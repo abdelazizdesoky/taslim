@@ -1,16 +1,6 @@
 @extends('Dashboard.layouts.master')
 @section('css')
-    <!--Internal Notify -->
-    <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
-    <!-- Internal Select2 css -->
-    <link href="{{URL::asset('dashboard/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
-    <!--Internal Datetimepicker-slider css -->
-    <link href="{{URL::asset('dashboard/plugins/amazeui-datetimepicker/css/amazeui.datetimepicker.css')}}" rel="stylesheet">
-    <link href="{{URL::asset('dashboard/plugins/jquery-simple-datetimepicker/jquery.simple-dtpicker.css')}}" rel="stylesheet">
-    <link href="{{URL::asset('dashboard/plugins/pickerjs/picker.min.css')}}" rel="stylesheet">
-    <!-- Internal Spectrum-colorpicker css -->
-    <link href="{{URL::asset('dashboard/plugins/spectrum-colorpicker/spectrum.css')}}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.css" rel="stylesheet">
+  
     <style>
         .serial-item {
             display: flex;
@@ -132,16 +122,19 @@
     const startScannerBtn = document.getElementById('startScanner');
     const interactive = document.getElementById('interactive');
 
+    // تحديث عدد السيريالات
     function updateSerialCount() {
         const serials = serialsList.querySelectorAll('.serial-item').length;
         serialCount.textContent = serials;
     }
 
+    // تحديث الحقل المخفي
     function updateHiddenInput() {
         const serials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
         serialsHiddenInput.value = serials.join('\n');
     }
 
+    // إنشاء عنصر جديد للسيريال
     function createSerialItem(serial) {
         const serialItem = document.createElement('div');
         serialItem.className = 'serial-item';
@@ -165,17 +158,27 @@
         updateHiddenInput();
     }
 
+    // التحقق من وجود السيريال
+    function isSerialDuplicate(serial) {
+        const existingSerials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
+        return existingSerials.includes(serial);
+    }
+
+    // عند إدخال السيريال يدويًا
     serialInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             const serial = serialInput.value.trim();
-            if (serial) {
+            if (serial && !isSerialDuplicate(serial)) {
                 createSerialItem(serial);
-                serialInput.value = ''; 
+                serialInput.value = ''; // مسح حقل الإدخال بعد الإضافة
+            } else if (isSerialDuplicate(serial)) {
+                alert('هذا السيريال مكرر على مستوى الفاتورة!');
             }
         }
     });
 
+    // عند الضغط على زر بدء الكاميرا
     startScannerBtn.addEventListener('click', function() {
         interactive.style.display = 'block'; // عرض الفيديو
 
@@ -190,7 +193,7 @@
                 }
             },
             decoder: {
-                readers: ["code_128_reader", "ean_reader", "qr_reader"]// نوع الباركود المدعوم (يمكن إضافة المزيد)
+                readers: ["code_128_reader"] // نوع الباركود المدعوم
             }
         }, function(err) {
             if (err) {
@@ -200,10 +203,15 @@
             Quagga.start();
         });
 
+        // عندما يتم اكتشاف السيريال بواسطة الكاميرا
         Quagga.onDetected(function(result) {
             const serial = result.codeResult.code;
-            if (serial) {
+            if (serial && !isSerialDuplicate(serial)) {
                 createSerialItem(serial);
+                Quagga.stop();
+                interactive.style.display = 'none'; // إخفاء الفيديو
+            } else if (isSerialDuplicate(serial)) {
+                alert('هذا السيريال مكرر على مستوى الفاتورة!');
                 Quagga.stop();
                 interactive.style.display = 'none'; // إخفاء الفيديو
             }
@@ -211,87 +219,8 @@
     });
 });
 
-//-----------------------------------------------------------------------
-
-document.addEventListener('DOMContentLoaded', function() {
-    const serialInput = document.getElementById('serialInput');
-    const serialsList = document.getElementById('serialsList');
-    const serialCount = document.getElementById('serialCount');
-    const serialsHiddenInput = document.getElementById('serialsHiddenInput');
-
-    function updateSerialCount() {
-        const serials = serialsList.querySelectorAll('.serial-item').length;
-        serialCount.textContent = serials;
-    }
-
-    function updateHiddenInput() {
-        const serials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
-        serialsHiddenInput.value = serials.join('\n');
-    }
-
-    function createSerialItem(serial) {
-        const serialItem = document.createElement('div');
-        serialItem.className = 'serial-item';
-
-        const serialText = document.createElement('span');
-        serialText.textContent = serial;
-        serialItem.appendChild(serialText);
-
-        const removeButton = document.createElement('button');
-        removeButton.textContent = '×';
-        removeButton.className = 'remove-serial-btn';
-        removeButton.addEventListener('click', function() {
-            serialsList.removeChild(serialItem);
-            updateSerialCount();
-            updateHiddenInput();
-        });
-        serialItem.appendChild(removeButton);
-
-        serialsList.appendChild(serialItem);
-        updateSerialCount();
-        updateHiddenInput();
-    }
-
-    serialInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // منع إدراج سطر جديد في الإدخال
-
-            const serial = serialInput.value.trim();
-            
-            // التحقق مما إذا كان السيريال موجودًا بالفعل
-            const existingSerials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
-            
-            if (serial && !existingSerials.includes(serial)) {
-                createSerialItem(serial);
-                serialInput.value = ''; // مسح حقل الإدخال بعد إضافة السيريال
-            } else if (existingSerials.includes(serial)) {
-                alert('هذا السيريال مكرر!'); // يمكنك تعديل رسالة الخطأ بالطريقة التي تريدها
-            }
-        }
-    });
-});
 
 </script>
 
 
-<script src="{{URL::asset('dashboard/plugins/notify/js/notifIt.js')}}"></script>
-<script src="{{URL::asset('/plugins/notify/js/notifit-custom.js')}}"></script>
-<!--Internal  Datepicker js -->
-<script src="{{URL::asset('dashboard/plugins/jquery-ui/ui/widgets/datepicker.js')}}"></script>
-<!--Internal  jquery.maskedinput js -->
-<script src="{{URL::asset('dashboard/plugins/jquery.maskedinput/jquery.maskedinput.js')}}"></script>
-<!--Internal  spectrum-colorpicker js -->
-<script src="{{URL::asset('dashboard/plugins/spectrum-colorpicker/spectrum.js')}}"></script>
-<!-- Internal Select2.min js -->
-<script src="{{URL::asset('dashboard/plugins/select2/js/select2.min.js')}}"></script>
-<!--Internal Ion.rangeSlider.min js -->
-<script src="{{URL::asset('dashboard/plugins/ion-rangeslider/js/ion.rangeSlider.min.js')}}"></script>
-<!--Internal  jquery-simple-datetimepicker js -->
-<script src="{{URL::asset('dashboard/plugins/amazeui-datetimepicker/js/amazeui.datetimepicker.min.js')}}"></script>
-<!-- Ionicons js -->
-<script src="{{URL::asset('dashboard/plugins/jquery-simple-datetimepicker/jquery.simple-dtpicker.js')}}"></script>
-<!--Internal  pickerjs js -->
-<script src="{{URL::asset('dashboard/plugins/pickerjs/picker.min.js')}}"></script>
-<!-- Internal form-elements js -->
-<script src="{{URL::asset('dashboard/js/form-elements.js')}}"></script>
 @endsection
