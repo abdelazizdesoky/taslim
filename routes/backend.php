@@ -147,8 +147,7 @@ use App\Http\Controllers\Employee\EmployeeInvoiceController;
 
             Route::put('/employeeinvoice/{id}', [EmployeeInvoiceController::class, 'show']);
 
-
-
+   
             });
             });
 

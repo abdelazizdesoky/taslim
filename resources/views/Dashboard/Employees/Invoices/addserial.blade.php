@@ -66,7 +66,20 @@
             رقم الاذن - {{$Invoices->code}}
             <div class="main-content-label mg-b-5"></div>
             <p class="mg-b-20">
-                العميل <i class="mdi mdi-truck-fast text-gray"></i> {{ $Invoices->customer->name??'-'}}
+                @switch($Invoices->invoice_type)
+                @case(1)
+                استلام
+                @break
+
+                @case(2)
+                تسليم
+                @break
+
+                @default
+                مرتجعات
+                @endswitch
+                
+                 <i class="mdi mdi-truck-fast text-gray"></i> {{ $Invoices->customer->name??$Invoices->supplier->name}}
             </p>
             
             <div class="container mt-4">
@@ -79,12 +92,12 @@
                 <div class="form-group">
                     <label for="serialInput">أدخل السيريال أو استخدم الكاميرا:</label>
                     <input type="text" class="form-control" id="serialInput" placeholder="أدخل السيريال هنا" autofocus>
-                    {{-- <button type="button" class="btn btn-primary mt-2" id="startScanner">استخدام الكاميرا</button> --}}
+                    <button type="button" class="btn btn-primary mt-2" id="startScanner">استخدام الكاميرا</button>
                 </div>
                 
-                {{-- <div id="interactive" class="viewport" style="position: relative; width: 100%; height: 300px; display: none;">
+                <div id="interactive" class="viewport" style="position: relative; width: 100%; height: 300px; display: none;">
                     <video autoplay="true" preload="auto" src="" muted="true" playsinline="true"></video>
-                </div> --}}
+                </div>
                 
          <!--------------------------------------------------------------------------->
                 <form class="form-horizontal" action="{{route('employeeinvoice.store')}}" method="post" autocomplete="off">
@@ -106,96 +119,97 @@
 
 @section('js')
 
-{{-- <script src="{{URL::asset('dashboard/js/quagga.min.js')}}"></script> --}}
+<script src="{{URL::asset('dashboard/js/quagga.min.js')}}"></script>
+
 
 <script>
     
-//     document.addEventListener('DOMContentLoaded', function() {
-//     const serialInput = document.getElementById('serialInput');
-//     const serialsList = document.getElementById('serialsList');
-//     const serialCount = document.getElementById('serialCount');
-//     const serialsHiddenInput = document.getElementById('serialsHiddenInput');
-//     const startScannerBtn = document.getElementById('startScanner');
-//     const interactive = document.getElementById('interactive');
+    document.addEventListener('DOMContentLoaded', function() {
+    const serialInput = document.getElementById('serialInput');
+    const serialsList = document.getElementById('serialsList');
+    const serialCount = document.getElementById('serialCount');
+    const serialsHiddenInput = document.getElementById('serialsHiddenInput');
+    const startScannerBtn = document.getElementById('startScanner');
+    const interactive = document.getElementById('interactive');
 
-//     function updateSerialCount() {
-//         const serials = serialsList.querySelectorAll('.serial-item').length;
-//         serialCount.textContent = serials;
-//     }
+    function updateSerialCount() {
+        const serials = serialsList.querySelectorAll('.serial-item').length;
+        serialCount.textContent = serials;
+    }
 
-//     function updateHiddenInput() {
-//         const serials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
-//         serialsHiddenInput.value = serials.join('\n');
-//     }
+    function updateHiddenInput() {
+        const serials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
+        serialsHiddenInput.value = serials.join('\n');
+    }
 
-//     function createSerialItem(serial) {
-//         const serialItem = document.createElement('div');
-//         serialItem.className = 'serial-item';
+    function createSerialItem(serial) {
+        const serialItem = document.createElement('div');
+        serialItem.className = 'serial-item';
 
-//         const serialText = document.createElement('span');
-//         serialText.textContent = serial;
-//         serialItem.appendChild(serialText);
+        const serialText = document.createElement('span');
+        serialText.textContent = serial;
+        serialItem.appendChild(serialText);
 
-//         const removeButton = document.createElement('button');
-//         removeButton.textContent = '×';
-//         removeButton.className = 'remove-serial-btn';
-//         removeButton.addEventListener('click', function() {
-//             serialsList.removeChild(serialItem);
-//             updateSerialCount();
-//             updateHiddenInput();
-//         });
-//         serialItem.appendChild(removeButton);
+        const removeButton = document.createElement('button');
+        removeButton.textContent = '×';
+        removeButton.className = 'remove-serial-btn';
+        removeButton.addEventListener('click', function() {
+            serialsList.removeChild(serialItem);
+            updateSerialCount();
+            updateHiddenInput();
+        });
+        serialItem.appendChild(removeButton);
 
-//         serialsList.appendChild(serialItem);
-//         updateSerialCount();
-//         updateHiddenInput();
-//     }
+        serialsList.appendChild(serialItem);
+        updateSerialCount();
+        updateHiddenInput();
+    }
 
-//     serialInput.addEventListener('keypress', function(event) {
-//         if (event.key === 'Enter') {
-//             event.preventDefault();
-//             const serial = serialInput.value.trim();
-//             if (serial) {
-//                 createSerialItem(serial);
-//                 serialInput.value = ''; 
-//             }
-//         }
-//     });
+    serialInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const serial = serialInput.value.trim();
+            if (serial) {
+                createSerialItem(serial);
+                serialInput.value = ''; 
+            }
+        }
+    });
 
-//     startScannerBtn.addEventListener('click', function() {
-//         interactive.style.display = 'block'; // عرض الفيديو
+    startScannerBtn.addEventListener('click', function() {
+        interactive.style.display = 'block'; // عرض الفيديو
 
-//         Quagga.init({
-//             inputStream: {
-//                 type: "LiveStream",
-//                 target: interactive, // الفيديو الذي سيستخدم لعرض الكاميرا
-//                 constraints: {
-//                     width: 640,
-//                     height: 480,
-//                     facingMode: "environment" // استخدام الكاميرا الخلفية
-//                 }
-//             },
-//             decoder: {
-//                 readers: ["code_128_reader"] // نوع الباركود المدعوم (يمكن إضافة المزيد)
-//             }
-//         }, function(err) {
-//             if (err) {
-//                 console.error(err);
-//                 return;
-//             }
-//             Quagga.start();
-//         });
+        Quagga.init({
+            inputStream: {
+                type: "LiveStream",
+                target: interactive, // الفيديو الذي سيستخدم لعرض الكاميرا
+                constraints: {
+                    width: 640,
+                    height: 480,
+                    facingMode: "environment" // استخدام الكاميرا الخلفية
+                }
+            },
+            decoder: {
+                readers: ["code_128_reader", "ean_reader", "qr_reader"]// نوع الباركود المدعوم (يمكن إضافة المزيد)
+            }
+        }, function(err) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            Quagga.start();
+        });
 
-//         Quagga.onDetected(function(result) {
-//             const serial = result.codeResult.code;
-//             if (serial) {
-//                 createSerialItem(serial);
-//                 Quagga.stop();
-//                 interactive.style.display = 'none'; // إخفاء الفيديو
-//             }
-//         });
-//     });
-// });
+        Quagga.onDetected(function(result) {
+            const serial = result.codeResult.code;
+            if (serial) {
+                createSerialItem(serial);
+                Quagga.stop();
+                interactive.style.display = 'none'; // إخفاء الفيديو
+            }
+        });
+    });
+});
 
 //-----------------------------------------------------------------------
 

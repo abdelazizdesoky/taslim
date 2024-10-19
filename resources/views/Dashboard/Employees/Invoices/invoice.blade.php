@@ -40,7 +40,7 @@
 							<tr>
 								<th class="wd-lg-25p">كود الاذن </th>
 								<th class="wd-lg-25p tx-right">تاريخ  </th>
-								<th class="wd-lg-25p tx-right">العميل  </th>
+								<th class="wd-lg-25p tx-right">العميل /عميل  </th>
 								<th class="wd-lg-25p tx-right">حالة </th>
 								<th class="wd-lg-25p tx-right">اجراء </th>
 
@@ -54,20 +54,15 @@
 							<tr>
 								<td>{{$invoice->code}}</td>
 								<td class="tx-right tx-medium tx-inverse">{{ $invoice->invoice_date}}</td>
-								<td class="tx-right tx-medium tx-inverse">{{ $invoice->customer->name??'-'}}</td>
+								<td class="tx-right tx-medium tx-inverse">{{ $invoice->customer->name??$invoice->supplier->name}}</td>
 								<td class="tx-right tx-medium tx-danger">
 									@if($invoice->invoice_status == 1)
-												    تحت تسليم  
-													@elseif ($invoice->invoice_status == 2)
-                                                   بالتوصيل 
-												   @elseif ($invoice->invoice_status == 5)
-												   ملغاه
-													@else
-													مكتملة 
-													@endif
+									{{ $invoice->invoice_type == 2 ?'تحت تسليم ':'مرتجع '}}     
+									
+										@endif
 								</td>
 								<td class="tx-right tx-medium tx-danger">
-									@if($invoice->invoice_status == 1)
+									@if($invoice->invoice_status == 1 )
 									<a href="{{route ('employeeinvoice.edit',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>	
 									@else
 									@endif

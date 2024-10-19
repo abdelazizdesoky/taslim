@@ -63,13 +63,33 @@
 											<tr>
                                                 <td>{{$loop->iteration}}</td>
 												<td><a href="{{route('Invoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
-												<td>{{$Invoice->invoice_type == 1 ? 'استلام':'تسليم '}}
+												<td>
+													@switch($Invoice->invoice_type)
+													@case(1)
+													استلام
+													@break
+
+													@case(2)
+													تسليم
+													@break
+
+													@case(3)
+											        مرتجعات   
+													@break
+
+													@default
+													غير معرف
+													@endswitch
+																								
+													
 												</td>
 												<td>{{$Invoice->invoice_date}}</td>
                                                 <td>{{$Invoice->employee->name}}</td>
 												<td>
 													@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
 														{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
+													@elseif ($Invoice->invoice_type == 3)
+													{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
 													@else
 														{{ '-' }} <!-- إذا لم يكن العميل متاحاً -->
 													@endif
@@ -77,6 +97,8 @@
 												<td>
 													@if($Invoice->invoice_type == 1) <!-- إذا كان نوع الفاتورة استلام -->
 														{{ $Invoice->supplier->name ??'-'}} <!-- اسم المورد -->
+														@elseif ($Invoice->invoice_type == 3)
+														{{ $Invoice->supplier->name ??'-' }} <!-- اسم العميل -->
 													@else
 														{{ '-' }} <!-- إذا لم يكن المورد متاحاً -->
 													@endif
@@ -103,8 +125,7 @@
 													  </div>
 													@endif
 
-													 
-												
+													
 												</td>
 												<td>
 												

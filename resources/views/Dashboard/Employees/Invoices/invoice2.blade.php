@@ -40,7 +40,7 @@
 							<tr>
 								<th class="wd-lg-25p">كود الاذن </th>
 								<th class="wd-lg-25p tx-right">تاريخ  </th>
-								<th class="wd-lg-25p tx-right">المورد  </th>
+								<th class="wd-lg-25p tx-right">مورد/عميل   </th>
 								<th class="wd-lg-25p tx-right">حالة </th>
 								<th class="wd-lg-25p tx-right">اجراء </th>
 
@@ -54,17 +54,14 @@
 							<tr>
 								<td>{{$invoice->code}}</td>
 								<td class="tx-right tx-medium tx-inverse">{{ $invoice->invoice_date}}</td>
-								<td class="tx-right tx-medium tx-inverse">{{ $invoice->supplier->name??'-'}}</td>
+								<td class="tx-right tx-medium tx-inverse">{{ $invoice->supplier->name??$invoice->customer->name}}</td>
 								<td class="tx-right tx-medium tx-danger">
+
 									@if($invoice->invoice_status == 1)
-												    تحت استلام  
-													@elseif ($invoice->invoice_status == 2)
-                                                   بالتوصيل 
-												   @elseif ($invoice->invoice_status == 5)
-												   ملغاه
-													@else
-													مكتملة 
-													@endif
+									{{ $invoice->invoice_type == 2 ?'تحت استلام ':'مرتجع '}}     
+									
+										@endif
+													
 								</td>
 								<td class="tx-right tx-medium tx-danger">
 									@if($invoice->invoice_status == 1)

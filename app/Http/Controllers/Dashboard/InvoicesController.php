@@ -30,14 +30,32 @@ class InvoicesController extends Controller
     //-------------------------------------------------------------------------------------------------------
     public function create()
     {
-        $suppliers = Supplier::where('status', 1)->get();
-        $customers = Customers::where('status', 1)->get();
+        $customers = Customers::select('id', 'name')->where('status', 1)->get();
+        $suppliers = Supplier::select('id', 'name')->where('status', 1)->get();
+    
+        // دمج الاثنين في قائمة واحدة
+        $contacts = $customers->map(function($customer) {
+            return [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'type' => 'customer',
+            ];
+        })->merge(
+            $suppliers->map(function($supplier) {
+                return [
+                    'id' => $supplier->id,
+                    'name' => $supplier->name, // تم تصحيح هنا
+                    'type' => 'supplier',
+                ];
+            })
+        );
+    
         $employees = Employee::where('status', 1)->get();
         $locations = Location::all();
-
-        return view('Dashboard.Admin.Invoices.create',compact('suppliers','customers','employees','locations'));
+    
+        return view('Dashboard.Admin.Invoices.create', compact('contacts', 'employees', 'locations','customers','suppliers'));
     }
-
+    
 
     //-------------------------------------------------------------------------------------------------------
     public function show($id)
@@ -49,7 +67,7 @@ class InvoicesController extends Controller
 
                     // احصل على السيريالات وقم بتجميعها حسب المنتج
             $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
-                $serialPrefix = substr($serial->serial_number, 0, 6);
+                $serialPrefix = substr($serial->serial_number, 0, 7);
                 $productCode = ProductCode::where('product_code', $serialPrefix)->first();
                 return $productCode ? $productCode->product->id : null;
             });
@@ -79,7 +97,7 @@ class InvoicesController extends Controller
         $request->validate([
             'code' => 'required|unique:invoices,code',
             'invoice_date' => 'required',
-            'invoice_type' => 'required|in:1,2',
+            'invoice_type' => 'required',
             'employee_id' => 'required|exists:employees,id',
         ]);
 
@@ -93,19 +111,35 @@ class InvoicesController extends Controller
             $invoice->employee_id = $request->employee_id;
             $invoice->location_id = $request->location_id;
 
-            if ($request->invoice_type == 1) {
-                  // استلام (Receiving)
 
+            if ($request->invoice_type == 1) {
+                // استلام (Receiving)
                 $request->validate([
                     'supplier_id' => 'required|exists:suppliers,id',
                 ]);
                 $invoice->supplier_id = $request->supplier_id;
-            } else {    
-                       // تسليم (Delivery)
+                $invoice->customer_id = null; // إفراغ حقل العميل
+            } elseif ($request->invoice_type == 2) {    
+                // تسليم (Delivery)
                 $request->validate([
                     'customer_id' => 'required|exists:customers,id',
                 ]);
                 $invoice->customer_id = $request->customer_id;
+                $invoice->supplier_id = null; // إفراغ حقل المورد
+            } elseif ($request->invoice_type == 3) {
+                // مرتجع
+                $request->validate([
+                    'contact_id' => 'required',
+                    'contact_type' => 'required|in:customer,supplier',
+                ]);
+            
+                if ($request->contact_type == 'customer') {
+                    $invoice->customer_id = $request->contact_id;
+                    $invoice->supplier_id = null; // إفراغ حقل المورد
+                } elseif ($request->contact_type == 'supplier') {
+                    $invoice->supplier_id = $request->contact_id;
+                    $invoice->customer_id = null; // إفراغ حقل العميل
+                }
             }
 
             $invoice->save();
