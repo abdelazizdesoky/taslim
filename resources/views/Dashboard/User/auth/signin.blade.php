@@ -3,8 +3,6 @@
 برنامج  تسليماتى 
 @endsection
 @section('css')
-<!-- Sidemenu-respoansive-tabs css -->
-<link href="{{URL::asset('dashboard/plugins/sidemenu-responsive-tabs/css/sidemenu-responsive-tabs.css')}}" rel="stylesheet">
 @endsection
 @section('content')
 <!--lang bottom-->
@@ -127,7 +125,5 @@
 @endsection
 
 @section('js')
-<!-- Bootstrap Tab JS (optional if not already included) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 @endsection
