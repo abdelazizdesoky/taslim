@@ -1,3 +1,5 @@
+
+
 @extends('Dashboard.layouts.master')
 @section('css')
     <!--Internal   Notify -->
@@ -71,7 +73,7 @@
                                     <select class="form-control" name="invoice_type" id="status" required>
                                         <option value="1">استلام</option>
                                         <option value="2">تسليم</option>
-                                        <option value="3">مرتجع</option> <!-- الخيار الثالث -->
+                                        <option value="3">مرتجعات عام </option> <!-- الخيار الثالث -->
                                     </select>
                                 </div>
 

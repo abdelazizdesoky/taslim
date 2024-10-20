@@ -39,7 +39,24 @@
 												<h6 class="timeline-title"><a href="{{route('Invoices.show',$invoice->id)}}">{{$invoice->code}}</h6></a>
 											</div>
 											<div class="timeline-body">
-												<p>{{$invoice->invoice_type == 1 ? 'استلام':'تسليم '}}</p>
+												<p>
+													
+												  
+													@if($invoice->invoice_type == 1) 
+
+													<div class="p-1 bg-info text-white">	 الاستلام  </div>
+
+													@elseif ($invoice->invoice_type == 3)
+
+													<div class="p-1 bg-secondary text-white"> مرتجعات  </div>
+													 @else
+
+													 <div class="p-1 bg-info text-white">تحت تسليم </div>
+
+												
+													@endif
+
+												</p>
 
                                                <p>
 												@if($invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
@@ -64,6 +81,9 @@
 											</div>
 										</div>
 									</div>
+
+
+
 									@endforeach
 									
 									@else

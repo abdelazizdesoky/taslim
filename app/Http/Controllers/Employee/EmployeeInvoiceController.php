@@ -17,13 +17,13 @@ class EmployeeInvoiceController extends Controller
     // الاذن الاستلام 
 
           $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-          ->where('invoice_status', 1)  // حالة الفاتورة تحت استلام 
-          ->where('invoice_type', 2) // استلام
+          ->whereIn('invoice_status', [1,4])  // حالة الفاتورة تحت استلام 
+          ->whereIn('invoice_type', [2,3]) // استلام
           ->count();
 
           $Invoices = Invoice::where('employee_id', Auth::user()->id)
-          ->where('invoice_status', 1) 
-          ->where('invoice_type', 2) // "استلام"
+          ->whereIn('invoice_status', [1,4])
+          ->whereIn('invoice_type',[2,3]) // "استلام"
           ->orderBy('invoice_date', 'desc')
           ->get();   
  
@@ -36,18 +36,18 @@ class EmployeeInvoiceController extends Controller
     }
     public function show($id)
     {
- 
+
      
      //اذن التسليم 
 
           $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-          ->where('invoice_status', 1)// حالة الفاتورة تحت تسليم  
-          ->where('invoice_type', $id) // إتسليم 
+          ->whereIn('invoice_status', [1,4])// حالة الفاتورة تحت تسليم  
+          ->whereIn('invoice_type',[$id,3]) // إتسليم 
           ->count();
 
           $Invoices = Invoice::where('employee_id', Auth::user()->id)
-          ->where('invoice_status', 1) 
-          ->where('invoice_type', $id) // تسليم
+          ->whereIn('invoice_status', [1,4])
+          ->whereIn('invoice_type', [$id,3]) // تسليم
           ->orderBy('invoice_date', 'desc')
           ->get();   
  

@@ -54,20 +54,62 @@
 							<tr>
 								<td>{{$invoice->code}}</td>
 								<td class="tx-right tx-medium tx-inverse">{{ $invoice->invoice_date}}</td>
-								<td class="tx-right tx-medium tx-inverse">{{ $invoice->customer->name??'-'}}</td>
+								<td class="tx-right tx-medium tx-inverse">
+									
+									
+										@if($invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
+											{{ $invoice->customer->name ??'-' }} <!-- اسم العميل -->
+										@elseif ($invoice->invoice_type == 3)
+										{{ $invoice->customer->name ??'-' }} <!-- اسم العميل -->
+										@else
+											 <!-- إذا لم يكن العميل متاحاً -->
+										@endif
+								
+										@if($invoice->invoice_type == 1) <!-- إذا كان نوع الفاتورة استلام -->
+											{{ $invoice->supplier->name ??'-'}} <!-- اسم المورد -->
+											@elseif ($invoice->invoice_type == 3)
+											{{ $invoice->supplier->name ??'-' }} <!-- اسم العميل -->
+										@else
+											 <!-- إذا لم يكن المورد متاحاً -->
+										@endif
+								
+
+
+								</td>
 								<td class="tx-right tx-medium tx-danger">
-									@if($invoice->invoice_status == 1)
-												    تحت تسليم  
-													@elseif ($invoice->invoice_status == 2)
-                                                   بالتوصيل 
-												   @elseif ($invoice->invoice_status == 5)
-												   ملغاه
-												   @elseif ($Invoice->invoice_status == 4)
-													مرتجع  
-												 
-													@else
-													مكتملة 
-													@endif
+									@if($invoice->invoice_status == 1  )
+												  
+									@if($invoice->invoice_type == 1) 
+
+									<div class="p-1 bg-info text-white">	تحت الاستلام  </div>
+
+									@elseif ($invoice->invoice_type == 3)
+
+									<div class="p-1 bg-secondary text-white">تحت ارجاع  </div>
+									 @else
+
+									 <div class="p-1 bg-info text-white">تحت تسليم  </div>
+
+								@endif
+							
+								@elseif ($invoice->invoice_status == 3)
+								<div class="p-1 bg-success text-white" >
+									 
+									مكتمل   </div>
+								@elseif ($invoice->invoice_status == 4)
+								<div class="p-1 bg-warning text-white" >
+									   
+									 مرتجع    </div>
+							   @elseif ($invoice->invoice_status == 5)
+							   <div class="p-1 bg-danger text-white" >
+									 ملغى	 </div>
+								@else
+
+								<div class="p-1 bg-success text-white" >
+									غير محدد 
+								  </div>
+								@endif
+								
 								</td>
 								<td class="tx-right tx-medium tx-danger">
 									@if($invoice->invoice_status == 1)

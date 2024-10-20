@@ -3,8 +3,13 @@
 برنامج  تسليماتى 
 @endsection
 @section('css')
-<!-- Sidemenu-respoansive-tabs css -->
-<link href="{{URL::asset('dashboard/plugins/sidemenu-responsive-tabs/css/sidemenu-responsive-tabs.css')}}" rel="stylesheet">
+<style>
+    @media (max-width: 768px) {
+        #form2-tab, #form3-tab {
+            display: none; 
+        }
+    }
+</style>
 @endsection
 @section('content')
 <!--lang bottom-->
@@ -46,17 +51,17 @@
 
                                         <!-- Navigation Tabs -->
                                         <ul class="nav nav-pills nav-justified " id="myTab" role="tablist">
-                                            <li class="nav-item bd ">
+                                            <li class="nav-item  ">
                                                 <a class="nav-link active" id="form1-tab" data-toggle="tab" href="#form1" role="tab" aria-controls="form1" aria-selected="true">
                                                     <h3>مندوب</h3>
                                                 </a>
                                             </li>
-                                            <li class="nav-item bd ">
+                                            <li class="nav-item  ">
                                                 <a class="nav-link" id="form2-tab" data-toggle="tab" href="#form2" role="tab" aria-controls="form2" aria-selected="false">
                                                     <h3>منسق</h3>
                                                 </a>
                                             </li>
-                                            <li class="nav-item bd ">
+                                            <li class="nav-item  ">
                                                 <a class="nav-link" id="form3-tab" data-toggle="tab" href="#form3" role="tab" aria-controls="form3" aria-selected="false">
                                                     <h3>إدارة</h3>
                                                 </a>

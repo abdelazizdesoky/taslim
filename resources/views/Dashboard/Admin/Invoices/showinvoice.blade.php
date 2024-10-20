@@ -22,7 +22,22 @@
 							<div class="card card-invoice">
 								<div class="card-body">
 									<div class="invoice-header">
-										<h1 class="invoice-title">اذن {{$invoice->invoice_type == 1 ? 'استلام':'تسليم '}}</h1>
+										<h1 class="invoice-title">اذن 
+											@switch($invoice->invoice_type)
+											@case(1)
+											استلام
+											@break
+
+											@case(2)
+											تسليم
+											@break
+
+											@default
+											مرتجعات
+											@endswitch
+														
+
+										</h1>
 										<div class="billed-from">
 											<h6>العربية جروب    </h6>
 											        16399
@@ -46,12 +61,21 @@
 											<label class="tx-gray-600"> تفاصيل الاذن </label>
 											<p class="invoice-info-row"><span>الاذن  </span> <span>{{ $invoice->code }}</span></p>
 											<p class="invoice-info-row"><span>تاريخ  </span> <span>{{ $invoice->invoice_date }}</span></p>
-											@if($invoice->invoice_type == 1) <!-- إذا كان نوع الفاتورة استلام -->
+
+											@switch($invoice->invoice_type)
+											@case(1)
 											<p class="invoice-info-row"><span>المورد  :</span> <span>{{ $invoice->supplier->name ??'-' }}-{{ $invoice->supplier->phone ??'-' }}</span></p>
-													@else
+											@break
+
+											@case(2)
 											<p class="invoice-info-row"><span>العميل  :</span> <span>{{ $invoice->customer->name ??'-' }}-{{ $invoice->customer->phone ??'-' }}</span></p>
-													@endif
+											@break
+
+											@default
+											<p class="invoice-info-row"><span>مورد/العميل   :</span> <span>{{ $invoice->customer->name ??$invoice->supplier->name }}-{{ $invoice->customer->phone ??$invoice->supplier->phone }}</span></p>
+											@endswitch
 												
+											
 										
 											<p class="invoice-info-row"><span>المندوب :</span> <span>{{ $invoice->employee->name ??'-' }}</span></p>
 											<p class="invoice-info-row"><span>مجموع سيريالات المسحوبة  :</span> <span>{{$serials->count()}}</span></p>
