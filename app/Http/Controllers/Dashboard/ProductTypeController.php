@@ -34,33 +34,5 @@ class ProductTypeController extends Controller
         return redirect()->back();
     }
 
-    public function show(ProductType $productType)
-    {
-        return view('Dashboard.Admin.Product.product-types.show', compact('productType'));
-    }
-
-    public function edit(ProductType $productType)
-    {
-        $brands = Brand::all();
-        return view('Dashboard.Admin.Product.product-types.edit', compact('productType', 'brands'));
-    }
-
-    public function update(Request $request, ProductType $productType)
-    {
-        $request->validate([
-            'type_name' => 'required',
-            'brand_id' => 'required'
-        ]);
-
-        $productType->update($request->all());
-
-        return redirect()->route('product-types.index');
-    }
-
-    public function destroy(ProductType $productType)
-    {
-        $productType->delete();
-
-        return redirect()->route('product-types.index');
-    }
+  
 }

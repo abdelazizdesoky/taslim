@@ -48,16 +48,11 @@
 												{{ $product->productType->type_name }}
 												 {{ $product->productType->brand->brand_name }}
 												  {{ $product->product_name }}
-
-												@foreach($product->productDetails as $detail)
-												{{ $detail->detail_name }} 
-												@endforeach
-												
+												   {{ $product->detail_name }} 	
 											</td>
 											<td>
-												@foreach($product->productCodes as $code)
-												{{ $code->product_code }}
-											    @endforeach
+												{{ $product->product_code }}
+											    
 											</td>
 												
 											

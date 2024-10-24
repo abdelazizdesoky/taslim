@@ -112,7 +112,7 @@
 								
 								</td>
 								<td class="tx-right tx-medium tx-danger">
-									@if($invoice->invoice_status == 1)
+									@if($invoice->invoice_status == 1  || $invoice->invoice_status == 4)
 									<a href="{{route ('employeeinvoice.edit',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>	
 									@else
 									@endif

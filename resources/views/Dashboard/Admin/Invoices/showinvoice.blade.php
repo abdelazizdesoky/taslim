@@ -35,7 +35,6 @@
 											@default
 											مرتجعات
 											@endswitch
-														
 
 										</h1>
 										<div class="billed-from">
@@ -100,24 +99,22 @@
 														<td>{{$loop->iteration}}</td>
 														<td>{{$serial->serial_number}}</td>
 														<td>
-												
+										
 
 															@php
 															// استخراج أول 6 أرقام من السيريال
 															$serialPrefix = substr($serial->serial_number, 0, 7);
 															// البحث في جدول product_codes عن الكود الذي يتطابق مع أول 6 أرقام من السيريال
-															$productCode = \App\Models\ProductCode::where('product_code', $serialPrefix)->first();
+															$productCode = \App\Models\Product::where('product_code', $serialPrefix)->first();
 														@endphp
-														
+
 														@if ($productCode && $productCode->product)
 															{{-- عرض تفاصيل المنتج إذا كان المنتج موجوداً --}}
 															{{ $productCode->product->productType->type_name ?? 'نوع غير موجود' }}
 															{{ $productCode->product->productType->brand->brand_name ?? 'ماركة غير موجودة' }}
 															{{ $productCode->product->product_name ?? 'اسم المنتج غير موجود' }}
-														
-															@foreach($productCode->product->productDetails as $detail)
-																{{ $detail->detail_name ?? 'تفاصيل غير موجودة' }}
-															@endforeach
+															{{ $productCode->product->detail_name ?? 'تفاصيل غير موجودة' }}
+																
 														@else
 															{{-- عرض رسالة في حال عدم وجود المنتج --}}
 															{{ 'غير موجود بالمنتجات' }}
@@ -142,14 +139,10 @@
 											<tr>
 												
 												
-														
 														<td>{{$loop->iteration}}</td>
 														<td>{{ $productData['product_name'] ?? 'اسم المنتج غير موجود' }}  
 														<td>{{ $productData['serial_count'] }}  </td>
-													
-														
-												
-										
+	
 											</tr>
 											@endforeach
 											</tbody>

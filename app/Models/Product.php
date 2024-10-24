@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\ProductCode;
 use App\Models\ProductType;
-use App\Models\ProductDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -27,16 +25,7 @@ class Product extends Model
     }
 
 
-    public function productCodes()
-    {
-        return $this->hasMany(ProductCode::class, 'product_id');
-    }
-
-    public function productDetails()
-    {
-        return $this->hasMany(ProductDetail::class, 'product_id');
-
-    }
+ 
 
 
 }

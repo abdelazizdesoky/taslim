@@ -73,15 +73,9 @@
                             </div>
                             <div class="col-md-9">
 
-                                @if ($product->productDetails->isNotEmpty())
+                                        <input type="text" name="detail_name" value="{{ $product->detail_name }}" class="form-control @error('product_name') is-invalid @enderror" required>
+                               
                               
-                                    @foreach ($product->productDetails as $detail)
-                                        <input type="text" name="detail_name" value="{{ $detail->detail_name }}" class="form-control @error('product_name') is-invalid @enderror" required>
-                                    @endforeach
-                              
-                            @else
-                                <p>لا توجد تفاصيل للمنتج.</p>
-                            @endif
 
                             </div>
                         </div>
@@ -93,16 +87,7 @@
                                 <label class="form-label">كود المنتج</label>
                             </div>
                             <div class="col-md-9">
-
-                                @if ($product->productCodes->isNotEmpty())
-                               
-                                    @foreach ($product->productCodes as $code)
-                                       <input type="text" name="product_code" value="{{ $code->product_code }}" class="form-control @error('product_name') is-invalid @enderror" required>
-                                    @endforeach
-                                
-                            @else
-                                <p>لا توجد كودات لهذا المنتج.</p>
-                            @endif
+                                       <input type="text" name="product_code" value="{{ $product->product_code }}" class="form-control @error('product_name') is-invalid @enderror" required>
 
                             </div>
                         </div>

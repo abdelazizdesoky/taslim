@@ -10,8 +10,9 @@ class BrandController extends Controller
 {
     public function index()
     {
-        $brands = Brand::all();
+        $brands = Brand::with('productTypes')->get();
         return view('Dashboard.Admin.Product.brands.index', compact('brands'));
+        
     }
 
     public function create()
@@ -19,6 +20,7 @@ class BrandController extends Controller
         return view('Dashboard.Admin.Product.brands.create');
     }
 
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -31,33 +33,6 @@ class BrandController extends Controller
         return redirect()->back();
     }
 
-    public function show(Brand $brand)
-    {
-        return view('Dashboard.Admin.Product.brands.show', compact('brand'));
-    }
 
-    public function edit(Brand $brand)
-    {
-        return view('Dashboard.Admin.Product.brands.edit', compact('brand'));
-    }
 
-    public function update(Request $request, Brand $brand)
-    {
-        $request->validate([
-            'brand_name' => 'required'
-        ]);
-
-        $brand->update($request->all());
-
-        session()->flash('edit');
-        return redirect()->route('brands.index');
-    }
-
-    public function destroy(Brand $brand)
-    {
-        $brand->delete();
-
-        session()->flash('delete');
-        return redirect()->route('brands.index');
-    }
 }

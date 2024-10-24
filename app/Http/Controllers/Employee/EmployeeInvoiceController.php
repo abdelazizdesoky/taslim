@@ -17,12 +17,12 @@ class EmployeeInvoiceController extends Controller
     // الاذن الاستلام 
 
           $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1,4])  // حالة الفاتورة تحت استلام 
+          ->whereIn('invoice_status', [1])  // حالة الفاتورة تحت استلام 
           ->whereIn('invoice_type', [2,3]) // استلام
           ->count();
 
           $Invoices = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1,4])
+          ->whereIn('invoice_status', [1])
           ->whereIn('invoice_type',[2,3]) // "استلام"
           ->orderBy('invoice_date', 'desc')
           ->get();   
@@ -41,13 +41,13 @@ class EmployeeInvoiceController extends Controller
      //اذن التسليم 
 
           $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1,4])// حالة الفاتورة تحت تسليم  
+          ->whereIn('invoice_status', [1])//,مرتجع  حالة الفاتورة تحت تسليم  
           ->whereIn('invoice_type',[$id,3]) // إتسليم 
           ->count();
 
           $Invoices = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1,4])
-          ->whereIn('invoice_type', [$id,3]) // تسليم
+          ->whereIn('invoice_status', [1])
+          ->whereIn('invoice_type', [$id,3]) // -مرتجعات | تسليم
           ->orderBy('invoice_date', 'desc')
           ->get();   
  
@@ -104,7 +104,7 @@ class EmployeeInvoiceController extends Controller
         $invoiceid = $request->input('id');
         $serials = $request->input('serials');
 
-        // تقسيم السيريالات إلى مصفوفة
+        
         $serialsArray = array_filter(array_map('trim', explode("\n", $serials)));
 
         

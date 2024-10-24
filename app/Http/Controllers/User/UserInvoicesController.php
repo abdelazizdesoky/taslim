@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\User;
 
 
-use Log;
+
 use App\Models\Invoice;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Supplier;
 use App\Models\Customers;
-use App\Models\ProductCode;
 use App\Models\SerialNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -50,7 +49,7 @@ class UserInvoicesController extends Controller
                     // احصل على السيريالات وقم بتجميعها حسب المنتج
             $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
                 $serialPrefix = substr($serial->serial_number, 0, 6);
-                $productCode = ProductCode::where('product_code', $serialPrefix)->first();
+                $productCode = Product::where('product_code', $serialPrefix)->first();
                 return $productCode ? $productCode->product->id : null;
             });
 

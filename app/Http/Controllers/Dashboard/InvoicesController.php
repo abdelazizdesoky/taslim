@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Dashboard;
 
 
-use Log;
+
 use App\Models\Invoice;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Supplier;
 use App\Models\Customers;
-use App\Models\ProductCode;
 use App\Models\SerialNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -22,8 +21,9 @@ class InvoicesController extends Controller
     //-------------------------------------------------------------------------------------------------------
 public function index()
 {
-    $Invoices = Invoice::orderBy('invoice_date', 'desc') ->get();
-  
+    $Invoices = Invoice::with(['supplier', 'customer', 'employee', 'location', 'serialNumbers'])
+    ->orderBy('invoice_date', 'desc')
+    ->get();
 
     return view('Dashboard.Admin.Invoices.index',compact('Invoices'));
 }
@@ -68,7 +68,7 @@ public function show($id)
                 // احصل على السيريالات وقم بتجميعها حسب المنتج
         $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
             $serialPrefix = substr($serial->serial_number, 0, 7);
-            $productCode = ProductCode::where('product_code', $serialPrefix)->first();
+            $productCode = Product::where('product_code', $serialPrefix)->first();
             return $productCode ? $productCode->product->id : null;
         });
 

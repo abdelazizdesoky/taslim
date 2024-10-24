@@ -53,6 +53,6 @@
 <!--Internal  Datatable js -->
 <script src="{{URL::asset('dashboard/js/table-data.js')}}"></script>
 
-<!-- Bootstrap Tab JS (optional if not already included) -->
+
 
 

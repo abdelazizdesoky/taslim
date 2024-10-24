@@ -10,19 +10,6 @@ use App\Http\Controllers\Controller;
 class SerialNumberController extends Controller
 {
 
-public function  index()
-{
-
-    $serials = SerialNumber::all();
-
-    return view('Dashboard.Admin.Serial.index', compact('serials'));
-
-
-}
-    
-
-
-
 
     public function searchInvoices(Request $request)
     {
