@@ -32,7 +32,7 @@
 							<div class="card-body">
 								<div class="mb-4 main-content-label"> الاذن</div>
 
-                                    <form class="form-horizontal" action="{{route('UserInvoices.store')}}" method="post" autocomplete="off">
+                                    <form class="form-horizontal" action="{{route('user.invoices.store')}}" method="post" autocomplete="off">
                                         @csrf
                                     <div class="form-group ">
 										<div class="row">

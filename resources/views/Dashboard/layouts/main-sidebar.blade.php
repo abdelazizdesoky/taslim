@@ -9,19 +9,18 @@
     </div>
     </div>
 
-    @if(\Auth::guard('admin')->check())
+    @if(Auth::guard('admin')->check())
+    @php $permission = Auth::guard('admin')->user()->permission; @endphp
+    
+    @if($permission == 1)
         @include('Dashboard.layouts.main-sidebar.admin-sidebar-main')
-
-
-    @elseif(\Auth::guard('employee')->check())
-
-            @include('Dashboard.layouts.main-sidebar.employee-sidebar-main')
-
-      @elseif(\Auth::guard()->check())
-
+    @elseif($permission == 2)
         @include('Dashboard.layouts.main-sidebar.user-sidebar-main')
-
+    @elseif($permission == 3)
+        @include('Dashboard.layouts.main-sidebar.employee-sidebar-main')
     @endif
+
+@endif
 
 </aside>
 <!-- main-sidebar -

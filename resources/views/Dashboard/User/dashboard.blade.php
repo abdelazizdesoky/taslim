@@ -22,7 +22,7 @@
 				
 				<div class="col-xl-4 col-lg-6 col-md-6 col-xm-12">
 					<div class="card overflow-hidden sales-card bg-primary-gradient">
-						<a  href="{{ route('UserInvoices.index') }}">
+						<a  href="{{ route('user.invoices.index') }}">
 						<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
 							<div class="">
 								<h6 class="mb-3 tx-12 text-white">عدد الاذون   </h6>

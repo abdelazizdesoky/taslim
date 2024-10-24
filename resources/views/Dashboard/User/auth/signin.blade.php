@@ -3,13 +3,13 @@
 برنامج  تسليماتى 
 @endsection
 @section('css')
-<style>
+{{-- <style>
     @media (max-width: 768px) {
         #form2-tab, #form3-tab {
             display: none; 
         }
     }
-</style>
+</style> --}}
 @endsection
 @section('content')
 <!--lang bottom-->
@@ -49,62 +49,7 @@
                                             </div>
                                         @endif
 
-                                        <!-- Navigation Tabs -->
-                                        <ul class="nav nav-pills nav-justified " id="myTab" role="tablist">
-                                            <li class="nav-item  ">
-                                                <a class="nav-link active" id="form1-tab" data-toggle="tab" href="#form1" role="tab" aria-controls="form1" aria-selected="true">
-                                                    <h3>مندوب</h3>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item  ">
-                                                <a class="nav-link" id="form2-tab" data-toggle="tab" href="#form2" role="tab" aria-controls="form2" aria-selected="false">
-                                                    <h3>منسق</h3>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item  ">
-                                                <a class="nav-link" id="form3-tab" data-toggle="tab" href="#form3" role="tab" aria-controls="form3" aria-selected="false">
-                                                    <h3>إدارة</h3>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                        <!-- Tab Content -->
-                                        <div class="tab-content" id="myTabContent">
-                                            <br>
-                                            <!-- Employee Form -->
-                                            <div class="tab-pane fade show active" id="form1" role="tabpanel" aria-labelledby="form1-tab">
-                                                <form method="POST" action="{{ route('login.employee') }}">
-                                                    @csrf
-                                                    <div class="form-group">
-                                                        <label> كود مندوب</label> 
-                                                        <input class="form-control" placeholder="ادخل كود" type="text" name="code" required autofocus autocomplete="username">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label> باسورد </label> 
-                                                        <input class="form-control" placeholder="ادخل باسورد" type="password" name="password" required autocomplete="current-password" />
-                                                    </div>
-                                                    <button class="btn btn-main-primary btn-block"> دخول </button>
-                                                </form>
-                                            </div>
-
-                                            <!-- Coordinator Form -->
-                                            <div class="tab-pane fade" id="form2" role="tabpanel" aria-labelledby="form2-tab">
-                                                <form method="POST" action="{{ route('login.user') }}">
-                                                    @csrf
-                                                    <div class="form-group">
-                                                        <label> ايميل المنسق</label> 
-                                                        <input class="form-control" placeholder="ادخل ايميل" type="email" name="email" required autofocus autocomplete="username">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label> باسورد </label> 
-                                                        <input class="form-control" placeholder="ادخل باسورد" type="password" name="password" required autocomplete="current-password" />
-                                                    </div>
-                                                    <button class="btn btn-main-primary btn-block"> دخول </button>
-                                                </form>
-                                            </div>
-
-                                            <!-- Admin Form -->
-                                            <div class="tab-pane fade " id="form3" role="tabpanel" aria-labelledby="form3-tab">
+                            
                                                 <form method="POST" action="{{ route('login.admin') }}">
                                                     @csrf
                                                     <div class="form-group">
@@ -118,7 +63,7 @@
                                                     <button class="btn btn-main-primary btn-block"> دخول </button>
                                                 </form>
                                             </div>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>

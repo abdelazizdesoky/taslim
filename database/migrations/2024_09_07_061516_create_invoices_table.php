@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('invoice_type');//-,مرتجع استلام وتسليم  /
             $table->date('invoice_date');
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
-            $table->foreignId('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreignId('employee_id')->references('id')->on('admins')->onDelete('cascade');
             $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers')->onDelete('cascade');
             $table->foreignId('customer_id')->nullable()->references('id')->on('customers')->onDelete('cascade');
             $table->integer('invoice_status')->default(1);//مرتجع -تحت الاستلام وتحت توصيل والتسليم ومخزن 

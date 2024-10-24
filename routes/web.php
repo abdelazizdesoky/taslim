@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\AdminController;
+use App\Http\Controllers\Auth\EmployeeController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,22 +23,23 @@ use App\Http\Controllers\ProfileController;
     })->middleware('guest');
 
 
-      //################################# User ###########################
+    Route::middleware(['auth:admin'])->group(function () {
+      Route::get('/Dashboard/admin', function () {
+          return view('Dashboard.Admin.dashboard');
+      })->middleware('permission:1')->name('Dashboard.admin');
+  
       Route::get('/Dashboard/user', function () {
-        return view('Dashboard.User.dashboard');
-    })->middleware(['auth', 'verified'])->name('Dashboard.user');
+          return view('Dashboard.User.dashboard');
+      })->middleware('permission:2')->name('Dashboard.user');
+  
+      Route::get('/Dashboard/employee', function () {
+          return view('Dashboard.Employees.dashboard');
+      })->middleware('permission:3')->name('Dashboard.employee');
+  });
+  
+  Route::post('login/admin', [AdminController::class, 'store'])
+      ->name('login.admin');
 
-
-    //############################### Admin #############################
-    Route::get('/Dashboard/admin', function () {
-        return view('Dashboard.Admin.dashboard');
-    })->middleware(['auth:admin', 'verified'])->name('Dashboard.admin');
-
-
-     //############################### employee #############################
-    Route::get('/Dashboard/employee', function () {
-      return view('Dashboard.Employees.dashboard');
-  })->middleware(['auth:employee'])->name('Dashboard.employee');
 
 
 
@@ -52,9 +56,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-  //  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-  //  Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-   // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+ 
 });
 
 

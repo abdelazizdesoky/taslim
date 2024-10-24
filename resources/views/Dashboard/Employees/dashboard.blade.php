@@ -16,24 +16,29 @@
 									</div>
 									<div class="d-flex my-xl-auto right-content">
 
-										@if ((Auth::user()->type == 1) )
+										@if(Auth::guard('admin')->check())
+										@php $permission = Auth::guard('admin')->user()->permission; @endphp
+										
+										@if($permission == 3)
 										<div class="pr-1 mb-3 mb-xl-0">
-											<a href="{{route('employeeinvoice.index')}}">
+											<a href="{{route('employee.invoices.index')}}">
 											<button type="button" class="btn btn-info  ml-2"><i class="mdi mdi-filter-variant"></i>الاذون تسليم </button>
 										</a>
 										</div>
-										@endif
 
-										@if ((Auth::user()->type ==2) )
+										@elseif($permission == 4)
 										<div class="pr-1 mb-3 mb-xl-0">
-											<a href="{{route('employeeinvoice.show',1)}}">
+											<a href="{{route('employee.invoices.show',1)}}">
 											<button type="button" class="btn btn-warning   ml-2"><i class="mdi mdi-refresh"></i>الاذون استلام </button>
 											</a>
-										</div>
 										@endif
+									
+									@endif
+
+										
 
 										<div class="pr-1 mb-3 mb-xl-0">
-											<a href="{{route('Compinvoice')}}">
+											<a href="{{route('employee.invoices.completed')}}">
 											<button type="button" class="btn btn-danger  ml-2"><i class="mdi mdi-star"></i>الاذون مكتملة</button>
 										</a>
 										</div>

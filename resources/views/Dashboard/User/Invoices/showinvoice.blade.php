@@ -82,7 +82,7 @@
 															// استخراج أول 6 أرقام من السيريال
 															$serialPrefix = substr($serial->serial_number, 0, 6);
 															// البحث في جدول product_codes عن الكود الذي يتطابق مع أول 6 أرقام من السيريال
-															$productCode = \App\Models\ProductCode::where('product_code', $serialPrefix)->first();
+															$productCode = \App\Models\Product::where('product_code', $serialPrefix)->first();
 														@endphp
 														
 														@if ($productCode && $productCode->product)
@@ -91,9 +91,7 @@
 															{{ $productCode->product->productType->brand->brand_name ?? 'ماركة غير موجودة' }}
 															{{ $productCode->product->product_name ?? 'اسم المنتج غير موجود' }}
 														
-															@foreach($productCode->product->productDetails as $detail)
-																{{ $detail->detail_name ?? 'تفاصيل غير موجودة' }}
-															@endforeach
+														
 														@else
 															{{-- عرض رسالة في حال عدم وجود المنتج --}}
 															{{ 'غير موجود بالمنتجات' }}

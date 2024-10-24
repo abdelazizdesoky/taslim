@@ -78,18 +78,23 @@
                                 </div>
                             </div>
                         </div>
-                        @if(auth('admin')->check())
 
-                        <a class="dropdown-item" href="{{route('admin.edit',auth()->user()->id)}}"><i class="bx bx-cog"></i>تعديل الملف الشخصي</a>
+                        @if(Auth::guard('admin')->check())
+                        @php $permission = Auth::guard('admin')->user()->permission; @endphp
+                        
+                        @if($permission == 1)
+                        <a class="dropdown-item" href="{{route('admin.admins.edit',auth()->user()->id)}}"><i class="bx bx-cog"></i>تعديل الملف الشخصي</a>
+                        @elseif($permission == 2)
 
+                        @elseif($permission == 3)
+                    
                         @endif
+                    
+                    @endif
+                   
 
-                        @if(auth('web')->check())
-                            <form method="POST" action="{{ route('logout.user') }}">
-                                @elseif(auth('admin')->check())
+                        @if(auth('admin')->check())
                                     <form method="POST" action="{{ route('logout.admin') }}">
-                                        @else
-                                            <form method="POST" action="{{ route('logout.employee') }}">
                                                @endif
                                                   @csrf
                                               <a class="dropdown-item" href="#"

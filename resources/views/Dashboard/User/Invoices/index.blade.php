@@ -22,7 +22,7 @@
 						<div class="card mg-b-20">
 							<div class="card-header pb-0">
 								<div class="d-flex justify-content-between">
-									<a href="{{route('UserInvoices.create')}}" class="btn btn-primary">اضافة اذن  جديد</a>
+									<a href="{{route('user.invoices.create')}}" class="btn btn-primary">اضافة اذن  جديد</a>
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 
 									
@@ -59,7 +59,7 @@
                                         @foreach($Invoices as $Invoice)
 											<tr>
                                                 <td>{{$loop->iteration}}</td>
-												<td><a href="{{route('UserInvoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
+												<td><a href="{{route('user.invoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
 												<td>
 													@if($Invoice->invoice_type == 2) 
 													تسليم 
@@ -72,7 +72,8 @@
 												</td>
 												<td>{{$Invoice->invoice_date}}</td>
                                                 <td>{{$Invoice->employee->name}}</td>
-												<td@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
+												<td>
+												@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
 													{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
 												@elseif($Invoice->invoice_type == 3)
 												{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
@@ -90,7 +91,7 @@
 												@endif
 												</td>
                                                 <td>
-													@if($Invoice->invoice_status == 1)
+											{{-- @if($Invoice->invoice_status == 1)
 												    <div class="p-1 bg-info text-white">
 													@if($Invoice->invoice_type == 2) 
 														تحت التسليم  
@@ -98,9 +99,9 @@
 												        المرتجع 
 													@else
 														تحت الاستلام 
-													@endif	
+													@endif	 --}}
 												  </div>
-													@elseif ($Invoice->invoice_status == 2)
+												   @if ($Invoice->invoice_status == 2)
 													<div class="p-1 bg-secondary text-white" >
 														 
                                                       فى توصيل    </div>
@@ -119,11 +120,6 @@
 													  </div>
 													@endif
 
-													 
-
-												
-
-													 
 												
 												</td>
 												<td>
@@ -133,7 +129,7 @@
 												</td>
 												<td>{{$Invoice->created_at->diffForHumans()}}</td>
 												 <td>
-                                                    <a href="{{route('UserInvoices.edit',$Invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
+                                                    <a href="{{route('user.invoices.edit',$Invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
 													<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#cancel{{$Invoice->id}}"><i class="fas ti-close"></i></button>
 													
                                                 </td>

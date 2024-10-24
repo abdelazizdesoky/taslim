@@ -14,25 +14,31 @@ use App\Http\Requests\Auth\adminLoginRequest;
 class AdminController extends Controller
 {
 
-    public function create()
-    {
-        
-    }
-
     
     public function store(adminLoginRequest $request)
     {
 
-      if($request->authenticate()){
+  
+    
+    if ($request->authenticate()) {
         $request->session()->regenerate();
-        return redirect()->intended(RouteServiceProvider::ADMIN);
+        
+        $admin = Auth::guard('admin')->user();
+        
+        return match ($admin->permission) {
+            1 => redirect()->intended(RouteServiceProvider::ADMIN),
+            2 => redirect()->intended(RouteServiceProvider::HOME),
+            3 => redirect()->intended(RouteServiceProvider::EMPLOYEE),
+            default => redirect()->back()
+                ->withErrors(['name' => 'Invalid permissions'])
+        };
     }
 
-    return redirect()->back()->withErrors(['name' => 'Name or Password ']);
-
-
+    return redirect()->back()
+        ->withErrors(['name' => 'Invalid credentials']);
+}
        
-    }
+  
 
   
 

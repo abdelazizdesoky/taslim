@@ -17,7 +17,7 @@
 						</div>
 						<div>
 							<label class="tx-13">عدد المنديب   </label>
-							<h5>{{\App\Models\Employee::count()}}</h5>
+							<h5></h5>
 						</div>
 					</div>
 				</div>
@@ -142,7 +142,7 @@
 						<div class="product-timeline card-body pt-2 mt-1">
 							<ul class="timeline-1 mb-0">
 
-								@foreach(\App\Models\Employee::latest()->take(3)->get()  as $employee)
+								{{-- @foreach(\App\Models\Employee::latest()->take(3)->get()  as $employee)
 
 							<li class="mt-0 mb-0"> <i class="icon-note icons bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">{{$employee->code}}-{{$employee->name}}</span> <a href="#" class="float-left  tx-11 text-muted"></a>
 									<p class="mb-0 text-muted tx-12">عدد الاذون 
@@ -150,7 +150,7 @@
 										<hr></p>
 								</li>
 
-                            @endforeach
+                            @endforeach --}}
 
 							</ul>
 						</div>

@@ -29,7 +29,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="mb-4 main-content-label">تعديل الاذن   </div>
-                <form action="{{route('UserInvoices.update',$Invoices->id)}}" method="post">
+                <form action="{{route('user.invoices.update',$Invoices->id)}}" method="post">
                     @method('PUT')
                     @csrf
                     <input type="hidden" name="id" value="{{$Invoices->id}}">
