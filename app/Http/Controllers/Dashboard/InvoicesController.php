@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Product;
 
 class InvoicesController extends Controller
@@ -21,7 +22,7 @@ class InvoicesController extends Controller
     //-------------------------------------------------------------------------------------------------------
 public function index()
 {
-    $Invoices = Invoice::with(['supplier', 'customer', 'employee', 'location', 'serialNumbers'])
+    $Invoices = Invoice::with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
     ->orderBy('invoice_date', 'desc')
     ->get();
 
@@ -50,55 +51,21 @@ public function create()
         })
     );
 
-    $employees = Employee::where('status', 1)->get();
+    $admins = Admin::whereIn('permission', [3,4])->get();
     $locations = Location::all();
 
-    return view('Dashboard.Admin.Invoices.create', compact('contacts', 'employees', 'locations','customers','suppliers'));
+    return view('Dashboard.Admin.Invoices.create', compact('contacts', 'admins', 'locations','customers','suppliers'));
 }
 
 
-//-------------------------------------------------------------------------------------------------------
-public function show($id)
-{
-    
-    $invoice = Invoice::findOrFail($id);
 
-    $serials = SerialNumber::where('invoice_id', $id)->get();
-
-                // احصل على السيريالات وقم بتجميعها حسب المنتج
-        $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
-            $serialPrefix = substr($serial->serial_number, 0, 7);
-            $productCode = Product::where('product_code', $serialPrefix)->first();
-            return $productCode ? $productCode->product->id : null;
-        });
-
-        // حساب عدد السيريالات لكل منتج
-        $productSerialCounts = [];
-        foreach ($serialsGroupedByProduct as $productId => $groupedSerials) {
-            if ($productId) {
-                $product = Product::find($productId);
-                $productSerialCounts[] = [
-                    'product_name' =>$product->productType->type_name ." ".$product->productType->brand->brand_name." ". $product->product_name,
-                    'serial_count' => $groupedSerials->count()
-                ];
-            }
-        }
-
- 
-
-
-    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'serials','productSerialCounts'));
-}
-
-
-//-------------------------------------------------------------------------------------------------------
 public function store(request $request)
 {
     $request->validate([
         'code' => 'required|unique:invoices,code',
         'invoice_date' => 'required',
         'invoice_type' => 'required',
-        'employee_id' => 'required|exists:employees,id',
+        'employee_id' => 'required|exists:admins,id',
     ]);
 
     DB::beginTransaction();
@@ -147,7 +114,7 @@ public function store(request $request)
         DB::commit();
 
         session()->flash('add');
-        return redirect()->route('Invoices.index');
+        return redirect()->route('admin.invoices.index');
 
     } catch (\Exception $e) {
         DB::rollback();
@@ -163,7 +130,7 @@ public function edit($id)
     $Invoices = Invoice::findorfail($id);
     $suppliers = Supplier::where('status', 1)->get();
     $customers = Customers::where('status', 1)->get();
-    $employees = Employee::where('status', 1)->get();
+    $admins = Admin::whereIn('permission', [3,4])->get();
     $locations = Location::all();
 
     // دمج العملاء والموردين في قائمة واحدة
@@ -183,7 +150,7 @@ public function edit($id)
         })
     );
 
-    return view('Dashboard.Admin.Invoices.edit', compact('Invoices', 'suppliers', 'customers', 'employees', 'locations', 'contacts'));
+    return view('Dashboard.Admin.Invoices.edit', compact('Invoices', 'suppliers', 'customers', 'admins', 'locations', 'contacts'));
 }
 
 public function update(Request $request, $id)
@@ -194,7 +161,7 @@ public function update(Request $request, $id)
     $validatedData = $request->validate([
         'invoice_date' => 'required',
         'invoice_type' => 'required|in:1,2,3',
-        'employee_id' => 'required|exists:employees,id',
+        'employee_id' => 'required|exists:admins,id',
         'invoice_status' => 'required',
         'location_id' => 'required',
     
@@ -261,8 +228,8 @@ public function update(Request $request, $id)
         // تحديث بيانات الفاتورة
         $invoice->update($updateData);
 
-        session()->flash('add');
-        return redirect()->route('Invoices.index');
+        session()->flash('edit');
+        return redirect()->route('admin.invoices.index');
     } catch (\Exception $e) {
         return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
@@ -282,7 +249,7 @@ public function cancel(Request $request)
         $invoice->save();
 
         session()->flash('edit');
-        return redirect()->route('Invoices.index');
+        return redirect()->route('admin.invoices.index');
 
     }
     catch (\Exception $e) 
@@ -299,4 +266,42 @@ public function destroy(request $request)
     session()->flash('delete');
     return redirect()->back();
 }
+
+
+
+//-------------------------------------------------------------------------------------------------------
+public function show($id)
+{
+    
+    $invoice = Invoice::findOrFail($id);
+
+    $serials = SerialNumber::where('invoice_id', $id)->get();
+
+                // احصل على السيريالات وقم بتجميعها حسب المنتج
+        $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
+            $serialPrefix = substr($serial->serial_number, 0, 7);
+            $productCode = Product::where('product_code', $serialPrefix)->first();
+            return $productCode ? $productCode->product->id : null;
+        });
+
+        // حساب عدد السيريالات لكل منتج
+        $productSerialCounts = [];
+        foreach ($serialsGroupedByProduct as $productId => $groupedSerials) {
+            if ($productId) {
+                $product = Product::find($productId);
+                $productSerialCounts[] = [
+                    'product_name' =>$product->productType->type_name ." ".$product->productType->brand->brand_name." ". $product->product_name,
+                    'serial_count' => $groupedSerials->count()
+                ];
+            }
+        }
+
+ 
+
+
+    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'serials','productSerialCounts'));
+}
+
+
+//-------------------------------------------------------------------------------------------------------
 }

@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('brands.store') }}" method="post" autocomplete="off">
+            <form action="{{ route('admin.brands.store') }}" method="post" autocomplete="off">
                 @csrf
                 <div class="modal-body">
                     <label for="exampleInputPassword1">اسم الماركة</label>

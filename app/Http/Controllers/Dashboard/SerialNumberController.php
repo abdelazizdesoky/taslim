@@ -11,6 +11,12 @@ class SerialNumberController extends Controller
 {
 
 
+    public function  index(){
+
+     return view('Dashboard.Admin.Serial.index');
+    }
+
+    
     public function searchInvoices(Request $request)
     {
         $query = $request->input('query');

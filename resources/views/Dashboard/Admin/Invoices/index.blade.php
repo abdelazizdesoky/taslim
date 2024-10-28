@@ -11,7 +11,7 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">الاذون </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ كل موردين</span>
+							<h4 class="content-title mb-0 my-auto">الاذون </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ كل الاذون</span>
 						</div>
 					</div>
 				</div>
@@ -26,7 +26,7 @@
 						<div class="card mg-b-20">
 							<div class="card-header pb-0">
 								<div class="d-flex justify-content-between">
-									<a href="{{route('Invoices.create')}}" class="btn btn-primary">اضافة اذن  جديد</a>
+									<a href="{{route('admin.invoices.create')}}" class="btn btn-primary">اضافة اذن  جديد</a>
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 
 									
@@ -63,7 +63,7 @@
                                         @foreach($Invoices as $Invoice)
 											<tr>
                                                 <td>{{$loop->iteration}}</td>
-												<td><a href="{{route('Invoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
+												<td><a href="{{route('admin.invoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
 												<td>
 													@switch($Invoice->invoice_type)
 													@case(1)
@@ -85,7 +85,7 @@
 													
 												</td>
 												<td>{{$Invoice->invoice_date}}</td>
-                                                <td>{{$Invoice->employee->name}}</td>
+                                                <td>{{$Invoice->Admin->name}}</td>
 												<td>
 													@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
 														{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
@@ -147,7 +147,7 @@
 												</td>
 												<td>{{$Invoice->created_at->diffForHumans()}}</td>
 												 <td>
-                                                    <a href="{{route('Invoices.edit',$Invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
+                                                    <a href="{{route('admin.invoices.edit',$Invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
                                                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$Invoice->id}}"><i class="fas fa-trash"></i></button>
 													<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#cancel{{$Invoice->id}}"><i class="fas ti-close"></i></button>
 													

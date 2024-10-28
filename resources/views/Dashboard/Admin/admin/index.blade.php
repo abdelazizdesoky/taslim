@@ -37,6 +37,8 @@
 												<th>#</th>
 												<th > ايميل   </th>
 												<th > اسم  </th>
+												<th > صلاحية   </th>
+												<th > الحالة   </th>
 												<th > انشئ منذ  </th>
 												<th > ألاجراءات  </th>
 											</tr>
@@ -47,7 +49,35 @@
                                                 <td>{{$loop->iteration}}</td>
 												<td>{{$admin->email}}</td>
 												<td>{{$admin->name}}</td>
-													<td></td>
+												<td>
+													@switch($admin->permission)
+													@case(1)
+													ادمن
+													@break
+
+													@case(2)
+													منسق
+													@break
+
+													@case(3)
+											        مندوب   
+													@break
+
+													@case(4)
+													امين مخزن   
+													   @break
+
+													@default
+													 غير محدد
+													@endswitch
+																
+												</td>
+												<td>
+													<div
+														class="dot-label bg-{{$admin->status == 1 ? 'success':'danger'}} ml-1"></div>
+													{{$admin->status == 1 ? 'مفعل' : ' غير مغعل '}}
+												</td>
+													<td>{{$admin->created_at?$admin->created_at->diffForHumans(): '-'}}</td>
 													<td>
 													<div class="dropdown">
 														<button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-outline-primary btn-sm" data-toggle="dropdown" type="button">الاجراءات<i class="fas fa-caret-down mr-1"></i></button>

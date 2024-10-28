@@ -25,7 +25,7 @@
           <div class="card">
                <div class="card-body">
 
-								<form action="{{ route('serial.invoices.search') }}" method="POST">
+								<form action="{{ route('admin.invoices.search') }}" method="POST">
 									@csrf
 									<div class="input-group mb-2">
 										<input type="text" class="form-control" name="query" placeholder="أدخل السيريال" autocomplete="off">

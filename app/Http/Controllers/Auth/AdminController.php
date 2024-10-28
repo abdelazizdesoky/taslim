@@ -6,8 +6,6 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
 use App\Http\Requests\Auth\adminLoginRequest;
 
@@ -25,9 +23,11 @@ class AdminController extends Controller
         $admin = Auth::guard('admin')->user();
         
         return match ($admin->permission) {
+            
             1 => redirect()->intended(RouteServiceProvider::ADMIN),
             2 => redirect()->intended(RouteServiceProvider::HOME),
-            3 => redirect()->intended(RouteServiceProvider::EMPLOYEE),
+            3, 4=> redirect()->intended(RouteServiceProvider::EMPLOYEE),
+
             default => redirect()->back()
                 ->withErrors(['name' => 'Invalid permissions'])
         };

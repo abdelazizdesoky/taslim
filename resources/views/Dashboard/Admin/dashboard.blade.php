@@ -17,7 +17,7 @@
 						</div>
 						<div>
 							<label class="tx-13">عدد المنديب   </label>
-							<h5></h5>
+							<h5>{{\App\Models\Admin::whereIn('permission', [3,4])->count()}}</h5>
 						</div>
 					</div>
 				</div>
@@ -112,7 +112,7 @@
 									@foreach(\App\Models\Invoice::latest()->take(5)->get()  as $invoice)
 										<tr>
 										<td>{{$invoice->invoice_date}}</td>
-										<td class="tx-right tx-medium tx-inverse"> <a href="{{route('Invoices.show',$invoice->id)}}">{{$invoice->code}}</a></td>
+										<td class="tx-right tx-medium tx-inverse"> <a href="{{route('admin.invoices.show',$invoice->id)}}">{{$invoice->code}}</a></td>
 										<td class="tx-right tx-medium tx-inverse">		
 												@if($invoice->invoice_type == 2) 
 												{{ $invoice->customer->name ??'-' }} 
@@ -142,16 +142,13 @@
 						<div class="product-timeline card-body pt-2 mt-1">
 							<ul class="timeline-1 mb-0">
 
-								{{-- @foreach(\App\Models\Employee::latest()->take(3)->get()  as $employee)
+								 @foreach(\App\Models\admin::whereIn('permission', [3,4])->take(3)->get()  as $employee)
 
-							<li class="mt-0 mb-0"> <i class="icon-note icons bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">{{$employee->code}}-{{$employee->name}}</span> <a href="#" class="float-left  tx-11 text-muted"></a>
+							 <li class="mt-0 mb-0"> <i class="icon-note icons bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">- {{$employee->name}}</span> <a href="#" class="float-left  tx-11 text-muted"></a>
 									<p class="mb-0 text-muted tx-12">عدد الاذون 
-										{{\App\Models\Invoice::where('employee_id', $employee->id )->count()}} 
-										<hr></p>
+										 <p></p>{{\App\Models\Invoice::where('employee_id', $employee->id )->count()}} </p> 
 								</li>
-
-                            @endforeach --}}
-
+                           @endforeach 
 							</ul>
 						</div>
 					</div>
@@ -175,7 +172,7 @@
                 $products = $serials->groupBy(function ($serial) {
                     // استخراج أول 6 أرقام من السيريال
                     $serialPrefix = substr($serial->serial_number, 0, 6);
-                    $productCode = \App\Models\ProductCode::where('product_code', $serialPrefix)->first();
+                    $productCode = \App\Models\Product::where('product_code', $serialPrefix)->first();
                     return $productCode && $productCode->product ? $productCode->product : null;
                 })->filter();
 

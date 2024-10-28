@@ -31,6 +31,7 @@
 											<a href="{{route('employee.invoices.show',1)}}">
 											<button type="button" class="btn btn-warning   ml-2"><i class="mdi mdi-refresh"></i>الاذون استلام </button>
 											</a>
+										</div>
 										@endif
 									
 									@endif
@@ -42,8 +43,8 @@
 											<button type="button" class="btn btn-danger  ml-2"><i class="mdi mdi-star"></i>الاذون مكتملة</button>
 										</a>
 										</div>
-									
 									</div>
+									
 								</div>
 								<!-- /breadcrumb -->
 				

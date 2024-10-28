@@ -9,13 +9,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('admin.admins.destroy','test')}}" method="post">
+                <form action="{{route('admin.admins.delete','test')}}" method="post">
                     @method('DELETE')
                     @csrf
                     <input type="hidden" name="id" value="{{$admin->id}}">
                     <div class="row">
                         <div class="col">
-                            <p class="h5 text-danger"> هل انت متاكد من حذف بيانات منسق ؟ </p>
+                            <p class="h5 text-danger"> هل انت متاكد من حذف بيانات  ؟ </p>
                             <input type="text" class="form-control" readonly value="{{$admin->name}}">
                         </div>
                     </div>

@@ -27,7 +27,7 @@
     <div class="col-lg-8">
         <div class="card ">
             <div class="card-body">
-                <form class="form-horizontal" action="{{route('products.store')}}" method="post" autocomplete="off">
+                <form class="form-horizontal" action="{{route('admin.products.store')}}" method="post" autocomplete="off">
                     @csrf
              <!--------------------------------------------------------------->   
 
@@ -122,32 +122,40 @@
 @section('js')
 
 <script>
-  function updateProductTypes() {
-    var brandSelect = document.getElementById('brand-select');
-    var productTypeSelect = document.getElementById('product-type-select');
+    function updateProductTypes() {
+      var brandSelect = document.getElementById('brand-select');
+      var productTypeSelect = document.getElementById('product-type-select');
+  
+   
+      var selectedBrandId = brandSelect.value;
+  
+     
+      if (!selectedBrandId) {
+        productTypeSelect.selectedIndex = 0; 
+        return; 
+      }
+  
+      for (var i = 0; i < productTypeSelect.options.length; i++) {
+          var option = productTypeSelect.options[i];
+          var brandId = option.getAttribute('data-brand-id'); 
+  
+     
+          if (brandId == selectedBrandId) {
+              option.style.display = ''; 
+          } else {
+              option.style.display = 'none';
+          }
+      }
+  
+      productTypeSelect.selectedIndex = 0;
+  }
 
-    // احصل على الماركة المختارة
-    var selectedBrandId = brandSelect.value;
 
-    // مر على جميع خيارات أنواع المنتجات
-    var productTypeOptions = productTypeSelect.options;
 
-    for (var i = 0; i < productTypeOptions.length; i++) {
-        var option = productTypeOptions[i];
 
-        // تحقق إذا كانت الماركة المختارة تتوافق مع الـ data-brand-id
-        if (option.getAttribute('data-brand-id') == selectedBrandId) {
-            option.style.display = ''; // إظهار النوع إذا كانت الماركة مطابقة
-        } else {
-            option.style.display = 'none'; // إخفاء النوع إذا لم تكن الماركة مطابقة
-        }
-    }
-
-    // إعادة التحديد بعد التحديث
-    productTypeSelect.selectedIndex = 0;
-}
-
-</script>
+  </script>
+  
+  
 
 
     <script src="{{URL::asset('dashboard/plugins/notify/js/notifIt.js')}}"></script>

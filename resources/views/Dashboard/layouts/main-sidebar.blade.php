@@ -16,7 +16,9 @@
         @include('Dashboard.layouts.main-sidebar.admin-sidebar-main')
     @elseif($permission == 2)
         @include('Dashboard.layouts.main-sidebar.user-sidebar-main')
-    @elseif($permission == 3)
+    @elseif($permission == 3 )
+        @include('Dashboard.layouts.main-sidebar.employee-sidebar-main')
+    @elseif($permission == 4 )
         @include('Dashboard.layouts.main-sidebar.employee-sidebar-main')
     @endif
 

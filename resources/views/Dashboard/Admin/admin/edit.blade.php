@@ -35,7 +35,7 @@
                         <div class="row row-xs align-items-center mg-b-20">
                             <div class="col-md-1">
                                 <label for="exampleInputEmail1">
-                                    اسم ادمن</label>
+                                    اسم </label>
                             </div>
                             <div class="col-md-11 mg-t-5 mg-md-t-0">
                                 <input class="form-control" name="name" type="text" value="{{$admin->name}}" autofocus>
@@ -45,25 +45,57 @@
                         <div class="row row-xs align-items-center mg-b-20">
                             <div class="col-md-1">
                                 <label for="exampleInputEmail1">
-                                   ايميل  ادمن</label>
+                                   ايميل  </label>
                             </div>
                             <div class="col-md-11 mg-t-5 mg-md-t-0">
-                                <input class="form-control" name="email" value="{{$admin->email}}"  type="email">
+                                <input class="form-control" name="email" value="{{$admin->email}}"  type="email" @disabled(true)>
                             </div>
                         </div>
                         <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-1">
+                                <label for="exampleInputEmail1">
+                                    صلاحية  </label>
+                            </div>
+                            <div class="col-md-11 mg-t-5 mg-md-t-0">
+                            <select class="form-control" name="permission"  required>
+                                <option value="1" {{ $admin->permission == 1 ? 'selected' : '' }}>ادمن</option>
+                                <option value="2" {{ $admin->permission == 2 ? 'selected' : '' }}>منسق</option>
+                                <option value="3" {{ $admin->permission == 3 ? 'selected' : '' }}> مندوب</option>
+                           <option value="4" {{ $admin->permission == 4 ? 'selected' : '' }}> امين مخزن</option>
+                               
+                            </select>
+                        </div>
+                        </div>
+
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-1">
+                                <label for="exampleInputEmail1">
+                                    الحالة   </label>
+                            </div>
+                            <div class="col-md-11 mg-t-5 mg-md-t-0">
+                            <select class="form-control" name="status"  required>
+                                <option value="1" {{ $admin->status == 1 ? 'selected' : '' }}>مفعل</option>
+                                <option value="2" {{ $admin->status == 2 ? 'selected' : '' }}>غير مفعل </option>
+                            </select>
                        
+                        </div>
+                    </div>
+                    <div class="col-md-11 mg-t-5 mg-md-t-0">
+                   
+                    <button   class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">  <a   data-toggle="modal" data-target="#update_password{{$admin->id}}"><i   class="text-primary ti-key"></i>&nbsp;&nbsp;تغير كلمة المرور</a> </button>
                     </div>
                         </div>
                         </div>
+
+
+                        @include('Dashboard.Admin.admin.update_password')
 
                           <div>
                                <button type="submit"  class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">تعديل </button>
                     </div>
                     <br>
                 </form>
-                @include('Dashboard.Admin.admin.Deleted')
-                @include('Dashboard.Admin.admin.update_password')
+            
                             
                     </div>
                 </div>

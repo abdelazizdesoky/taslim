@@ -35,7 +35,7 @@ class SupplierController extends Controller
 
 
       session()->flash('add');
-      return redirect()->route('supplier.index');
+      return redirect()->route('admin.supplier.index');
 
         }
 
@@ -61,7 +61,7 @@ class SupplierController extends Controller
         $Supplier->save();
 
         session()->flash('edit');
-        return redirect()->route('supplier.index');
+        return redirect()->route('admin.supplier.index');
     }
 
 

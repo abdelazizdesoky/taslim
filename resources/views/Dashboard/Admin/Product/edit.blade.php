@@ -24,7 +24,7 @@
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body">
-                <form class="form-horizontal" action="{{ route('products.update', $product->id) }}" method="post" autocomplete="off">
+                <form class="form-horizontal" action="{{ route('admin.products.update', $product->id) }}" method="post" autocomplete="off">
                     @csrf
                     @method('PUT') <!-- يستخدم مع التحديث لتحديد نوع الطلب PUT -->
                     

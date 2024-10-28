@@ -17,6 +17,7 @@ class AdminController extends Controller
         return view('Dashboard.Admin.admin.index',compact('admins'));
     }
 
+
     public function create()
     {
         return view('Dashboard.Admin.admin.create');
@@ -26,22 +27,36 @@ class AdminController extends Controller
 
     public function store(request $request){
 
-  
+     // إضافة التحقق على المدخلات
+     $request->validate([
+        'email' => 'required|email|unique:admins,email',
+        'password' => 'required|min:8',
+        'name' => 'required|string|max:255',
+        'permission' => 'required|in:1,2,3,4',
+    ], [
+        'email.required' => 'البريد الإلكتروني مطلوب.',
+        'email.email' => 'يجب أن يكون البريد الإلكتروني صالحًا.',
+        'email.unique' => 'البريد الإلكتروني مسجل بالفعل.',
+        'password.required' => 'كلمة المرور مطلوبة.',
+        'password.min' => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
+        'name.required' => 'الاسم مطلوب.',
+        'permission.required' => 'الرجاء تحديد نوع الصلاحية.',
+        'permission.in' => 'نوع الصلاحية غير صالح.',
+    ]);
 
         try {
 
-            $employees = new Admin();
-            $employees->email = $request->email;
-            $employees->password = Hash::make($request->password);
-            $employees->name = $request->name;
-            $employees->permission = $request->permission;//--1 admin 2- user  3- deliver 4-store
-            $employees->phone = $request->phone;
-            $employees->status = 1;
-            $employees->save();
+            $admin = new Admin();
+            $admin->email = $request->email;
+            $admin->password = Hash::make($request->password);
+            $admin->name = $request->name;
+            $admin->permission = $request->permission;//--1 admin 2- user  3- deliver 4-store
+            $admin->status = 1;
+            $admin->save();
 
            
             session()->flash('add');
-            return redirect()->route('employee.index');
+            return redirect()->route('admin.admins.index');
 
         }
         catch (\Exception $e) {
@@ -52,34 +67,9 @@ class AdminController extends Controller
 
     }
 
-    public function update(request $request)
-    {
-       
-        try {
 
-            $employee = Admin::findorfail($request->id);
-            $employee->email = $request->email;
-            $employee->name = $request->name;
-            $employee->type = $request->type;
-            $employee->phone = $request->phone;
-            $employee->status = $request->status;
-            $employee->save();
 
-           
-            session()->flash('edit');
-            return redirect()->route('employee.index');
-
-        }
-        catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-        }
-
-    }
-
-   
     
-
-
     public function edit($id)
     {
        
@@ -88,38 +78,64 @@ class AdminController extends Controller
     }
 
 
-   
 
-
-
-    public function update_status(request $request)
+    public function update(request $request)
     {
+        $request->validate([
+           
+            'email' => 'required|email|unique:admins,email,' . $request->id,
+            'name' => 'required|string|max:255',
+            'permission' => 'required|in:1,2,3,4',
+            'status' => 'required|boolean',
+        ], [
+          
+            'email.required' => 'البريد الإلكتروني مطلوب.',
+            'email.email' => 'يجب أن يكون البريد الإلكتروني صالحًا.',
+            'email.unique' => 'البريد الإلكتروني مسجل بالفعل.',
+            'name.required' => 'الاسم مطلوب.',
+            'permission.required' => 'الرجاء تحديد نوع الصلاحية.',
+            'permission.in' => 'نوع الصلاحية غير صالح.',
+            'status.required' => 'الحالة مطلوبة.',
+            'status.boolean' => 'يجب أن تكون الحالة صحيحة أو خاطئة فقط.',
+        ]);
+      
+    
        
-   
-     try {
+        try {
 
-            $Employee = Admin::findorfail($request->id);
-            $Employee->update([
-                'status'=>$request->status
-            ]);
+            $admin = Admin::findorfail($request->id);
+            $admin->email = $request->email;
+            $admin->name = $request->name;
+            $admin->permission = $request->permission;
+            $admin->status = $request->status;
+            $admin->save();
 
+           
             session()->flash('edit');
-            return redirect()->back();
-        }
+            return redirect()->route('admin.admins.index');
 
+        }
         catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
+
     }
-
-
- 
-
 
 
     
     public function update_password (request $request)
     {
+
+
+        $request->validate([
+           
+          'password' => 'required|min:8',
+        ], [
+          
+            'password.required' => 'كلمة المرور مطلوبة.',
+            'password.min' => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
+        ]);
+        
         try {
             $admin = Admin::findorfail($request->id);
             $admin->update([

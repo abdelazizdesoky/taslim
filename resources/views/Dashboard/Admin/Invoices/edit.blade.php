@@ -30,7 +30,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="mb-4 main-content-label">تعديل الاذن   </div>
-                <form action="{{route('Invoices.update',$Invoices->id)}}" method="post">
+                <form action="{{route('admin.invoices.update',$Invoices->id)}}" method="post">
                     @method('PUT')
                     @csrf
                     <input type="hidden" name="id" value="{{$Invoices->id}}">
@@ -120,8 +120,8 @@
                             </div>
                             <div class="col-md-9">
                                 <select class="form-control select2" name="employee_id">
-                                    @foreach($employees as $employee)
-                                        <option value="{{ $employee->id }}" {{ $Invoices->employee_id == $employee->id ? 'selected' : '' }}>{{ $employee->name }}</option>
+                                    @foreach($admins as $admin)
+                                        <option value="{{ $admin->id }}" {{ $Invoices->employee_id == $admin->id ? 'selected' : '' }}>{{ $admin->name }}-{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
                                     @endforeach
                                 </select>
                           
@@ -149,6 +149,7 @@
                             <option value="1" {{ $Invoices->invoice_status == 1 ? 'selected' : '' }}>تحت تسليم </option>
                             <option value="3" {{ $Invoices->invoice_status == 3 ? 'selected' : '' }}>مكتملة </option>
                             <option value="4" {{ $Invoices->invoice_status == 4 ? 'selected' : '' }}>مرتجع </option>
+                            <option value="4" {{ $Invoices->invoice_status == 5 ? 'selected' : '' }}>ملغى  </option>
                         </select>
                     </div>
          

@@ -35,7 +35,7 @@
 							<div class="card-body">
 								<div class="mb-4 main-content-label"> الاذن</div>
 
-                                    <form class="form-horizontal" action="{{route('Invoices.store')}}" method="post" autocomplete="off">
+                                    <form class="form-horizontal" action="{{route('admin.invoices.store')}}" method="post" autocomplete="off">
                                         @csrf
                                     <div class="form-group ">
 										<div class="row">
@@ -116,14 +116,6 @@
                                     <!------------------------------------------------------------>
 
 
-
-
-
-
-
-                                   
-                              
-
                                     
                                     <div class="form-group ">
 										<div class="row">
@@ -132,8 +124,8 @@
 											</div>
 											<div class="col-md-9">
 												<select class="form-control select2" name="employee_id" >
-                                                    @foreach($employees as $employee)
-                                                   <option value="{{$employee->id}}">{{$employee->name}} - {{$employee->type == 2 ? 'امين مخزن':'مندوب تسليم '}}</option>
+                                                    @foreach($admins as $admin)
+                                                   <option value="{{$admin->id}}">{{$admin->name}} -{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
                                                     @endforeach
 												</select>
 											</div>

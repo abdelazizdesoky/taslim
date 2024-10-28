@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Employee;
+
+use App\Models\Admin;
 use App\Models\Location;
 use App\Models\Supplier;
 use App\Models\Customers;
@@ -28,9 +29,9 @@ class Invoice extends Model
     }
 
     
-    public function employee()
+    public function admin()
     {
-        return $this->belongsTo(Employee::class,'employee_id');
+        return $this->belongsTo(Admin::class,'employee_id');
     }
 
     public function location()

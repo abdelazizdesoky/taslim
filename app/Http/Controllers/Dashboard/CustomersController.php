@@ -35,7 +35,7 @@ class CustomersController extends Controller
 
 
       session()->flash('add');
-      return redirect()->route('customers.index');
+      return redirect()->route('admin.customers.index');
 
         }
 
@@ -61,7 +61,7 @@ class CustomersController extends Controller
         $customers->save();
 
         session()->flash('edit');
-        return redirect()->route('customers.index');
+        return redirect()->route('admin.customers.index');
     }
 
 

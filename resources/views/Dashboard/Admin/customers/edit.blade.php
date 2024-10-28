@@ -24,7 +24,7 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <form action="{{route('customers.update','test')}}" method="post">
+                <form action="{{route('admin.customers.update','test')}}" method="post">
                     @method('PUT')
                     @csrf
                     <input type="hidden" name="id" value="{{$customer->id}}">

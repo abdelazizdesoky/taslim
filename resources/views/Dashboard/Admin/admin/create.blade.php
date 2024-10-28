@@ -9,7 +9,7 @@
 
 
 @section('title')
-   اضافة يوزر 
+   اضافة مستخدم 
 @stop
 @endsection
 @section('page-header')
@@ -17,7 +17,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto"> أضافة  يوزر </h4><span
+                <h4 class="content-title mb-0 my-auto"> أضافة  مستخدم </h4><span
                     class="text-muted mt-1 tx-13 mr-2 mb-0">/
              اضافة</span>
             </div>
@@ -34,14 +34,14 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
+                    <form action="{{ route('admin.admins.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="pd-30 pd-sm-40 bg-gray-200">
 
                             <div class="row row-xs align-items-center mg-b-20">
                                 <div class="col-md-1">
                                     <label for="exampleInputEmail1">
-                                        اسم </label>
+                                        الاسم </label>
                                 </div>
                                 <div class="col-md-11 mg-t-5 mg-md-t-0">
                                     <input class="form-control" name="name" type="text" autofocus>
@@ -51,7 +51,7 @@
                             <div class="row row-xs align-items-center mg-b-20">
                                 <div class="col-md-1">
                                     <label for="exampleInputEmail1">
-                                       ميل  </label>
+                                       الايميل   </label>
                                 </div>
                                 <div class="col-md-11 mg-t-5 mg-md-t-0">
                                     <input class="form-control" name="email" type="email">
@@ -76,6 +76,22 @@
                                 <div class="col-md-11 mg-t-5 mg-md-t-0">
                                     <input class="form-control"  type="password" name="password_confirmation" required autocomplete="new-password" >
                                 </div>
+                            </div>
+
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-1">
+                                    <label for="exampleInputEmail1">
+                                        صلاحية  </label>
+                                </div>
+                                <div class="col-md-11 mg-t-5 mg-md-t-0">
+                                <select class="form-control" name="permission"  required>
+                                    <option value="" selected disabled>------</option>
+                                    <option value="1">ادمن </option>
+                                    <option value="2">منسق </option>
+                                    <option value="3"> مندوب </option> 
+                                    <option value="4"> امين مخزن </option>
+                                </select>
+                           
                             </div>
 
 

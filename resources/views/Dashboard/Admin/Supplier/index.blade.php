@@ -22,7 +22,7 @@
 						<div class="card mg-b-20">
 							<div class="card-header pb-0">
 								<div class="d-flex justify-content-between">
-									<a href="{{route('supplier.create')}}" class="btn btn-primary">اضافة مورد  جديد</a>
+									<a href="{{route('admin.supplier.create')}}" class="btn btn-primary">اضافة مورد  جديد</a>
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 								</div>
 								
@@ -57,7 +57,7 @@
 													{{$Supplier->status == 1 ? 'مفعلة':'غير مفعلة'}}</td>
                                                
                                                 <td>
-                                                    <a href="{{route('supplier.edit',$Supplier->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
+                                                    <a href="{{route('admin.supplier.edit',$Supplier->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
                                                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$Supplier->id}}"><i class="fas fa-trash"></i></button>
                                                 </td>
 											</tr>

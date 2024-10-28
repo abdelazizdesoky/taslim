@@ -25,7 +25,7 @@
         <div class="card ">
             <div class="card-body">
               
-                <form class="form-horizontal" action="{{route('supplier.store')}}" method="post" autocomplete="off">
+                <form class="form-horizontal" action="{{route('admin.supplier.store')}}" method="post" autocomplete="off">
                     @csrf
                  
                         <div class="form-group ">

@@ -76,7 +76,7 @@
 												
 											
 										
-											<p class="invoice-info-row"><span>المندوب :</span> <span>{{ $invoice->employee->name ??'-' }}</span></p>
+											<p class="invoice-info-row"><span>المندوب :</span> <span>{{ $invoice->admin->name ??'-' }}</span></p>
 											<p class="invoice-info-row"><span>مجموع سيريالات المسحوبة  :</span> <span>{{$serials->count()}}</span></p>
 										</div>
 									</div>

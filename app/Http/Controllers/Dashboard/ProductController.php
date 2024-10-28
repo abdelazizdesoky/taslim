@@ -26,9 +26,9 @@ class ProductController extends Controller
          {
 
             $brands = Brand::with('productTypes')->get();
-            $products = Product::with('productType')->get();
+            $productTypes = ProductType::all();
           
-             return view('Dashboard.Admin.Product.create', compact('brands','products'));
+             return view('Dashboard.Admin.Product.create', compact('brands','productTypes'));
          }
 
 
@@ -65,7 +65,7 @@ class ProductController extends Controller
                
                 DB::commit();
                 session()->flash('add', 'تم إضافة المنتج بنجاح.');
-                return redirect()->route('products.index');
+                return redirect()->route('admin.products.index');
             } catch (\Exception $e) {
                 DB::rollback();
                 return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -104,7 +104,7 @@ class ProductController extends Controller
          
                 DB::commit();
                 session()->flash('edit');
-                return redirect()->route('products.index');
+                return redirect()->route('admin.products.index');
     
     
            }

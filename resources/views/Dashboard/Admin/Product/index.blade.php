@@ -22,7 +22,7 @@
 						<div class="card mg-b-20">
 							<div class="card-header pb-0">
 								<div class="d-flex justify-content-between">
-									<a href="{{route('products.create')}}" class="btn btn-primary">اضافة منتج  جديد</a>
+									<a href="{{route('admin.products.create')}}" class="btn btn-primary">اضافة منتج  جديد</a>
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 								</div>
 								
@@ -57,7 +57,7 @@
 												
 											
 												<td>
-													<a href="{{route('products.edit',$product->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
+													<a href="{{route('admin.products.edit',$product->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
 													<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$product->id}}"><i class="fas fa-trash"></i></button>
 
 												</td>

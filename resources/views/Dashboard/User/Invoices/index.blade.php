@@ -1,13 +1,17 @@
+
 @extends('Dashboard.layouts.master')
 @section('css')
     <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
+@endsection
+@section('title')
+الاذون | تسليماتى 
 @endsection
 @section('page-header')
 				<!-- breadcrumb -->
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">الاذون </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ كل الاذون</span>
+							<h4 class="content-title mb-0 my-auto">الاذون </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ كل الاذون </span>
 						</div>
 					</div>
 				</div>
@@ -61,66 +65,80 @@
                                                 <td>{{$loop->iteration}}</td>
 												<td><a href="{{route('user.invoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
 												<td>
-													@if($Invoice->invoice_type == 2) 
-													تسليم 
-												@elseif($Invoice->invoice_type == 3)
-												   مرتجع
-												@else
+													@switch($Invoice->invoice_type)
+													@case(1)
 													استلام
-												@endif
+													@break
 
+													@case(2)
+													تسليم
+													@break
+
+													@case(3)
+											    مرتجعات عامه   
+													@break
+
+													@default
+													غير معرف
+													@endswitch
+																								
+													
 												</td>
 												<td>{{$Invoice->invoice_date}}</td>
-                                                <td>{{$Invoice->employee->name}}</td>
+                                                <td>{{$Invoice->Admin->name}}</td>
 												<td>
-												@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
+													@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
+														{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
+													@elseif ($Invoice->invoice_type == 3)
 													{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
-												@elseif($Invoice->invoice_type == 3)
-												{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
-												@else
-													{{ '-' }} <!-- إذا لم يكن العميل متاحاً -->
-												@endif
-											</td>
-											<td>
-												@if($Invoice->invoice_type == 1) <!-- إذا كان نوع الفاتورة استلام -->
-													{{ $Invoice->supplier->name ??'-'}} <!-- اسم المورد -->
-												@elseif($Invoice->invoice_type == 3)
-												{{ $Invoice->supplier->name ??'-' }} <!-- اسم العميل -->
-												@else
-													{{ '-' }} <!-- إذا لم يكن المورد متاحاً -->
-												@endif
+													@else
+														{{ '-' }} <!-- إذا لم يكن العميل متاحاً -->
+													@endif
+												</td>
+												<td>
+													@if($Invoice->invoice_type == 1) <!-- إذا كان نوع الفاتورة استلام -->
+														{{ $Invoice->supplier->name ??'-'}} <!-- اسم المورد -->
+														@elseif ($Invoice->invoice_type == 3)
+														{{ $Invoice->supplier->name ??'-' }} <!-- اسم العميل -->
+													@else
+														{{ '-' }} <!-- إذا لم يكن المورد متاحاً -->
+													@endif
 												</td>
                                                 <td>
-											{{-- @if($Invoice->invoice_status == 1)
-												    <div class="p-1 bg-info text-white">
-													@if($Invoice->invoice_type == 2) 
-														تحت التسليم  
-													@elseif($Invoice->invoice_type == 3)
-												        المرتجع 
-													@else
-														تحت الاستلام 
-													@endif	 --}}
-												  </div>
-												   @if ($Invoice->invoice_status == 2)
-													<div class="p-1 bg-secondary text-white" >
+													@if($Invoice->invoice_status == 1  )
+												  
+														@if($Invoice->invoice_type == 1) 
+
+														<div class="p-1 bg-info text-white">	تحت الاستلام  </div>
+
+														@elseif ($Invoice->invoice_type == 3)
+
+														<div class="p-1 bg-secondary text-white">تحت ارجاع  </div>
+													     @else
+
+														 <div class="p-1 bg-info text-white">تحت تسليم  </div>
+
+													@endif
+												
+													@elseif ($Invoice->invoice_status == 3)
+													<div class="p-1 bg-success text-white" >
 														 
-                                                      فى توصيل    </div>
+														مكتمل   </div>
 												    @elseif ($Invoice->invoice_status == 4)
-													<div class="p-1 bg-secondary text-white" >
+													<div class="p-1 bg-warning text-white" >
 														   
 														 مرتجع    </div>
-														 
 												   @elseif ($Invoice->invoice_status == 5)
 												   <div class="p-1 bg-danger text-white" >
                                                          ملغى	 </div>
 													@else
 
-													<div class="p-1 bg-success text-white" ><!--invoice_status == 3--->
-														مكتمل
+													<div class="p-1 bg-success text-white" >
+														غير محدد 
 													  </div>
 													@endif
 
-												
+													
 												</td>
 												<td>
 												

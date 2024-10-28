@@ -25,11 +25,11 @@
 							@php $permission = Auth::guard('admin')->user()->permission; @endphp
 
 							@if($permission == 3)
-                            <li><a class="slide-item" href="{{route('employee.invoices.show',1)}}">تسليم الاذون  </a></li>
+                            <li><a class="slide-item" href="{{route('employee.invoices.index')}}">تسليم الاذون  </a></li>
 						
 							
 							@elseif($permission == 4)
-							<li><a class="slide-item" href="{{route('employee.invoices.index')}}">استلام الاذون  </a></li>
+							<li><a class="slide-item" href="{{route('employee.invoices.show',1)}}">استلام الاذون  </a></li>
 							@endif
 									
 							@endif

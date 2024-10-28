@@ -93,9 +93,8 @@
                     @endif
                    
 
-                        @if(auth('admin')->check())
-                                    <form method="POST" action="{{ route('logout.admin') }}">
-                                               @endif
+                     
+                        <form method="post" action="{{ route('logout.admin') }}">
                                                   @csrf
                                               <a class="dropdown-item" href="#"
                                          onclick="event.preventDefault();

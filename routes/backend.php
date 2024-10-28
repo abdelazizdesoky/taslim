@@ -39,26 +39,12 @@ Route::middleware(['auth:admin'])->group(function () {
         
         // Invoice Management
         Route::resource('invoices', InvoicesController::class);
-        Route::delete('invoices/cancel', [InvoicesController::class, 'cancel'])->name('invoices.cancel');
+        Route::post('invoices/cancel', [InvoicesController::class, 'cancel'])->name('invoices.cancel');
         
         // Location Management
         Route::resource('locations', LocationController::class);
         
-        // // Employee Management
-        // Route::resource('employees', EmployeeController::class);
-        // Route::post('employees/update-password', [EmployeeController::class, 'update_password'])->name('employees.update-password');
-        // Route::post('employees/update-status', [EmployeeController::class, 'update_status'])->name('employees.update-status');
-        
-        // User Management
-        // Route::controller(RegisteredUserController::class)->prefix('users')->name('users.')->group(function () {
-        //     Route::get('/', 'index')->name('index');
-        //     Route::get('/create', 'create')->name('create');
-        //     Route::post('/', 'store')->name('store');
-        //     Route::get('/{id}/edit', 'edit')->name('edit');
-        //     Route::put('/{id}', 'update')->name('update');
-        //     Route::delete('/{id}', 'destroy')->name('destroy');
-        //     Route::post('/update-password', 'update_password')->name('update-password');
-        // });
+     
         
         // user Management
         Route::controller(AdminController::class)->prefix('admins')->name('admins.')->group(function () {
@@ -67,7 +53,7 @@ Route::middleware(['auth:admin'])->group(function () {
             Route::post('/', 'store')->name('store');
             Route::get('/{id}/edit', 'edit')->name('edit');
             Route::put('/{id}', 'update')->name('update');
-            Route::delete('/{id}', 'destroy')->name('destroy');
+            Route::delete('/{id}', 'delete')->name('delete');
             Route::post('/update-password', 'update_password')->name('update-password');
         });
         
@@ -77,10 +63,10 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::resource('products', ProductController::class);
         
         // Serial Number Management
-        Route::controller(SerialNumberController::class)->prefix('serial')->name('serial.')->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/invoices/search', 'searchInvoices')->name('invoices.search');
-        });
+        Route::get('/',[SerialNumberController::class, 'index'])->name('serial.index');
+        Route::post('/invoices/search',[SerialNumberController::class, 'searchInvoices'])->name('invoices.search');
+
+       
         
         // Data Migration
         Route::get('/migrate-data', [DataController::class, 'migrateData'])->name('migrate-data');
@@ -100,17 +86,19 @@ Route::middleware(['auth:admin'])->group(function () {
             'update' => 'invoices.update',
             'destroy' => 'invoices.destroy',
         ]);
-        Route::delete('invoices/cancel', [UserInvoicesController::class, 'cancel'])->name('invoices.cancel');
+        Route::post('invoices/cancel', [UserInvoicesController::class, 'cancel'])->name('invoices.cancel');
     });
 
 
      /**
-     * Employee Routes (Permission Level 3)
+     * Deliver Routes (Permission Level 3)
      */
-    Route::middleware('permission:3')->prefix('employee')->name('employee.')->group(function () {
+    Route::middleware('permission:3,4')->prefix('employee')->name('employee.')->group(function () {
       Route::resource('invoices', EmployeeInvoiceController::class);
       Route::get('completed-invoices', [EmployeeInvoiceController::class, 'Compinvoice'])->name('invoices.completed');
   });
+
+  
   
 
   

@@ -91,7 +91,7 @@
                 </div>
                 
          <!--------------------------------------------------------------------------->
-                <form class="form-horizontal" action="{{route('employeeinvoice.store')}}" method="post" autocomplete="off">
+                <form class="form-horizontal" action="{{route('employee.invoices.store')}}" method="post" autocomplete="off">
                     @csrf
                     <input type="hidden" name="id" value="{{$Invoices->id}}">
                     <input type="hidden" name="serials" id="serialsHiddenInput">
