@@ -13,7 +13,10 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
 
- 
+    public function create(){
+
+        return redirect('/');
+    }
   
 
     public function destroy(Request $request): RedirectResponse

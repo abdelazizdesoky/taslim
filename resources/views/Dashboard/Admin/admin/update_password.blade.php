@@ -10,7 +10,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('admin_password') }}" method="post" autocomplete="off">
+            <form action="{{ route('admin.admins.update-password') }}" method="post" autocomplete="off">
                 {{ csrf_field() }}
                 <div class="modal-body">
                     <div class="form-group">

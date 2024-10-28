@@ -25,7 +25,7 @@
         <div class="card">
             <div class="card-body">
 
-                <form action="{{route('admin.update',['id' => $admin->id])}}" method="post">
+                <form action="{{route('admin.admins.update',['id' => $admin->id])}}" method="post">
                     @method('PUT')
                     @csrf
                     <input type="hidden" name="id" value="{{$admin->id}}">
@@ -52,12 +52,7 @@
                             </div>
                         </div>
                         <div class="row row-xs align-items-center mg-b-20">
-                        <button class=" pd-x-30 mg-l-5 mg-t-5">
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#update_password{{auth()->user()->id}}"><i   class="text-primary ti-key"></i>&nbsp;&nbsp;تغير كلمة المرور</a>
-                        </button>
-                        <button class=" btn btn-danger pd-x-30 mg-l-5 mg-t-5">
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#Deleted{{auth()->user()->id}}"><i  class="text-danger  ti-trash"></i>&nbsp;&nbsp;حذف الحساب</a>
-                    </button>
+                       
                     </div>
                         </div>
                         </div>

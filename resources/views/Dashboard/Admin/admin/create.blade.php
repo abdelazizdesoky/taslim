@@ -9,7 +9,7 @@
 
 
 @section('title')
-   اضافة المنسق
+   اضافة يوزر 
 @stop
 @endsection
 @section('page-header')
@@ -17,7 +17,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto"> أضافة المنسق</h4><span
+                <h4 class="content-title mb-0 my-auto"> أضافة  يوزر </h4><span
                     class="text-muted mt-1 tx-13 mr-2 mb-0">/
              اضافة</span>
             </div>
@@ -34,14 +34,14 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('user.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
+                    <form action="{{ route('admin.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="pd-30 pd-sm-40 bg-gray-200">
 
                             <div class="row row-xs align-items-center mg-b-20">
                                 <div class="col-md-1">
                                     <label for="exampleInputEmail1">
-                                        اسم المنسق</label>
+                                        اسم </label>
                                 </div>
                                 <div class="col-md-11 mg-t-5 mg-md-t-0">
                                     <input class="form-control" name="name" type="text" autofocus>
@@ -51,7 +51,7 @@
                             <div class="row row-xs align-items-center mg-b-20">
                                 <div class="col-md-1">
                                     <label for="exampleInputEmail1">
-                                       ميل  المنسق</label>
+                                       ميل  </label>
                                 </div>
                                 <div class="col-md-11 mg-t-5 mg-md-t-0">
                                     <input class="form-control" name="email" type="email">

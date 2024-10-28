@@ -64,7 +64,7 @@
 							<div class="pb-0 mt-0">
 								<div class="d-flex">
 									<div class="">
-										<h4 class="tx-20 font-weight-bold mb-1 text-white">{{\App\Models\Employee::count()}}</h4>
+										{{-- <h4 class="tx-20 font-weight-bold mb-1 text-white">{{\App\Models\Employee::count()}}</h4> --}}
 									</div>
 								</div>
 							</div>
@@ -135,14 +135,14 @@
 						<div class="product-timeline card-body pt-2 mt-1">
 							<ul class="timeline-1 mb-0">
 
-								@foreach(\App\Models\Employee::latest()->take(3)->get()  as $employee)
+								{{-- @foreach(\App\Models\Employee::latest()->take(3)->get()  as $employee) --}}
 
-							<li class="mt-0 mb-0"> <i class="icon-note icons bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">{{$employee->code}}-{{$employee->name}}</span> <a href="#" class="float-left  tx-11 text-muted"></a>
-									<p class="mb-0 text-muted tx-12">عدد الاذون 
-										<p></p>{{\App\Models\Invoice::where('employee_id', $employee->id )->count()}} </p>
+							{{-- <li class="mt-0 mb-0"> <i class="icon-note icons bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">{{$employee->code}}-{{$employee->name}}</span> <a href="#" class="float-left  tx-11 text-muted"></a>
+									<p class="mb-0 text-muted tx-12">عدد الاذون  --}}
+										{{-- <p></p>{{\App\Models\Invoice::where('employee_id', $employee->id )->count()}} </p> --}}
 								</li>
-
-                            @endforeach
+{{-- 
+                            @endforeach --}}
 
 							</ul>
 						</div>

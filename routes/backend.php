@@ -2,21 +2,22 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataController;
-use App\Http\Controllers\Auth\AdminController;
+
 use App\Http\Controllers\Dashboard\{
     BrandController,
     ProductController,
-    EmployeeController,
     InvoicesController,
     LocationController,
     SupplierController,
     CustomersController,
     ProductTypeController,
     SerialNumberController,
+    AdminController,
+    
 };
 use App\Http\Controllers\User\UserInvoicesController;
 use App\Http\Controllers\Employee\EmployeeInvoiceController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,27 +44,30 @@ Route::middleware(['auth:admin'])->group(function () {
         // Location Management
         Route::resource('locations', LocationController::class);
         
-        // Employee Management
-        Route::resource('employees', EmployeeController::class);
-        Route::post('employees/update-password', [EmployeeController::class, 'update_password'])->name('employees.update-password');
-        Route::post('employees/update-status', [EmployeeController::class, 'update_status'])->name('employees.update-status');
+        // // Employee Management
+        // Route::resource('employees', EmployeeController::class);
+        // Route::post('employees/update-password', [EmployeeController::class, 'update_password'])->name('employees.update-password');
+        // Route::post('employees/update-status', [EmployeeController::class, 'update_status'])->name('employees.update-status');
         
         // User Management
-        Route::controller(RegisteredUserController::class)->prefix('users')->name('users.')->group(function () {
+        // Route::controller(RegisteredUserController::class)->prefix('users')->name('users.')->group(function () {
+        //     Route::get('/', 'index')->name('index');
+        //     Route::get('/create', 'create')->name('create');
+        //     Route::post('/', 'store')->name('store');
+        //     Route::get('/{id}/edit', 'edit')->name('edit');
+        //     Route::put('/{id}', 'update')->name('update');
+        //     Route::delete('/{id}', 'destroy')->name('destroy');
+        //     Route::post('/update-password', 'update_password')->name('update-password');
+        // });
+        
+        // user Management
+        Route::controller(AdminController::class)->prefix('admins')->name('admins.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/', 'store')->name('store');
             Route::get('/{id}/edit', 'edit')->name('edit');
             Route::put('/{id}', 'update')->name('update');
             Route::delete('/{id}', 'destroy')->name('destroy');
-            Route::post('/update-password', 'update_password')->name('update-password');
-        });
-        
-        // Admin Management
-        Route::controller(AdminController::class)->prefix('admins')->name('admins.')->group(function () {
-            Route::get('/{id}/edit', 'edit')->name('edit');
-            Route::put('/{id}', 'update')->name('update');
-            Route::delete('/{id}', 'delete')->name('delete');
             Route::post('/update-password', 'update_password')->name('update-password');
         });
         
