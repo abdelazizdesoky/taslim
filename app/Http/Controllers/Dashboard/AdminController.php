@@ -83,20 +83,17 @@ class AdminController extends Controller
     {
         $request->validate([
            
-            'email' => 'required|email|unique:admins,email,' . $request->id,
+           
             'name' => 'required|string|max:255',
             'permission' => 'required|in:1,2,3,4',
-            'status' => 'required|boolean',
+            'status' => 'required|in:1,2',
         ], [
           
-            'email.required' => 'البريد الإلكتروني مطلوب.',
-            'email.email' => 'يجب أن يكون البريد الإلكتروني صالحًا.',
-            'email.unique' => 'البريد الإلكتروني مسجل بالفعل.',
             'name.required' => 'الاسم مطلوب.',
             'permission.required' => 'الرجاء تحديد نوع الصلاحية.',
             'permission.in' => 'نوع الصلاحية غير صالح.',
             'status.required' => 'الحالة مطلوبة.',
-            'status.boolean' => 'يجب أن تكون الحالة صحيحة أو خاطئة فقط.',
+            'status.in' => 'يجب أن تكون الحالة صحيحة   .',
         ]);
       
     
@@ -104,7 +101,6 @@ class AdminController extends Controller
         try {
 
             $admin = Admin::findorfail($request->id);
-            $admin->email = $request->email;
             $admin->name = $request->name;
             $admin->permission = $request->permission;
             $admin->status = $request->status;

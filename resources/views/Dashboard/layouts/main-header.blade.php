@@ -94,12 +94,11 @@
                    
 
                      
-                        <form method="post" action="{{ route('logout.admin') }}">
-                                                  @csrf
-                                              <a class="dropdown-item" href="#"
-                                         onclick="event.preventDefault();
-                                        this.closest('form').submit();"><i class="bx bx-log-out"></i>تسجيل الخروج</a>
-                     </form>
+                    <form method="get" action="{{ route('logout.admin') }}">
+                        <a class="dropdown-item" href="#"  onclick="event.preventDefault(); this.closest('form').submit();">
+                            <i class="bx bx-log-out"></i> تسجيل الخروج
+                        </a>
+                    </form>
 
                     </div>
                 </div>

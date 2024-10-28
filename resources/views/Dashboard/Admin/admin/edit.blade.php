@@ -48,7 +48,7 @@
                                    ايميل  </label>
                             </div>
                             <div class="col-md-11 mg-t-5 mg-md-t-0">
-                                <input class="form-control" name="email" value="{{$admin->email}}"  type="email" @disabled(true)>
+                                <input class="form-control" name="email" value="{{$admin->email}}"  type="email" disabled>
                             </div>
                         </div>
                         <div class="row row-xs align-items-center mg-b-20">
@@ -61,7 +61,7 @@
                                 <option value="1" {{ $admin->permission == 1 ? 'selected' : '' }}>ادمن</option>
                                 <option value="2" {{ $admin->permission == 2 ? 'selected' : '' }}>منسق</option>
                                 <option value="3" {{ $admin->permission == 3 ? 'selected' : '' }}> مندوب</option>
-                           <option value="4" {{ $admin->permission == 4 ? 'selected' : '' }}> امين مخزن</option>
+                                <option value="3" {{ $admin->permission == 4 ? 'selected' : '' }}> امين مخزن</option>
                                
                             </select>
                         </div>
@@ -81,14 +81,12 @@
                         </div>
                     </div>
                     <div class="col-md-11 mg-t-5 mg-md-t-0">
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#update_password{{$admin->id}}"><i   class="text-primary ti-key"></i>&nbsp;&nbsp;تغير كلمة المرور</a>
                    
-                    <button   class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">  <a   data-toggle="modal" data-target="#update_password{{$admin->id}}"><i   class="text-primary ti-key"></i>&nbsp;&nbsp;تغير كلمة المرور</a> </button>
                     </div>
                         </div>
                         </div>
 
-
-                        @include('Dashboard.Admin.admin.update_password')
 
                           <div>
                                <button type="submit"  class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">تعديل </button>
@@ -96,6 +94,7 @@
                     <br>
                 </form>
             
+                @include('Dashboard.Admin.admin.update_password')
                             
                     </div>
                 </div>

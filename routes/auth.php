@@ -22,7 +22,7 @@ Route::middleware('guest')->group(function () {
 
 //-----------------------------log out ------------------------------------------------------
 
-Route::post('logout/admin', [AdminController::class, 'destroy'])->middleware('auth:admin')->name('logout.admin');
+Route::get('logout/admin', [AdminController::class, 'destroy'])->middleware('auth:admin')->name('logout.admin');
 
 
 

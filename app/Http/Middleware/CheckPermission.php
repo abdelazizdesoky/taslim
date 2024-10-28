@@ -16,7 +16,12 @@ class CheckPermission
 
         $user = Auth::guard('admin')->user();
 
-       
+          // التحقق إذا كان المستخدم غير مفعل
+          if ($user->status !== 1) {
+            return redirect('/logout/admin');
+        }
+
+
         if (!in_array($user->permission, $permissions)) {
           
             switch ($user->permission) {

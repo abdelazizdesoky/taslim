@@ -58,7 +58,7 @@
                     <div class="form-group" id="client-section">
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="form-label">المنتج</label>
+                                <label class="form-label">اسم المنتج </label>
                             </div>
                             <div class="col-md-9">
                                 <input type="text" name="product_name" value="{{ $product->product_name }}" class="form-control @error('product_name') is-invalid @enderror" required>
@@ -69,7 +69,7 @@
                     <div class="form-group" id="client-section">
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="form-label">اسم المنتج</label>
+                                <label class="form-label">تفاصيل المنتج  </label>
                             </div>
                             <div class="col-md-9">
 
