@@ -96,36 +96,30 @@
 
 												@foreach($serials as $serial)
 												<tr>
-														<td>{{$loop->iteration}}</td>
-														<td>{{$serial->serial_number}}</td>
-														<td>
-										
-
-															@php
+													<td>{{ $loop->iteration }}</td>
+													<td>{{ $serial->serial_number }}</td>
+													<td>
+														@php
 															// استخراج أول 6 أرقام من السيريال
-															$serialPrefix = substr($serial->serial_number, 0, 7);
-															// البحث في جدول product_codes عن الكود الذي يتطابق مع أول 6 أرقام من السيريال
-															$productCode = \App\Models\Product::where('product_code', $serialPrefix)->first();
+															$serialPrefix = substr($serial->serial_number, 0, 6);
+															// البحث عن المنتج باستخدام الكود المستخرج
+															$product = \App\Models\Product::where('product_code', $serialPrefix)->first();
 														@endphp
-
-														@if ($productCode && $productCode->product)
+											
+														@if ($product)
 															{{-- عرض تفاصيل المنتج إذا كان المنتج موجوداً --}}
-															{{ $productCode->product->productType->type_name ?? 'نوع غير موجود' }}
-															{{ $productCode->product->productType->brand->brand_name ?? 'ماركة غير موجودة' }}
-															{{ $productCode->product->product_name ?? 'اسم المنتج غير موجود' }}
-															{{ $productCode->product->detail_name ?? 'تفاصيل غير موجودة' }}
-																
+															{{ $product->productType->type_name ?? 'نوع غير موجود' }}
+															{{ $product->productType->brand->brand_name ?? 'ماركة غير موجودة' }}
+															{{ $product->product_name ?? 'اسم المنتج غير موجود' }}
+															{{ $product->detail_name ?? 'تفاصيل غير موجودة' }}
 														@else
 															{{-- عرض رسالة في حال عدم وجود المنتج --}}
 															{{ 'غير موجود بالمنتجات' }}
 														@endif
-													
-													</td>	
-													<td>{{$serial->created_at}}</td>
-													
-											</tr>
-							
-												@endforeach
+													</td>    
+													<td>{{ $serial->created_at }}</td>
+												</tr>
+											@endforeach
 
 												
 											
@@ -137,14 +131,12 @@
 											</tr>
 											@foreach($productSerialCounts as $productData)
 											<tr>
-												
-												
-														<td>{{$loop->iteration}}</td>
-														<td>{{ $productData['product_name'] ?? 'اسم المنتج غير موجود' }}  
-														<td>{{ $productData['serial_count'] }}  </td>
-	
+												<td>{{ $loop->iteration }}</td>
+												<td>{{ $productData['product_name'] ?? 'اسم المنتج غير موجود' }}</td>
+												<td>{{ $productData['serial_count'] }}</td>
 											</tr>
-											@endforeach
+										@endforeach
+										
 											</tbody>
 										</table>
 									</div>

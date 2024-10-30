@@ -272,35 +272,33 @@ public function destroy(request $request)
 //-------------------------------------------------------------------------------------------------------
 public function show($id)
 {
-    
     $invoice = Invoice::findOrFail($id);
 
+    // استرجاع السيريالات المرتبطة بالفاتورة
     $serials = SerialNumber::where('invoice_id', $id)->get();
 
-                // احصل على السيريالات وقم بتجميعها حسب المنتج
-        $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
-            $serialPrefix = substr($serial->serial_number, 0, 7);
-            $productCode = Product::where('product_code', $serialPrefix)->first();
-            return $productCode ? $productCode->product->id : null;
-        });
+    // تجميع السيريالات حسب المنتج
+    $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
+        $serialPrefix = substr($serial->serial_number, 0, 6); // استخراج أول 6 أرقام
+        $product = \App\Models\Product::where('product_code', $serialPrefix)->first();
+        return $product ? $product->id : null; // إرجاع معرف المنتج إذا وجد
+    });
 
-        // حساب عدد السيريالات لكل منتج
-        $productSerialCounts = [];
-        foreach ($serialsGroupedByProduct as $productId => $groupedSerials) {
-            if ($productId) {
-                $product = Product::find($productId);
-                $productSerialCounts[] = [
-                    'product_name' =>$product->productType->type_name ." ".$product->productType->brand->brand_name." ". $product->product_name,
-                    'serial_count' => $groupedSerials->count()
-                ];
-            }
+    // حساب عدد السيريالات لكل منتج
+    $productSerialCounts = [];
+    foreach ($serialsGroupedByProduct as $productId => $groupedSerials) {
+        if ($productId) {
+            $product = Product::find($productId);
+            $productSerialCounts[] = [
+                'product_name' => $product->productType->type_name . " " . $product->productType->brand->brand_name . " " . $product->product_name,
+                'serial_count' => $groupedSerials->count()
+            ];
         }
+    }
 
- 
-
-
-    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'serials','productSerialCounts'));
+    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'serials', 'productSerialCounts'));
 }
+
 
 
 //-------------------------------------------------------------------------------------------------------
