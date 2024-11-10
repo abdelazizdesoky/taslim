@@ -279,7 +279,7 @@ public function show($id)
 
     // تجميع السيريالات حسب المنتج
     $serialsGroupedByProduct = $serials->groupBy(function ($serial) {
-        $serialPrefix = substr($serial->serial_number, 0, 6); // استخراج أول 6 أرقام
+        $serialPrefix = substr($serial->serial_number, 0, 7); // استخراج أول 6 أرقام
         $product = \App\Models\Product::where('product_code', $serialPrefix)->first();
         return $product ? $product->id : null; // إرجاع معرف المنتج إذا وجد
     });

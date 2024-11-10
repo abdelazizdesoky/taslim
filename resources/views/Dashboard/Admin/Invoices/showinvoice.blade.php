@@ -100,10 +100,13 @@
 													<td>{{ $serial->serial_number }}</td>
 													<td>
 														@php
-															// استخراج أول 6 أرقام من السيريال
-															$serialPrefix = substr($serial->serial_number, 0, 6);
-															// البحث عن المنتج باستخدام الكود المستخرج
-															$product = \App\Models\Product::where('product_code', $serialPrefix)->first();
+                                                             $serialNumber = ltrim($serial->serial_number, '0');
+ 
+                                                             $serialPrefix = substr($serialNumber, 0, 7);
+
+                                                            $product = \App\Models\Product::where('product_code', $serialPrefix)->first();
+
+														
 														@endphp
 											
 														@if ($product)
