@@ -11,7 +11,7 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 ##  install 
 
-Run git clone '[link projer github](https://github.com/abdelazizdesoky/taslim)'
+Run git clone '[app taslim](https://github.com/abdelazizdesoky/taslim)'
 
 Run composer install   Or Run composer install --ignore-platform-reqs
 
