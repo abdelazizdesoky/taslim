@@ -9,17 +9,24 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 
 
-## Contributing
+##  install 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the 
+Run git clone '[link projer github](https://github.com/abdelazizdesoky/taslim)'
 
-## Code of Conduct
+Run composer install   Or Run composer install --ignore-platform-reqs
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the 
+Run cp .env.example .env or copy .env.example .env
 
-## Security Vulnerabilities
+Run php artisan key:generate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via . All security vulnerabilities will be promptly addressed.
+Run php artisan migrate
+
+Run php artisan db:seed
+
+Run php artisan serve
+
+Go to link localhost:8000 OR 127.0.0.1:8000
+
 
 ## License
 
