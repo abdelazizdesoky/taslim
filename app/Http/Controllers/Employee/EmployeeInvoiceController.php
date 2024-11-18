@@ -92,43 +92,46 @@ class EmployeeInvoiceController extends Controller
 
     public function store(Request $request)
     {
-       
-    try {
-        
-        $request->validate([
-            'id' => 'required|string|max:255',
-            'serials' => 'required|string',
-        ]);
-
-      
-        $invoiceid = $request->input('id');
-        $serials = $request->input('serials');
-
-        
-        $serialsArray = array_filter(array_map('trim', explode("\n", $serials)));
-
-        
-        foreach ($serialsArray as $serial) {
-            SerialNumber::create([
-                'invoice_id' => $invoiceid,
-                'serial_number' => $serial,
+        try {
+            $request->validate([
+                'id' => 'required|string|max:255',
+                'serials' => 'required|string',
             ]);
+    
+            $invoiceid = $request->input('id');
+            $serials = $request->input('serials');
+    
+            // تحويل السيريالات إلى مصفوفة بعد تنقيتها
+            $serialsArray = array_filter(array_map('trim', explode("\n", $serials)));
+    
+            foreach ($serialsArray as $serial) {
+                // تحقق إذا كان السيريال مكررًا في نفس الفاتورة
+                $existingSerial = SerialNumber::where('invoice_id', $invoiceid)
+                                              ->where('serial_number', $serial)
+                                              ->exists();
+    
+                if (!$existingSerial) {
+                    SerialNumber::create([
+                        'invoice_id' => $invoiceid,
+                        'serial_number' => $serial,
+                    ]);
+                } else {
+                    // يمكنك تجاهل السيريال المكرر أو إضافة رسالة خطأ مخصصة إذا رغبت
+                 // return redirect()->back()->withErrors(['error' => " $serial مكرر "]);
+                }
+            }
+    
+            $invoice = Invoice::findOrFail($invoiceid);
+            $invoice->invoice_status = 3;
+            $invoice->save();
+    
+            session()->flash('add');
+            return redirect()->route('Dashboard.employee');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
-
-        $invoice = Invoice::findOrFail($request->id);
-        $invoice->invoice_status =3;
-        $invoice->save();
-
-        session()->flash('add');
-        return redirect()->route('Dashboard.employee');
     }
-
-    catch (\Exception $e) 
-    {
-        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-    }
-
-    }
+    
 
   
 }

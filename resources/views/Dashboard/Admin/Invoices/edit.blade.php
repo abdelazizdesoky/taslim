@@ -68,7 +68,7 @@
                    
                           <div class="form-group">
                             <label class="form-label">نوع الاذن</label>
-                            <select class="form-control" name="invoice_type" id="invoice-type" required>
+                            <select class="form-control" name="invoice_type" id="status" required>
                                 <option value="1" {{ $Invoices->invoice_type == 1 ? 'selected' : '' }}>استلام</option>
                                 <option value="2" {{ $Invoices->invoice_type == 2 ? 'selected' : '' }}>تسليم</option>
                                 <option value="3" {{ $Invoices->invoice_type == 3 ? 'selected' : '' }}>مرتجعات عام</option>
@@ -77,7 +77,7 @@
                         
                         <div class="form-group" id="supplier-section" style="{{ $Invoices->invoice_type == 1 ? 'display: block;' : 'display: none;' }}">
                             <label class="form-label">المورد</label>
-                            <select class="form-control" name="supplier_id">
+                            <select class="form-control select2" name="supplier_id"  style="width: 100%;" >
                                 <option value="" disabled>--اختر المورد</option>
                                 @foreach($suppliers as $supplier)
                                     <option value="{{ $supplier->id }}" {{ $supplier->id == $Invoices->supplier_id ? 'selected' : '' }}>{{ $supplier->name }}</option>
@@ -87,7 +87,7 @@
                         
                         <div class="form-group" id="client-section" style="{{ $Invoices->invoice_type == 2 ? 'display: block;' : 'display: none;' }}">
                             <label class="form-label">العميل</label>
-                            <select class="form-control" name="customer_id">
+                            <select class="form-control select2 " name="customer_id"  style="width: 100%;">
                                 <option value="" disabled>--اختر العميل</option>
                                 @foreach($customers as $customer)
                                     <option value="{{ $customer->id }}" {{ $customer->id == $Invoices->customer_id ? 'selected' : '' }}>{{ $customer->name }}</option>
@@ -97,7 +97,7 @@
                         
                         <div class="form-group" id="contact-section" style="{{ $Invoices->invoice_type == 3 ? 'display: block;' : 'display: none;' }}">
                             <label class="form-label">العميل/المورد</label>
-                            <select class="form-control" name="contact_id" id="contact-id">
+                            <select class="form-control select2 " name="contact_id" id="contact-id"  style="width: 100%;">
                                 <option value="" disabled>--اختر العميل أو المورد</option>
                                 @foreach($contacts as $contact)
                                     <option value="{{ $contact['id'] }}" data-type="{{ $contact['type'] }}">
@@ -119,7 +119,7 @@
                                 <label class="form-label">المندوب</label>
                             </div>
                             <div class="col-md-9">
-                                <select class="form-control select2" name="employee_id">
+                                <select class="form-control select2" name="employee_id"  style="width: 100%;">
                                     @foreach($admins as $admin)
                                         <option value="{{ $admin->id }}" {{ $Invoices->employee_id == $admin->id ? 'selected' : '' }}>{{ $admin->name }}-{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
                                     @endforeach
@@ -173,9 +173,8 @@
 
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function() {
-    const invoiceTypeSelect = document.getElementById('invoice-type');
+    const statusSelect = document.getElementById('status');
     const supplierSection = document.getElementById('supplier-section');
     const clientSection = document.getElementById('client-section');
     const contactSection = document.getElementById('contact-section');
@@ -183,31 +182,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactTypeInput = document.getElementById('contact-type');
 
     function updateSections() {
-        const selectedValue = invoiceTypeSelect.value;
+        const selectedValue = statusSelect.value;
 
+        // إخفاء جميع الأقسام أولاً
         supplierSection.style.display = 'none';
         clientSection.style.display = 'none';
         contactSection.style.display = 'none';
 
-        if (selectedValue == '1') {
+        // إظهار القسم المناسب بناءً على القيمة المختارة
+        if (selectedValue === '1') {
             supplierSection.style.display = 'block';
-        } else if (selectedValue == '2') {
+        } else if (selectedValue === '2') {
             clientSection.style.display = 'block';
-        } else if (selectedValue == '3') {
+        } else if (selectedValue === '3') {
             contactSection.style.display = 'block';
         }
     }
 
-    invoiceTypeSelect.addEventListener('change', updateSections);
-    updateSections();
-
-    // عند اختيار العميل/المورد في حالة المرتجع
-    contactSelect.addEventListener('change', function() {
+    function updateContactType() {
         const selectedOption = contactSelect.options[contactSelect.selectedIndex];
-        contactTypeInput.value = selectedOption.getAttribute('data-type');
-    });
-});
+        if (selectedOption) {
+            contactTypeInput.value = selectedOption.getAttribute('data-type');
+        }
+    }
 
+    // تحديث الأقسام بناءً على الاختيار الحالي عند تحميل الصفحة
+    updateSections();
+    updateContactType();
+
+    // إضافة مستمعين لتحديث الأقسام والنوع عند التغيير
+    statusSelect.addEventListener('change', updateSections);
+    contactSelect.addEventListener('change', updateContactType);
+});
 
       
     </script>

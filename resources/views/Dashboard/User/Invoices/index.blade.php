@@ -109,7 +109,7 @@
 												  
 														@if($Invoice->invoice_type == 1) 
 
-														<div class="p-1 bg-info text-white">	تحت الاستلام  </div>
+														<div class="p-1 bg-primary text-white">	تحت الاستلام  </div>
 
 														@elseif ($Invoice->invoice_type == 3)
 
