@@ -96,7 +96,7 @@
                     <input type="hidden" name="id" value="{{$Invoices->id}}">
                     <input type="hidden" name="serials" id="serialsHiddenInput">
                     <div class="card-footer text-left">
-                        <button type="submit" class="btn btn-success waves-effect waves-light">تأكيد تسليم</button>
+                        <button type="submit" class="btn btn-success waves-effect waves-light">تأكيد الاذن</button>
                     </div>
                 </form>
             </div>

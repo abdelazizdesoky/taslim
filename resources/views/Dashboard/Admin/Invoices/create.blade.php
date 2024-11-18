@@ -69,7 +69,7 @@
 									<!------------------------------------------------------------>
 
                                                                     <div class="form-group">
-                                    <label class="form-label">نوع الفاتورة</label>
+                                    <label class="form-label">نوع الاذن</label>
                                     <select class="form-control" name="invoice_type" id="status" required>
                                         <option value="1">استلام</option>
                                         <option value="2">تسليم</option>
@@ -83,7 +83,7 @@
                                     <select class="form-control" name="supplier_id">
                                         <option value="" disabled>--اختر المورد</option>
                                         @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                            <option value="{{ $supplier->id }}">{{ $supplier->id }}-{{ $supplier->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -91,10 +91,10 @@
                                 <!-- قسم العميل -->
                                 <div class="form-group d-none" id="client-section">
                                     <label class="form-label">العميل</label>
-                                    <select class="form-control" name="customer_id">
+                                    <select class="form-control select2" name="customer_id" style="width: 100%;">
                                         <option value="" disabled>--اختر العميل</option>
                                         @foreach($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                            <option value="{{ $customer->id }}">{{ $customer->id }}-{{ $customer->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -102,11 +102,11 @@
                                 <!-- قسم العميل/المورد (للمرتجع) -->
                                 <div class="form-group d-none" id="contact-section">
                                     <label class="form-label">العميل/المورد</label>
-                                    <select class="form-control" name="contact_id" id="contact-id">
+                                    <select class="form-control select2" name="contact_id" id="contact-id" style="width: 100%;">
                                         <option value="" disabled>--اختر العميل أو المورد</option>
                                         @foreach($contacts as $contact)
                                             <option value="{{ $contact['id'] }}" data-type="{{ $contact['type'] }}">
-                                                {{ $contact['name'] }} ({{ $contact['type'] == 'customer' ? 'عميل' : 'مورد' }})
+                                                {{ $contact['id'] }} - {{ $contact['name'] }} ({{ $contact['type'] == 'customer' ? 'عميل' : 'مورد' }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -123,9 +123,9 @@
 												<label class="form-label">  امين مخزن/المندوب</label>
 											</div>
 											<div class="col-md-9">
-												<select class="form-control select2" name="employee_id" >
+												<select class="form-control select2" name="employee_id" style="width: 100%;" >
                                                     @foreach($admins as $admin)
-                                                   <option value="{{$admin->id}}">{{$admin->name}} -{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
+                                                   <option value="{{$admin->id}}">{{$admin->id}} - {{$admin->name}} -{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
                                                     @endforeach
 												</select>
 											</div>
@@ -168,13 +168,14 @@
 @section('js')
 
 <script>
-
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
     const statusSelect = document.getElementById('status');
     const supplierSection = document.getElementById('supplier-section');
     const clientSection = document.getElementById('client-section');
     const contactSection = document.getElementById('contact-section');
-    
+    const contactSelect = document.getElementById('contact-id');
+    const contactTypeInput = document.getElementById('contact-type');
+
     function updateSections() {
         const selectedValue = statusSelect.value;
 
@@ -186,24 +187,25 @@ document.addEventListener('DOMContentLoaded', function() {
             supplierSection.classList.remove('d-none');
         } else if (selectedValue == '2') {
             clientSection.classList.remove('d-none');
-        } else if (selectedValue == '3') { // عند اختيار مرتجع
+        } else if (selectedValue == '3') {
             contactSection.classList.remove('d-none');
         }
     }
 
-    statusSelect.addEventListener('change', updateSections);
-    updateSections();
-
-    // عندما يختار المستخدم جهة اتصال (عميل/مورد)
-    const contactSelect = document.getElementById('contact-id');
-    const contactTypeInput = document.getElementById('contact-type');
-    
-    contactSelect.addEventListener('change', function() {
+    function updateContactType() {
         const selectedOption = contactSelect.options[contactSelect.selectedIndex];
-        contactTypeInput.value = selectedOption.getAttribute('data-type');
-    });
-});
+        if (selectedOption) {
+            contactTypeInput.value = selectedOption.getAttribute('data-type');
+        }
+    }
 
+    // Update sections based on the initial selection
+    updateSections();
+    updateContactType();
+
+    statusSelect.addEventListener('change', updateSections);
+    contactSelect.addEventListener('change', updateContactType);
+});
 
       
     </script>

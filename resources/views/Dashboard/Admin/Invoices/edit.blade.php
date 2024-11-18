@@ -15,7 +15,7 @@
 <div class="breadcrumb-header justify-content-between">
     <div class="my-auto">
         <div class="d-flex">
-            <h4 class="content-title mb-0 my-auto">فاتورة </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/تعديل الاذن</span>
+            <h4 class="content-title mb-0 my-auto">الاذن </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/تعديل الاذن</span>
         </div>
     </div>
 </div>
@@ -67,7 +67,7 @@
                           <!---------------------------------------------------->
                    
                           <div class="form-group">
-                            <label class="form-label">نوع الفاتورة</label>
+                            <label class="form-label">نوع الاذن</label>
                             <select class="form-control" name="invoice_type" id="invoice-type" required>
                                 <option value="1" {{ $Invoices->invoice_type == 1 ? 'selected' : '' }}>استلام</option>
                                 <option value="2" {{ $Invoices->invoice_type == 2 ? 'selected' : '' }}>تسليم</option>

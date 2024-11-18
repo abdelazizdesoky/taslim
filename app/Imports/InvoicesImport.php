@@ -17,6 +17,7 @@ class InvoicesImport implements ToModel, WithHeadingRow
             'code' => $row['code'],
             'invoice_type' => $row['invoice_type'],
             'invoice_date' => date('Y-m-d'),
+            'location_id'=> $row['location_id'],
             'employee_id'=> $row['employee_id'],
             'customer_id' => $row['customer_id'],
             'supplier_id' => $row['supplier_id'],

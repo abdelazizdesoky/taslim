@@ -181,8 +181,8 @@ document.querySelector('.btn-success').addEventListener('click', function () {
     // Fetch the table and invoice details
     var table = document.querySelector('.table-striped'); // Update the selector if necessary
     var invoiceCode = "{{ $invoice->code }}";
-    var customerName = "{{ $invoice->customer->name ?? '-' }}";
-    var employeeName = "{{ $invoice->employee->name ?? '-' }}";
+    var customerName = "{{ $invoice->customer->name ?? $invoice->supplier->name  }}";
+    var employeeName = "{{ $invoice->admin->name ?? '-' }}";
     var serialsCount = "{{ $serials->count() }}";
 
     // Create a new workbook and add a worksheet

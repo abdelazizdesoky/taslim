@@ -49,11 +49,11 @@
             <form method="POST" action="{{ route('login.admin') }}">
                 @csrf
                 <div class="form-group">
-                    <label> الايميل</label>
-                    <input class="form-control" placeholder="ادخل الايميل" type="email" name="email" required autofocus autocomplete="username">
+                 
+                    <input class="form-control" placeholder="ادخل الايميل" type="text" name="email" required autofocus autocomplete="username">
                 </div>
                 <div class="form-group">
-                    <label> الباسورد</label>
+                   
                     <input class="form-control" placeholder="ادخل الباسورد" type="password" name="password" required autocomplete="current-password" />
                 </div>
                 <button class="btn btn-main-primary btn-block"> دخول </button>

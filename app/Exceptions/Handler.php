@@ -13,33 +13,33 @@ class Handler extends ExceptionHandler
 
    
     
-    // public function render($request, Throwable $exception )
+     public function render($request, Throwable $exception )
 
-    // {
+    {
 
-    // if ($exception instanceof ModelNotFoundException) 
+     if ($exception instanceof ModelNotFoundException) 
     
-    // {
+    {
 
-    //     return response()->view('Dashboard.404', [], 404);
+        return response()->view('Dashboard.404', [], 404);
 
-    // } 
+     } 
     
-    //  elseif ($exception instanceof \ErrorException) 
+      elseif ($exception instanceof \ErrorException) 
      
-    // {
-    //     return response()->view('Dashboard.500', [], 500);
+     {
+         return response()->view('Dashboard.500', [], 500);
         
-    // }
-    //  else 
-    // {
+     }
+      else 
+    {
 
-    //     return parent::render($request, $exception);
-    // }
+         return parent::render($request, $exception);
+    }
      
     
     
-    // }
+     }
     
 
     /**
