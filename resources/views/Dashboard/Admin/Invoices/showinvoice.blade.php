@@ -73,9 +73,9 @@
 											@default
 											<p class="invoice-info-row"><span>مورد/العميل   :</span> <span>{{ $invoice->customer->name ??$invoice->supplier->name }}-{{ $invoice->customer->phone ??$invoice->supplier->phone }}</span></p>
 											@endswitch
-												
-											
 										
+											
+											<p class="invoice-info-row"><span>المنسق :</span> <span>	{{$invoice->creator->name??'-'}}</span></p>
 											<p class="invoice-info-row"><span>المندوب :</span> <span>{{ $invoice->admin->name ??'-' }}</span></p>
 											<p class="invoice-info-row"><span>مجموع سيريالات المسحوبة  :</span> <span>{{$serials->count()}}</span></p>
 										</div>

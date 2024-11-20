@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="form-label">كود الاذن</label>
+                                <label class="form-label">رقم  الاذن</label>
                             </div>
                             <div class="col-md-9">
                                 <input type="text" name="code" value="{{ $Invoices->code }}" class="form-control @error('code') is-invalid @enderror" disabled>
@@ -140,7 +140,20 @@
 												</select>
 											</div>
 									
-                                   
+                                            <div class="form-group">
+                        
+                                                <div class="col-md-3">
+                                                    <label class="form-label">اضافة بواسطة </label>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <select class="form-control select2" name="created_by"  style="width: 100%;">
+                                                        @foreach($creators as $creator)
+                                                            <option value="{{ $creator->id }}" {{ $Invoices->created_by == $creator->id ? 'selected' : '' }}>{{ $creator->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                              
+                                                </div>
+                                        </div> 
 
 
                     <div class="form-group">

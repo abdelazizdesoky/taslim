@@ -24,8 +24,11 @@ class Product extends Model
         return $this->hasOneThrough(Brand::class, ProductType::class, 'id', 'id', 'type_id', 'brand_id');
     }
 
-
- 
-
+    public function invoices()
+{
+    return $this->belongsToMany(Invoice::class, 'invoice_products')
+                ->withPivot('quantity')
+                ->withTimestamps();
+}
 
 }

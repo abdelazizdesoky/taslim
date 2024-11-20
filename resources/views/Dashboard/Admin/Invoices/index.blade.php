@@ -47,7 +47,7 @@
 
 											<tr>
 												<th>#</th>
-												<th > كود الاذن </th>
+												<th > رقم الاذن </th>
 												<th >  نوع الاذن </th>
 												<th> تاريخ الاذن  </th>
 												<th>  المندوب </th>
@@ -56,6 +56,7 @@
 												<th > حالة الاذن </th>
 												<th > موقع </th>
 												<th >  تااريخ تحرير</th>
+												<th >  اضافة </th>
 												<th > ألاجراءات  </th>
 											</tr>
 										</thead>
@@ -146,6 +147,7 @@
 												
 												</td>
 												<td>{{$Invoice->created_at->diffForHumans()}}</td>
+												<td>{{$Invoice->creator->name??'-'}}</td>
 												 <td>
                                                     <a href="{{route('admin.invoices.edit',$Invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
                                                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$Invoice->id}}"><i class="fas fa-trash"></i></button>

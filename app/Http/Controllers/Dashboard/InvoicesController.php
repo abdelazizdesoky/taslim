@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Dashboard;
 
 
 
+use App\Models\Admin;
 use App\Models\Invoice;
+use App\Models\Product;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Supplier;
@@ -14,8 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
-use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class InvoicesController extends Controller
 {
@@ -76,6 +77,7 @@ public function store(request $request)
         $invoice->invoice_date = Carbon::createFromFormat('m/d/Y', $request->input('invoice_date'))->format('Y-m-d');
         $invoice->invoice_type = $request->invoice_type;
         $invoice->employee_id = $request->employee_id;
+        $invoice->created_by = Auth::user()->id;
         $invoice->location_id = $request->location_id;
 
 
@@ -131,6 +133,7 @@ public function edit($id)
     $suppliers = Supplier::where('status', 1)->get();
     $customers = Customers::where('status', 1)->get();
     $admins = Admin::whereIn('permission', [3,4])->get();
+    $creators = Admin::whereIn('permission', [1,2])->get();
     $locations = Location::all();
 
     // دمج العملاء والموردين في قائمة واحدة
@@ -150,7 +153,7 @@ public function edit($id)
         })
     );
 
-    return view('Dashboard.Admin.Invoices.edit', compact('Invoices', 'suppliers', 'customers', 'admins', 'locations', 'contacts'));
+    return view('Dashboard.Admin.Invoices.edit', compact('Invoices', 'suppliers', 'customers', 'admins', 'locations', 'contacts','creators'));
 }
 
 public function update(Request $request, $id)
@@ -162,6 +165,7 @@ public function update(Request $request, $id)
         'invoice_date' => 'required',
         'invoice_type' => 'required|in:1,2,3',
         'employee_id' => 'required|exists:admins,id',
+        'created_by' => 'required|exists:admins,id|in:1,2',
         'invoice_status' => 'required',
         'location_id' => 'required',
     
@@ -175,6 +179,7 @@ public function update(Request $request, $id)
         $updateData = [
             'invoice_type' => $validatedData['invoice_type'],
             'employee_id' => $validatedData['employee_id'],
+            'created_by'=> $validatedData['created_by'],
             'invoice_status' => $validatedData['invoice_status'],
             'location_id' => $validatedData['location_id'],
         ];

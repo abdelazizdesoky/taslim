@@ -34,6 +34,11 @@ class Invoice extends Model
         return $this->belongsTo(Admin::class,'employee_id');
     }
 
+        public function creator()
+    {
+        return $this->belongsTo(Admin::class, 'created_by');
+    }
+
     public function location()
     {
         return $this->belongsTo(Location::class,'location_id');
@@ -44,5 +49,12 @@ class Invoice extends Model
     {
         return $this->hasMany(SerialNumber::class); 
     }
+
+    public function products()
+{
+    return $this->belongsToMany(Product::class, 'invoice_products')
+                ->withPivot('quantity')
+                ->withTimestamps();
+}
   
 }
