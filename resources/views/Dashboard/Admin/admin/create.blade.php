@@ -51,10 +51,10 @@
                             <div class="row row-xs align-items-center mg-b-20">
                                 <div class="col-md-1">
                                     <label for="exampleInputEmail1">
-                                       الايميل   </label>
+                                       اسم مستخدم   </label>
                                 </div>
                                 <div class="col-md-11 mg-t-5 mg-md-t-0">
-                                    <input class="form-control" name="email" type="email">
+                                    <input class="form-control" name="email" type="text">
                                 </div>
                             </div>
 

@@ -29,14 +29,13 @@ class AdminController extends Controller
 
      // إضافة التحقق على المدخلات
      $request->validate([
-        'email' => 'required|email|unique:admins,email',
+        'email' => 'required|unique:admins,email',
         'password' => 'required|min:8',
         'name' => 'required|string|max:255',
         'permission' => 'required|in:1,2,3,4',
     ], [
         'email.required' => 'البريد الإلكتروني مطلوب.',
-        'email.email' => 'يجب أن يكون البريد الإلكتروني صالحًا.',
-        'email.unique' => 'البريد الإلكتروني مسجل بالفعل.',
+        'email.unique' => 'اسم   مسجل بالفعل.',
         'password.required' => 'كلمة المرور مطلوبة.',
         'password.min' => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
         'name.required' => 'الاسم مطلوب.',
