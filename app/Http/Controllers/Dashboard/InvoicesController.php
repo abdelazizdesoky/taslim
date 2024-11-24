@@ -63,7 +63,6 @@ public function create()
 //-----------------------------------
 public function store(Request $request)
 {
-    // التحقق من صحة البيانات
     $request->validate([
         'code' => 'required|unique:invoices,code',
         'invoice_date' => 'required',
@@ -73,8 +72,6 @@ public function store(Request $request)
         'items.*.product_id' => 'required|exists:products,id',
         'items.*.quantity' => 'required|integer|min:1',
     ]);
-
-
 
     DB::beginTransaction();
 
@@ -107,29 +104,16 @@ public function store(Request $request)
         $invoice->save();
 
         // حفظ المنتجات
-        $productData = [];
-        foreach ($request->items as $index => $item) {
-            if ($item['product_id'] && $item['quantity'] > 0) {
-                $productData[] = [
-                    'invoice_id' => $invoice->id,
-                    'product_id' => $item['product_id'],
-                    'quantity' => $item['quantity'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
+        $productsData = json_decode($request->products_data, true);
+
+        if (!empty($productsData)) {
+            foreach ($productsData as &$productData) {
+                $productData['invoice_id'] = $invoice->id;
             }
-        }
-
-      
-
-        // إدخال جميع المنتجات دفعة واحدة
-        if (!empty($productData)) {
-            InvoiceProduct::insert($productData);
+            InvoiceProduct::insert($productsData);
         }
 
         DB::commit();
-
-        dd($request);
 
         session()->flash('add', 'تم حفظ الفاتورة بنجاح');
         return redirect()->route('admin.invoices.index');
@@ -140,7 +124,6 @@ public function store(Request $request)
     }
 }
 
-
 //-------------------------------------------------------------------------------------------------------
 public function edit($id)
 {
@@ -150,7 +133,10 @@ public function edit($id)
     $admins = Admin::whereIn('permission', [3,4])->get();
     $creators = Admin::whereIn('permission', [1,2])->get();
     $locations = Location::all();
-
+    $invoiceProducts= InvoiceProduct::where('invoice_id', $id )->get();
+    $allProducts = Product::all(); // جلب المنتجات المتاحة
+  
+  
     // دمج العملاء والموردين في قائمة واحدة
     $contacts = $customers->map(function($customer) {
         return [
@@ -168,93 +154,130 @@ public function edit($id)
         })
     );
 
-    return view('Dashboard.Admin.Invoices.edit', compact('Invoices', 'suppliers', 'customers', 'admins', 'locations', 'contacts','creators'));
+    return view('Dashboard.Admin.Invoices.edit', compact('Invoices', 'suppliers', 'customers', 'admins', 'locations', 'contacts','creators','invoiceProducts','allProducts'));
 }
+
+
+//--------------------------------------------------
+
 
 public function update(Request $request, $id)
 {
     $invoice = Invoice::findOrFail($id);
 
-    // التحقق من صحة البيانات المدخلة
+    // Validate input data
     $validatedData = $request->validate([
         'invoice_date' => 'required',
         'invoice_type' => 'required|in:1,2,3',
         'employee_id' => 'required|exists:admins,id',
-        'created_by' => 'required|exists:admins,id|in:1,2',
+        'created_by' => 'required|exists:admins,id',
         'invoice_status' => 'required',
         'location_id' => 'required',
-    
+        'products' => 'required|array|min:1',
+        'quantities' => 'required|array|min:1',
+        'products.*' => 'required|exists:products,id',
+        'quantities.*' => 'required|numeric|min:1',
     ]);
 
     try {
-        // تنسيق تاريخ الفاتورة
+        DB::beginTransaction();
+
+        // Format invoice date
         $carbonDate = Carbon::parse($validatedData['invoice_date']);
         $newInvoiceDate = $carbonDate->format('Y-m-d');
 
         $updateData = [
             'invoice_type' => $validatedData['invoice_type'],
             'employee_id' => $validatedData['employee_id'],
-            'created_by'=> $validatedData['created_by'],
+            'created_by' => $validatedData['created_by'],
             'invoice_status' => $validatedData['invoice_status'],
             'location_id' => $validatedData['location_id'],
         ];
 
-        // التحقق إذا كانت الفاتورة من نوع استلام
+        // Handle invoice type specific validation and updates
         if ($request->invoice_type == 1) {
-            $request->validate([
-                'supplier_id' => 'required|exists:suppliers,id',
-            ]);
-            $invoice->supplier_id = $request->supplier_id;
-            $invoice->customer_id = null;
-        } 
-        // التحقق إذا كانت الفاتورة من نوع تسليم
-        elseif ($request->invoice_type == 2) {
-            $request->validate([
-                'customer_id' => 'required|exists:customers,id',
-            ]);
-            $invoice->customer_id = $request->customer_id;
-            $invoice->supplier_id = null;
-        } 
-        // التحقق إذا كانت الفاتورة من نوع مرتجعات
-        elseif ($request->invoice_type == 3) {
+            $request->validate(['supplier_id' => 'required|exists:suppliers,id']);
+            $updateData['supplier_id'] = $request->supplier_id;
+            $updateData['customer_id'] = null;
+        } elseif ($request->invoice_type == 2) {
+            $request->validate(['customer_id' => 'required|exists:customers,id']);
+            $updateData['customer_id'] = $request->customer_id;
+            $updateData['supplier_id'] = null;
+        } elseif ($request->invoice_type == 3) {
             $request->validate([
                 'contact_id' => 'required',
                 'contact_type' => 'required|in:customer,supplier',
             ]);
 
-            // إذا كان العميل هو المرتجع
             if ($request->contact_type == 'customer') {
-                $request->validate([
-                    'contact_id' => 'exists:customers,id',
-                ]);
-                $invoice->customer_id = $request->contact_id;
-                $invoice->supplier_id = null;
-            } 
-            // إذا كان المورد هو المرتجع
-            else {
-                $request->validate([
-                    'contact_id' => 'exists:suppliers,id',
-                ]);
-                $invoice->supplier_id = $request->contact_id;
-                $invoice->customer_id = null;
+                $request->validate(['contact_id' => 'exists:customers,id']);
+                $updateData['customer_id'] = $request->contact_id;
+                $updateData['supplier_id'] = null;
+            } else {
+                $request->validate(['contact_id' => 'exists:suppliers,id']);
+                $updateData['supplier_id'] = $request->contact_id;
+                $updateData['customer_id'] = null;
             }
         }
 
-        // التحقق من تحديث تاريخ الفاتورة
+        // Update invoice date if changed
         if ($newInvoiceDate !== $invoice->invoice_date) {
             $updateData['invoice_date'] = $newInvoiceDate;
         }
 
-        // تحديث بيانات الفاتورة
+        // Update invoice
         $invoice->update($updateData);
 
+        // Get existing products
+        $existingProducts = InvoiceProduct::where('invoice_id', $invoice->id)
+            ->pluck('quantity', 'product_id')
+            ->toArray();
+
+        // Prepare new products data
+        $newProducts = [];
+        foreach ($request->products as $index => $productId) {
+            $newProducts[$productId] = [
+                'quantity' => $request->quantities[$index],
+                'processed' => false
+            ];
+        }
+
+        // Process products
+        foreach ($newProducts as $productId => $data) {
+            if (isset($existingProducts[$productId])) {
+                // Update existing product if quantity changed
+                if ($existingProducts[$productId] != $data['quantity']) {
+                    InvoiceProduct::where('invoice_id', $invoice->id)
+                        ->where('product_id', $productId)
+                        ->update(['quantity' => $data['quantity']]);
+                }
+                unset($existingProducts[$productId]);
+            } else {
+                // Add new product
+                InvoiceProduct::create([
+                    'invoice_id' => $invoice->id,
+                    'product_id' => $productId,
+                    'quantity' => $data['quantity']
+                ]);
+            }
+        }
+
+        // Remove products that are no longer in the invoice
+        if (!empty($existingProducts)) {
+            InvoiceProduct::where('invoice_id', $invoice->id)
+                ->whereIn('product_id', array_keys($existingProducts))
+                ->delete();
+        }
+
+        DB::commit();
         session()->flash('edit');
         return redirect()->route('admin.invoices.index');
+
     } catch (\Exception $e) {
+        DB::rollBack();
         return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
 }
-
 
 //-------------------------------------------------------------------------------------------------------
 public function cancel(Request $request)
@@ -323,3 +346,125 @@ public function show($id)
 
 //-------------------------------------------------------------------------------------------------------
 }
+/*
+public function update(Request $request, $id)
+{
+    try {
+        DB::beginTransaction();
+        
+        $invoice = Invoice::findOrFail($id);
+
+        // التحقق من البيانات
+        $validatedData = $request->validate([
+            'invoice_date' => 'required',
+            'invoice_type' => 'required|in:1,2,3',
+            'employee_id' => 'required|exists:admins,id',
+            'created_by' => 'required|exists:admins,id',
+            'invoice_status' => 'required',
+            'location_id' => 'required',
+            'products' => 'required|array|min:1',
+            'quantities' => 'required|array|min:1',
+            'products.*' => 'required|exists:products,id',
+            'quantities.*' => 'required|numeric|min:1',
+        ]);
+
+        // تنسيق تاريخ الفاتورة
+        $carbonDate = Carbon::parse($validatedData['invoice_date']);
+        $newInvoiceDate = $carbonDate->format('Y-m-d');
+
+        // تحديث بيانات الفاتورة الأساسية
+        $updateData = [
+            'invoice_date' => $newInvoiceDate,
+            'invoice_type' => $validatedData['invoice_type'],
+            'employee_id' => $validatedData['employee_id'],
+            'created_by' => $validatedData['created_by'],
+            'invoice_status' => $validatedData['invoice_status'],
+            'location_id' => $validatedData['location_id'],
+        ];
+
+        // معالجة نوع الفاتورة
+        switch ($request->invoice_type) {
+            case '1': // مورد
+                $updateData['supplier_id'] = $request->supplier_id;
+                $updateData['customer_id'] = null;
+                break;
+            case '2': // عميل
+                $updateData['customer_id'] = $request->customer_id;
+                $updateData['supplier_id'] = null;
+                break;
+            case '3': // مرتجعات
+                if ($request->contact_type == 'customer') {
+                    $updateData['customer_id'] = $request->contact_id;
+                    $updateData['supplier_id'] = null;
+                } else {
+                    $updateData['supplier_id'] = $request->contact_id;
+                    $updateData['customer_id'] = null;
+                }
+                break;
+        }
+
+        // تحديث الفاتورة
+        $invoice->update($updateData);
+
+        // حذف جميع المنتجات القديمة
+        InvoiceProduct::where('invoice_id', $invoice->id)->delete();
+
+        // إضافة المنتجات الجديدة
+        foreach ($request->products as $index => $productId) {
+            InvoiceProduct::create([
+                'invoice_id' => $invoice->id,
+                'product_id' => $productId,
+                'quantity' => $request->quantities[$index],
+            ]);
+        }
+
+        DB::commit();
+        session()->flash('edit', 'تم تحديث الفاتورة بنجاح');
+        return redirect()->route('admin.invoices.index');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function(e) {
+        // تأكد من وجود منتجات
+        const products = document.querySelectorAll('select[name="products[]"]');
+        const quantities = document.querySelectorAll('input[name="quantities[]"]');
+        
+        if (products.length === 0) {
+            e.preventDefault();
+            alert('يجب إضافة منتج واحد على الأقل');
+            return false;
+        }
+
+        // التحقق من البيانات قبل الإرسال
+        let isValid = true;
+        products.forEach((product, index) => {
+            if (!product.value || !quantities[index].value || quantities[index].value < 1) {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('يرجى التأكد من اختيار المنتج وإدخال كمية صحيحة لجميع المنتجات');
+            return false;
+        }
+    });
+
+    // تأكد من تهيئة select2 بشكل صحيح
+    $('.select2').select2({
+        width: '100%',
+        placeholder: 'اختر...',
+        allowClear: true
+    });
+});
+
+
+*/

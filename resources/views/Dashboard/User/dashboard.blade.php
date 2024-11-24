@@ -30,7 +30,7 @@
 							<div class="pb-0 mt-0">
 								<div class="d-flex">
 									<div class="">
-										<h4 class="tx-20 font-weight-bold mb-1 text-white"> {{\App\Models\Invoice::count()}}</h4>
+										<h4 class="tx-20 font-weight-bold mb-1 text-white"> {{\App\Models\Invoice::where('created_by', Auth::user()->id)->count()}}</h4>
 									</div>
 								</div>
 							</div>
@@ -47,7 +47,7 @@
 							<div class="pb-0 mt-0">
 								<div class="d-flex">
 									<div class="">
-										<h4 class="tx-20 font-weight-bold mb-1 text-white">{{\App\Models\Invoice::where('invoice_status', 1)->count()}}</h4>
+										<h4 class="tx-20 font-weight-bold mb-1 text-white">{{\App\Models\Invoice::where('created_by', Auth::user()->id)->where('invoice_status', 1)->count()}}</h4>
 									</div>
 								</div>
 							</div>
@@ -103,7 +103,7 @@
 								</thead>
 								<tbody>
 								
-									@foreach(\App\Models\Invoice::latest()->take(5)->get()  as $invoice)
+									@foreach(\App\Models\Invoice::where('created_by', Auth::user()->id)->latest()->take(5)->get()  as $invoice)
 										<tr>
 										<td>{{$loop->iteration}}</td>
 										<td class="tx-right tx-medium tx-inverse"> {{$invoice->code}}</td>

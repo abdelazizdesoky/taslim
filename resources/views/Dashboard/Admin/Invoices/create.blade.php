@@ -168,7 +168,7 @@
                                     <select class="form-control select2 product-select" name="items[0][product_id]" required>
                                         <option value="">-- اختر المنتج --</option>
                                         @foreach($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                            <option value="{{ $product->id }}">{{ $product->id }}-{{ $product->product_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -268,7 +268,7 @@ $(document).ready(function() {
                     <select class="form-control select2 product-select" name="items[${productCounter}][product_id]" required>
                         <option value="">-- اختر المنتج --</option>
                         @foreach($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                            <option value="{{ $product->id }}">{{ $product->id }}-{{ $product->product_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -311,6 +311,74 @@ $(document).ready(function() {
             updateRemoveButtons();  // تحديث أزرار الحذف
         }
     });
+
+
+
+function collectProductData() {
+    let products = [];
+
+    // جمع بيانات المنتجات والكميات
+    $('.product-row').each(function() {
+        const productId = $(this).find('.product-select').val();
+        const quantity = $(this).find('.quantity').val();
+
+        if (productId && quantity && quantity > 0) {
+            products.push({
+                product_id: productId,
+                quantity: quantity
+            });
+        }
+    });
+
+    return products;
+}
+
+$('form').on('submit', function(e) {
+    e.preventDefault();
+
+    let isValid = true;
+    let hasProducts = false;
+
+    // التحقق من صحة المدخلات
+    $('.product-row').each(function() {
+        const productId = $(this).find('.product-select').val();
+        const quantity = $(this).find('.quantity').val();
+
+        if (productId && quantity && quantity > 0) {
+            hasProducts = true;
+        } else {
+            isValid = false;
+            return false;
+        }
+    });
+
+    if (!isValid) {
+        alert('الرجاء ملء جميع بيانات المنتجات والكميات بشكل صحيح');
+        return false;
+    }
+
+    if (!hasProducts) {
+        alert('يجب إضافة منتج واحد على الأقل');
+        return false;
+    }
+
+    // جمع بيانات المنتجات
+    const products = collectProductData();
+    if (products.length === 0) {
+        alert('يجب إضافة منتج واحد على الأقل');
+        return false;
+    }
+
+    // إضافة بيانات المنتجات إلى حقل مخفي
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'products_data',
+        value: JSON.stringify(products)
+    }).appendTo('form');
+
+    this.submit();  // إرسال النموذج
+});
+
 
     // التحقق من النموذج قبل الإرسال
     $('form').on('submit', function(e) {

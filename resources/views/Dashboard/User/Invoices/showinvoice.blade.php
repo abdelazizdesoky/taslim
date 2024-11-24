@@ -73,9 +73,9 @@
 											@default
 											<p class="invoice-info-row"><span>مورد/العميل   :</span> <span>{{ $invoice->customer->name ??$invoice->supplier->name }}-{{ $invoice->customer->phone ??$invoice->supplier->phone }}</span></p>
 											@endswitch
-												
-											
 										
+											
+											<p class="invoice-info-row"><span>المنسق :</span> <span>	{{$invoice->creator->name??'-'}}</span></p>
 											<p class="invoice-info-row"><span>المندوب :</span> <span>{{ $invoice->admin->name ??'-' }}</span></p>
 											<p class="invoice-info-row"><span>مجموع سيريالات المسحوبة  :</span> <span>{{$serials->count()}}</span></p>
 										</div>
@@ -181,7 +181,7 @@ document.querySelector('.btn-success').addEventListener('click', function () {
     // Fetch the table and invoice details
     var table = document.querySelector('.table-striped'); // Update the selector if necessary
     var invoiceCode = "{{ $invoice->code }}";
-	var customerName = "{{ $invoice->customer->name ?? $invoice->supplier->name  }}";
+    var customerName = "{{ $invoice->customer->name ?? $invoice->supplier->name  }}";
     var employeeName = "{{ $invoice->admin->name ?? '-' }}";
     var serialsCount = "{{ $serials->count() }}";
 
