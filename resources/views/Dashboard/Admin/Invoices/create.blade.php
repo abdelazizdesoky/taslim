@@ -1,5 +1,4 @@
 
-
 @extends('Dashboard.layouts.master')
 @section('css')
     <!--Internal   Notify -->
@@ -30,7 +29,7 @@
 <!-- row -->
 <div class="row">
 					<!-- Col -->
-					<div class="col-lg-8">
+					<div class="col-lg-6">
 						<div class="card">
 							<div class="card-body">
 								<div class="mb-4 main-content-label"> الاذن</div>
@@ -146,19 +145,68 @@
 											</div>
 										</div>	
                                     </div>
-                                   
-
-       
+                     
+                             
 
 							</div>
-							<div class="card-footer text-left">
-								<button type="submit" class="btn btn-success waves-effect waves-light">حفظ الاذن</button>
-							</div>
-                        </form>
 						</div>
 					</div>
 					<!-- /Col -->
-				</div>
+
+
+                           <!-- Col -->
+					<div class="col-lg-6">
+						<div class="card">
+							<div class="card-body">
+                      <!-- مكون Livewire لإضافة المنتجات -->
+                      <div class="form-group">
+                        <label for="products">المنتجات</label>
+                        <div id="products-container">
+                            <!-- صف المنتج الأول -->
+                            <div class="product-row row mb-3">
+                                <div class="col-md-5">
+                                    <select class="form-control select2 product-select" name="items[0][product_id]" required>
+                                        <option value="">-- اختر المنتج --</option>
+                                        @foreach($products as $product)
+                                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="number" class="form-control quantity" name="items[0][quantity]" placeholder="الكمية" required min="1">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-danger remove-product">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <!-- زر إضافة منتج -->
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-primary" id="add-product">
+                                    <i class="fas fa-plus"></i> إضافة منتج
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+</div>
+
+                 </div>
+             </div>
+
+             <div class="card-footer text-left">
+                <button type="submit" class="btn btn-success waves-effect waves-light">حفظ الاذن</button>
+            </div>
+        </form>
+
+          </div>
+	<!-- /Col -->
+
+	</div>
 
    
 </div>
@@ -207,7 +255,103 @@
     contactSelect.addEventListener('change', updateContactType);
 });
 
-      
+//---------------------------------
+$(document).ready(function() {
+    let productCounter = $('.product-row').length;  // تهيئة العداد بعدد الصفوف الحالية
+
+    // دالة إضافة صف منتج جديد
+    function addProductRow() {
+        const container = $('#products-container');
+        const newRow = $(`
+            <div class="product-row row mb-3">
+                <div class="col-md-5">
+                    <select class="form-control select2 product-select" name="items[${productCounter}][product_id]" required>
+                        <option value="">-- اختر المنتج --</option>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <input type="number" class="form-control quantity" name="items[${productCounter}][quantity]" placeholder="الكمية" required min="1">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-product">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `);
+        
+        container.append(newRow);
+        newRow.find('.select2').select2();  // تهيئة Select2 للمنتجات الجديدة
+        productCounter++;  // زيادة العداد
+        updateRemoveButtons();  // تحديث أزرار الحذف
+    }
+
+    // تحديث أزرار الحذف
+    function updateRemoveButtons() {
+        const rows = $('.product-row');
+        if (rows.length === 1) {
+            rows.find('.remove-product').hide();  // إخفاء زر الحذف إذا كان هناك صف واحد فقط
+        } else {
+            rows.find('.remove-product').show();  // إظهار زر الحذف إذا كان هناك أكثر من صف
+        }
+    }
+
+    // إضافة حدث لزر إضافة منتج
+    $('#add-product').on('click', function() {
+        addProductRow();  // إضافة منتج جديد
+    });
+
+    // إضافة حدث حذف للصفوف
+    $(document).on('click', '.remove-product', function() {
+        if ($('.product-row').length > 1) {
+            $(this).closest('.product-row').remove();  // إزالة الصف
+            updateRemoveButtons();  // تحديث أزرار الحذف
+        }
+    });
+
+    // التحقق من النموذج قبل الإرسال
+    $('form').on('submit', function(e) {
+        e.preventDefault();
+
+        let isValid = true;
+        let hasProducts = false;
+
+        $('.product-row').each(function() {
+            const productId = $(this).find('.product-select').val();
+            const quantity = $(this).find('.quantity').val();
+
+            if (productId && quantity && quantity > 0) {
+                hasProducts = true;
+            } else {
+                isValid = false;
+                return false;
+            }
+        });
+
+        if (!isValid) {
+            alert('الرجاء ملء جميع بيانات المنتجات والكميات بشكل صحيح');
+            return false;
+        }
+
+        if (!hasProducts) {
+            alert('يجب إضافة منتج واحد على الأقل');
+            return false;
+        }
+
+        // طباعة البيانات للتحقق (يمكن إزالتها لاحقاً)
+        console.log('Form data:', $(this).serialize());
+
+        this.submit();  // إرسال النموذج
+    });
+
+    // تهيئة أزرار الحذف عند تحميل الصفحة
+    updateRemoveButtons();
+});
+
+
     </script>
     
 
