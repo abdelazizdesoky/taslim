@@ -21,14 +21,14 @@
 										
 										@if($permission == 3)
 										<div class="pr-1 mb-3 mb-xl-0">
-											<a href="{{route('employee.invoices.index')}}">
+											<a href="{{route('employee.invoices.update',2)}}">
 											<button type="button" class="btn btn-info  ml-2"><i class="mdi mdi-filter-variant"></i>الاذون تسليم </button>
 										</a>
 										</div>
 
 										@elseif($permission == 4)
 										<div class="pr-1 mb-3 mb-xl-0">
-											<a href="{{route('employee.invoices.show',1)}}">
+											<a href="{{route('employee.invoices.update',1)}}">
 											<button type="button" class="btn btn-warning   ml-2"><i class="mdi mdi-refresh"></i>الاذون استلام </button>
 											</a>
 										</div>

@@ -41,7 +41,8 @@
 <div class="breadcrumb-header justify-content-between">
     <div class="my-auto">
         <div class="d-flex">
-            <h4 class="content-title mb-0 my-auto">الاذن</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ إضافة سيريال</span>
+            <h4 class="content-title mb-0 my-auto">الاذن</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">ِ<a href="{{route ('employee.invoices.show',$Invoices->id)}}">/ عرض المنتجات </a>
+                 / إضافة سيريال</span>
         </div>
     </div>
 </div>
@@ -52,7 +53,9 @@
 @include('Dashboard.messages_alert')
 <!-- row -->
 <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12">
+    
     <div class="card">
+
         <div class="card-body">
             رقم الاذن - {{$Invoices->code}}
             <div class="main-content-label mg-b-5"></div>
@@ -72,6 +75,8 @@
                 
                  <i class="mdi mdi-truck-fast text-gray"></i> {{ $Invoices->customer->name??$Invoices->supplier->name}}
             </p>
+
+         
             
             <div class="container mt-4">
           
@@ -80,6 +85,13 @@
 
                 <p class="mt-2">عدد السيريالات: <span id="serialCount">0</span></p>
                 <!--------------------------------------------------------------------------->
+
+
+
+
+
+
+                
                 <div class="form-group">
                     <label for="serialInput">أدخل السيريال أو استخدم الكاميرا:</label>
                     <input type="text" class="form-control" id="serialInput" placeholder="أدخل السيريال هنا" autofocus>
@@ -99,6 +111,10 @@
                         <button type="submit" class="btn btn-success waves-effect waves-light">تأكيد الاذن</button>
                     </div>
                 </form>
+
+             
+
+                
             </div>
         </div>
     </div>
@@ -218,6 +234,35 @@
             }
         });
     });
+});
+
+
+Quagga.onDetected(async function (result) {
+    const serial = result.codeResult.code;
+
+    if (serial) {
+        const invoiceId = {{ $Invoices->id }};
+
+        // تحقق من السيريال عبر طلب AJAX
+        const response = await fetch(`/check-serial/${invoiceId}/${serial}`);
+        const data = await response.json();
+
+        if (data.valid) {
+            if (!isSerialDuplicate(serial)) {
+                createSerialItem(serial);
+                Quagga.stop();
+                interactive.style.display = 'none'; // إخفاء الفيديو
+            } else {
+                alert('هذا السيريال مكرر على مستوى الفاتورة!');
+                Quagga.stop();
+                interactive.style.display = 'none'; // إخفاء الفيديو
+            }
+        } else {
+            alert(data.message); // عرض رسالة الخطأ المناسبة
+            Quagga.stop();
+            interactive.style.display = 'none'; // إخفاء الفيديو
+        }
+    }
 });
 
 

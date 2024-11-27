@@ -14,4 +14,9 @@ class SerialNumber extends Model
     {
         return $this->belongsTo(Invoice::class,'invoice_id');
     } 
+
+    public function product()
+{
+    return $this->belongsTo(Product::class, 'product_id');
+}
 }

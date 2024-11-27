@@ -42,7 +42,7 @@
 								<th class="wd-lg-25p tx-right">تاريخ  </th>
 								<th class="wd-lg-25p tx-right">المورد  </th>
 								<th class="wd-lg-25p tx-right">حالة </th>
-								<th class="wd-lg-25p tx-right">اجراء </th>
+								
 
 							</tr>
 						</thead>
@@ -74,18 +74,36 @@
 								
 								</td>
 								<td class="tx-right tx-medium tx-danger">
-									@if($invoice->invoice_status == 1  )
+						@if($invoice->invoice_status == 1  )
 												  
-									@if($invoice->invoice_type == 1) 
+							@if($invoice->invoice_type == 1) 
 
-									<div class="p-1 bg-primary text-white">	تحت الاستلام  </div>
+									 
+										@if($invoice->invoice_status == 1  || $invoice->invoice_status == 4)
+										<a href="{{route ('employee.invoices.show',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i>	 الاستلام  </a>	
+										@else
+										@endif	
+								
 
 									@elseif ($invoice->invoice_type == 3)
 
-									<div class="p-1 bg-secondary text-white">تحت ارجاع  </div>
+									
+										@if($invoice->invoice_status == 1  || $invoice->invoice_status == 4)
+										<a href="{{route ('employee.invoices.show',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> ارجاع 	 </a>	
+										@else
+										@endif	
+								
+								
 									 @else
 
-									 <div class="p-1 bg-info text-white">تحت تسليم  </div>
+									 
+										@if($invoice->invoice_status == 1  || $invoice->invoice_status == 4)
+										<a href="{{route ('employee.invoices.show',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i>	 تسليم 
+										</a>	
+										@else
+										@endif	
+									
+									
 
 								@endif
 							
@@ -108,13 +126,7 @@
 								@endif
 								
 								</td>
-								<td class="tx-right tx-medium tx-danger">
-									@if($invoice->invoice_status == 1)
-									<a href="{{route ('employee.invoices.edit',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>	
-									@else
-									@endif
-					
-								</td>
+								
 							</tr>
 							@endforeach
 							@else

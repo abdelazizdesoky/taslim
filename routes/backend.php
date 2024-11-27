@@ -94,8 +94,22 @@ Route::middleware(['auth:admin'])->group(function () {
      * Deliver Routes (Permission Level 3)
      */
     Route::middleware('permission:3,4')->prefix('employee')->name('employee.')->group(function () {
-      Route::resource('invoices', EmployeeInvoiceController::class);
-      Route::get('completed-invoices', [EmployeeInvoiceController::class, 'Compinvoice'])->name('invoices.completed');
+
+      Route::controller(EmployeeInvoiceController::class)->name('invoices.')->group(function () {
+        Route::get('index', 'index')->name('index');
+        Route::get('show/{id}', 'show')->name('show');
+        Route::get('update/{id}', 'update')->name('update');
+        Route::post('/', 'store')->name('store');
+        Route::get('edit/{id}', 'edit')->name('edit');
+
+        Route::get('completed-invoices', 'Compinvoice')->name('completed');
+        Route::get('/check-serial/{invoice}/{serial}', 'checkSerial');
+
+
+    });
+
+    
+     
   });
 
   
