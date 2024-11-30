@@ -35,6 +35,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
       Route::get('/Dashboard/employee', function () {
           return view('Dashboard.Employees.dashboard');
       })->middleware('permission:3,4')->name('Dashboard.employee');
+
+
+      Route::get('/Dashboard/viewer', function () {
+        return view('Dashboard.Viewer.dashboard');
+    })->middleware('permission:5')->name('Dashboard.viewer');
   });
   
   Route::post('login/admin', [AdminController::class, 'store'])

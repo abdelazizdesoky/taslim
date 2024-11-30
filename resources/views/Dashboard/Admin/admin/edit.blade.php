@@ -61,7 +61,8 @@
                                 <option value="1" {{ $admin->permission == 1 ? 'selected' : '' }}>ادمن</option>
                                 <option value="2" {{ $admin->permission == 2 ? 'selected' : '' }}>منسق</option>
                                 <option value="3" {{ $admin->permission == 3 ? 'selected' : '' }}> مندوب</option>
-                                <option value="3" {{ $admin->permission == 4 ? 'selected' : '' }}> امين مخزن</option>
+                                <option value="4" {{ $admin->permission == 4 ? 'selected' : '' }}> امين مخزن</option>
+                                <option value="5" {{ $admin->permission == 5 ? 'selected' : '' }}> امين مخزن</option>
                                
                             </select>
                         </div>

@@ -20,6 +20,8 @@
         @include('Dashboard.layouts.main-sidebar.employee-sidebar-main')
     @elseif($permission == 4 )
         @include('Dashboard.layouts.main-sidebar.employee-sidebar-main')
+  @elseif($permission == 5 )
+        @include('Dashboard.layouts.main-sidebar.viewer-sidebar-main')
     @endif
 
 @endif

@@ -27,6 +27,7 @@ class AdminController extends Controller
             1 => redirect()->intended(RouteServiceProvider::ADMIN),
             2 => redirect()->intended(RouteServiceProvider::HOME),
             3, 4=> redirect()->intended(RouteServiceProvider::EMPLOYEE),
+            5=> redirect()->intended(RouteServiceProvider::VIEWER),
 
             default => redirect()->back()
                 ->withErrors(['name' => 'Invalid permissions'])

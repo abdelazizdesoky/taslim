@@ -32,7 +32,7 @@ class AdminController extends Controller
         'email' => 'required|unique:admins,email',
         'password' => 'required|min:8',
         'name' => 'required|string|max:255',
-        'permission' => 'required|in:1,2,3,4',
+        'permission' => 'required|in:1,2,3,4,5',
     ], [
         'email.required' => 'البريد الإلكتروني مطلوب.',
         'email.unique' => 'اسم   مسجل بالفعل.',
@@ -84,7 +84,7 @@ class AdminController extends Controller
            
            
             'name' => 'required|string|max:255',
-            'permission' => 'required|in:1,2,3,4',
+            'permission' => 'required|in:1,2,3,4,5',
             'status' => 'required|in:1,2',
         ], [
           

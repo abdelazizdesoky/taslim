@@ -11,7 +11,7 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">الاذون </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ كل الاذون</span>
+							<h4 class="content-title mb-0 my-auto">الاذون </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ كل الاذون </span>
 						</div>
 					</div>
 				</div>
@@ -26,28 +26,22 @@
 						<div class="card mg-b-20">
 							<div class="card-header pb-0">
 								<div class="d-flex justify-content-between">
-									<a href="{{route('admin.invoices.create')}}" class="btn btn-primary">اضافة اذن  جديد</a>
+									
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 
 									
 								</div>
-								<form action="{{ route('import.excel') }}" method="POST" enctype="multipart/form-data">
-									@csrf
-									<br>
-									<button class="btn btn-primary" type="submit">Import</button>
-									<input class="" type="file" name="file" />
-								
-								</form>
+						
 								
 							</div>
 							<div class="card-body">
 								<div class="table-responsive">
-									<table id="example" class="table key-buttons text-md-nowrap">
+									<table id="example" class="table table-bordered">
 										<thead>
 
 											<tr>
 												<th>#</th>
-												<th > رقم الاذن </th>
+												<th > كود الاذن </th>
 												<th >  نوع الاذن </th>
 												<th> تاريخ الاذن  </th>
 												<th>  المندوب </th>
@@ -58,14 +52,13 @@
 												<th >  تااريخ تحرير</th>
 												<th >  سيريال مسحوب    </th>
 												<th >  منسق    </th>
-												<th > ألاجراءات  </th>
 											</tr>
 										</thead>
 										<tbody>
                                         @foreach($Invoices as $Invoice)
 											<tr>
                                                 <td>{{$loop->iteration}}</td>
-												<td><a href="{{route('admin.invoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
+												<td><a href="{{route('viewer.invoices.show',$Invoice->id)}}">{{$Invoice->code}}</a></td>
 												<td>
 													@switch($Invoice->invoice_type)
 													@case(1)
@@ -148,17 +141,13 @@
 												
 												</td>
 												<td>{{$Invoice->created_at->diffForHumans()}}</td>
-												<td > {{ $Invoice->serial_numbers_count }}    </td>
-												<td>{{$Invoice->creator->name??'-'}}</td>
-												 <td>
-                                                    <a href="{{route('admin.invoices.edit',$Invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
-                                                    <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$Invoice->id}}"><i class="fas fa-trash"></i></button>
-													<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#cancel{{$Invoice->id}}"><i class="fas ti-close"></i></button>
+												
+													<td > {{ $Invoice->serial_numbers_count }}    </td>
+													<td>{{$Invoice->creator->name??'-'}}</td> 
 													
-                                                </td>
+                                               
 											</tr>
-                                            @include('Dashboard.Admin.Invoices.Deleted')
-											@include('Dashboard.Admin.Invoices.cancel')
+										
                                         @endforeach
 										</tbody>
 									</table>

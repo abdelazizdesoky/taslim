@@ -34,7 +34,7 @@
 				</div>
 				<span class="tx-12 tx-muted mb-3 ">		</span>
 				<div class="table-responsive country-table">
-					<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
+					<table class="table  table-bordered ">
 						
 						<thead>
 							<tr>

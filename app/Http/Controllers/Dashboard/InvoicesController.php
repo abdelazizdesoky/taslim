@@ -26,6 +26,7 @@ class InvoicesController extends Controller
 public function index()
 {
     $Invoices = Invoice::with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
+    ->withCount('serialNumbers')
     ->orderBy('invoice_date', 'desc')
     ->get();
 

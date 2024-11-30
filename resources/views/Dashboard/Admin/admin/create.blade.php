@@ -90,6 +90,7 @@
                                     <option value="2">منسق </option>
                                     <option value="3"> مندوب </option> 
                                     <option value="4"> امين مخزن </option>
+                                    <option value="5">  مشرف </option>
                                 </select>
                            
                             </div>

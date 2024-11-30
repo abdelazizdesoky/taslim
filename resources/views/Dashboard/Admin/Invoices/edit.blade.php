@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="row row-sm mg-b-20">
-                                    <div class="input-group col-md-4">
+                                    <div class="input-group col-md-6">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
                                                 <i class="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>

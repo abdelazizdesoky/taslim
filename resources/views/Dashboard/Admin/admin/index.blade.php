@@ -67,6 +67,10 @@
 													امين مخزن   
 													   @break
 
+													 @case(5)
+													    مشرف   
+														  @break
+
 													@default
 													 غير محدد
 													@endswitch

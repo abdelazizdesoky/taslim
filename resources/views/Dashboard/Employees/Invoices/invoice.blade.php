@@ -34,7 +34,7 @@
 				</div>
 				<span class="tx-12 tx-muted mb-3 ">		</span>
 				<div class="table-responsive country-table">
-					<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
+					<table class="table  table-bordered">
 						
 						<thead>
 							<tr>
@@ -83,7 +83,7 @@
 
 									 
 										@if($invoice->invoice_status == 1  || $invoice->invoice_status == 4)
-										<a href="{{route ('employee.invoices.edit',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i>	 الاستلام  </a>	
+										<a href="{{route ('employee.invoices.show',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i>	 الاستلام  </a>	
 										@else
 										@endif	
 										
@@ -92,7 +92,7 @@
 
 								
 										@if($invoice->invoice_status == 1  || $invoice->invoice_status == 4)
-										<a href="{{route ('employee.invoices.edit',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> ارجاع 	 </a>	
+										<a href="{{route ('employee.invoices.show',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i> ارجاع 	 </a>	
 										@else
 										@endif	
 										
@@ -101,7 +101,7 @@
 
 									
 										@if($invoice->invoice_status == 1  || $invoice->invoice_status == 4)
-										<a href="{{route ('employee.invoices.edit',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i>	 تسليم 
+										<a href="{{route ('employee.invoices.show',$invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i>	 تسليم 
 										</a>	
 										@else
 										@endif	
