@@ -113,7 +113,7 @@
                         <div class="col-md-9">
                             <select class="form-control select2" name="employee_id"  style="width: 100%;">
                                 @foreach($admins as $admin)
-                                    <option value="{{ $admin->id }}" {{ $Invoices->employee_id == $admin->id ? 'selected' : '' }}>{{ $admin->name }}-{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
+                                    <option value="{{ $admin->id }}" {{ $Invoices->employee_id == $admin->id ? 'selected' : '' }}>{{ $admin->id }}{{ $admin->name }}-{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -180,7 +180,7 @@
                                                             <select name="products[]" class="form-control select2-product" required>
                                                                 @foreach ($allProducts as $p)
                                                                     <option value="{{ $p->id }}" {{ $p->id == $product->product_id ? 'selected' : '' }}>
-                                                                        {{ $p->product_name }}
+                                                                        {{ $p->product_code }} - {{ $p->product_name }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <select name="products[]" class="form-control select2-product" required>
                     <option value="" disabled selected>اختر المنتج</option>
                     @foreach ($allProducts as $product)
-                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                        <option value="{{ $product->id }}"> {{ $product->product_code }} -{{ $product->product_name }}</option>
                     @endforeach
                 </select>
             </td>
