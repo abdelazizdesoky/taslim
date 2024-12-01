@@ -36,7 +36,7 @@
 										<div class="timeline-badge {{$invoice->invoice_type == 1 ? 'success ':'info'}}"><img class="timeline-image" alt="img" src="{{URL::asset('dashboard/img/faces/3.jpg')}}"> </div>
 										<div class="timeline-panel">
 											<div class="timeline-heading">
-												<h6 class="timeline-title"><a href="{{route('admin.invoices.show',$invoice->id)}}">{{$invoice->code}}</h6></a>
+												<h6 class="timeline-title"><a href="{{route('viewer.invoices.show',$invoice->id)}}">{{$invoice->code}}</h6></a>
 											</div>
 											<div class="timeline-body">
 												<p>
@@ -99,7 +99,7 @@
 
 
 					<div class="d-flex justify-content-between">
-						<a href="{{route('admin.serial.index')}}" class="btn btn-primary">  رجوع </a>
+						<a href="{{route('viewer.invoices.create')}}" class="btn btn-primary">  رجوع </a>
 					  
 					</div>
 				</div>

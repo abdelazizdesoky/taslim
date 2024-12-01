@@ -30,7 +30,7 @@ class ViewerInvoicesController extends Controller
     public function create()
     {
 
-        return view('Dashboard.Admin.Serial.index');
+        return view('Dashboard.Viewer.Serial.index');
     }
 
 
@@ -38,10 +38,10 @@ class ViewerInvoicesController extends Controller
    
    public function searchInvoices(Request $request)
 
-
    {
 
-    dd($request);
+   
+
        $query = $request->input('query');
    
        // البحث عن السيريالات المطابقة
@@ -58,15 +58,17 @@ class ViewerInvoicesController extends Controller
    
                // التأكد من وجود فواتير
                if ($invoices->count() > 0) {
-                   return view('Dashboard.Admin.Serial.show', compact('invoices', 'query'));
+
+                   return view('Dashboard.Viewer.Serial.show', compact('invoices', 'query'));
+
                } else {
-                   return view('Dashboard.Admin.Serial.show')->with('message', 'لا توجد فواتير مرتبطة بهذا السيريال.');
+                   return view('Dashboard.Viewer.Serial.show')->with('message', 'لا توجد فواتير مرتبطة بهذا السيريال.');
                }
            } else {
-               return view('Dashboard.Admin.Serial.show')->with('message', 'لا توجد فواتير مرتبطة بهذا السيريال.');
+               return view('Dashboard.Viewer.Serial.show')->with('message', 'لا توجد فواتير مرتبطة بهذا السيريال.');
            }
        } else {
-           return view('Dashboard.Admin.Serial.show')->with('message', 'لم يتم العثور على السيريال.');
+           return view('Dashboard.Viewer.Serial.show')->with('message', 'لم يتم العثور على السيريال.');
        }
    }
    
@@ -109,4 +111,15 @@ public function show($id)
 
 
 //-------------------------------------------------------------------------------------------------------
+
+public function viewProduct()
+{
+
+    $products = Product::with(['productType.brand'])->get();
+
+    return view('Dashboard.Viewer.Product.index',compact('products'));
+
+}
+
+
 }

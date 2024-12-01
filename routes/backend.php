@@ -118,19 +118,18 @@ Route::middleware(['auth:admin'])->group(function () {
      * viewer Routes (Permission Level 5)
      */
     Route::middleware('permission:5')->prefix('viewer')->name('viewer.')->group(function () {
-        Route::resource('invoices', ViewerInvoicesController::class)->names([
-            'index' => 'invoices.index',
-            'create' => 'invoices.create',
-            'store' => 'invoices.store',
-            'show' => 'invoices.show',
-            'edit' => 'invoices.edit',
-            'update' => 'invoices.update',
-            'destroy' => 'invoices.destroy',
-        ]);
 
-         // Serial Number Management
-         Route::get('/',[ViewerInvoicesController::class, 'create'])->name('serial.create');
-         Route::post('/invoices/search',[ViewerInvoicesController::class, 'searchInvoices'])->name('invoices.search');
+        Route::controller(ViewerInvoicesController::class)->name('invoices.')->group(function () {
+
+            Route::get('index', 'index')->name('index');
+            Route::get('show/{id}', 'show')->name('show');
+            Route::get('/', 'create')->name('create');
+            Route::post('/invoices/search', 'searchInvoices')->name('search');
+            Route::get('prodact/view', 'viewProduct')->name('prodact');
+
+    });
+
+    
  
        
     });
