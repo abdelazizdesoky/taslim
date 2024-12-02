@@ -12,16 +12,16 @@ use App\Http\Requests\Auth\adminLoginRequest;
 class AdminController extends Controller
 {
 
+ 
+
     
     public function store(adminLoginRequest $request)
     {
 
-    
     if ($request->authenticate()) {
         $request->session()->regenerate();
         
         $admin = Auth::guard('admin')->user();
-        
         return match ($admin->permission) {
             
             1 => redirect()->intended(RouteServiceProvider::ADMIN),

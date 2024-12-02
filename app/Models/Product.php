@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ProductType;
+use App\Traits\TracksActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -30,5 +31,11 @@ class Product extends Model
                 ->withPivot('quantity')
                 ->withTimestamps();
 }
+
+use TracksActivity;
+
+protected static $logAttributes = ['product_name','product_code','detail_name'];
+protected static $logName = 'Product';
+protected static $logOnlyDirty = true;
 
 }

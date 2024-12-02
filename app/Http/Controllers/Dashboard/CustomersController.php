@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Dashboard;
 use App\Models\Customers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class CustomersController extends Controller
 {
     public function index()
     {
-        $customers = Customers::all();
-        return view('Dashboard.Admin.customers.index',compact('customers'));
+        $customers = Cache::remember('customers', 60, function () {
+            return Customers::all();
+        });
+        return view('Dashboard.Admin.customers.index', compact('customers'));
     }
 
     public function create()

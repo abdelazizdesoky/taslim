@@ -13,6 +13,7 @@ use App\Http\Controllers\Dashboard\{
     ProductTypeController,
     SerialNumberController,
     AdminController,
+    ActivityLogController,
     
 };
 use App\Http\Controllers\User\UserInvoicesController;
@@ -44,7 +45,7 @@ Route::middleware(['auth:admin'])->group(function () {
         // Location Management
         Route::resource('locations', LocationController::class);
         
-     
+        Route::get('admin/activity-logs', [ActivityLogController::class, 'index'])->name('activityLogs.index');
         
         // user Management
         Route::controller(AdminController::class)->prefix('admins')->name('admins.')->group(function () {

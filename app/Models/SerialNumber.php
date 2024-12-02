@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\TracksActivity;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SerialNumber extends Model
 {
@@ -19,4 +21,11 @@ class SerialNumber extends Model
 {
     return $this->belongsTo(Product::class, 'product_id');
 }
+
+use TracksActivity;
+
+protected static $logAttributes = ['serial_number', 'invoice_id'];
+protected static $logName = 'serial_number';
+protected static $logOnlyDirty = true;
+
 }

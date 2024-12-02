@@ -4,11 +4,18 @@ namespace App\Models;
 
 
 use App\Models\Admin;
+use App\Models\Product;
 use App\Models\Location;
 use App\Models\Supplier;
 use App\Models\Customers;
+use App\Models\SerialNumber;
+use App\Traits\TracksActivity;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+
 
 class Invoice extends Model
 {
@@ -16,7 +23,7 @@ class Invoice extends Model
     protected $guarded=[];
 
 
-    
+    use TracksActivity;
    
     public function supplier()
     {
@@ -56,5 +63,25 @@ class Invoice extends Model
                 ->withPivot('quantity')
                 ->withTimestamps();
 }
+
+
+
+protected static $logAttributes = [
+    'code',
+    'invoice_date',
+    'invoice_status',
+    'invoice_type',
+    'location_id',
+    'employee_id',
+    'supplier_id',
+    'customer_id',
+    'created_by',
+];
+
+protected static $logName = 'invoice';
+protected static $logOnlyDirty = true;
+
+
+
   
 }
