@@ -7,7 +7,7 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto">المستخدمين   </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ كل المستخدمين  </span>
+							<h4 class="content-title mb-0 my-auto">سجلات   </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/  عرض سجلات    </span>
 						</div>
 					</div>
 				</div>
@@ -18,59 +18,68 @@
 				<!-- row opened -->
 				<div class="row row-sm">
 					<!--div-->
-					<div class="col-xl-12">
-						<div class="card mg-b-20">
+                    <div class="col-xl-12">
+						<div class="card">
 							<div class="card-header pb-0">
 								<div class="d-flex justify-content-between">
+									<h4 class="card-title mg-b-0">سجلات </h4>
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 								</div>
-								
-								
+								<p class="tx-12 tx-gray-500 mb-2">اخر 10 سجلات تمت على سيستم </p>
 							</div>
 							<div class="card-body">
-								<div class="table-responsive">
-									<table id="example" class="table key-buttons text-md-nowrap">
+								<div class="table-responsive hoverable-table">
+									<table class="table  key-buttons text-md-nowrap" >
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>اسم السجل</th>
-                                                <th>الوصف</th>
-                                                <th>المستخدم الذي قام بالتغيير</th>
-                                                <th>البيانات القديمة</th>
-                                                <th>البيانات الجديدة</th>
-                                                <th>التاريخ</th>
+                                                <th> السجل</th>
                                                 <th>التعديلات</th>
+                                                <th>التاريخ</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($logs as $log)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $log->log_name }}</td>
-                                                    <td>{{ $log->description }}</td>
-                                                    <td>{{ $log->causer_type }} - {{ $log->causer_id }}</td>
-                    
-                                                    {{-- عرض البيانات القديمة --}}
                                                     <td>
-                                                        @if(isset($log->properties['old']))
-                                                            <pre>{{ json_encode($log->properties['old'], JSON_PRETTY_PRINT) }}</pre>
-                                                        @else
-                                                            لا توجد بيانات قديمة
-                                                        @endif
+
+                                                    @php
+                                                        $admin = \App\Models\Admin::find($log->causer_id);
+                                                    @endphp
+
+                                                    {{ $admin->name ?? 'Unknown' }}
+                                                    -
+                                                   
+                                                    @switch($log->description)
+                                                    @case('updated') تعديل  @break 
+                                                    @case('deleted')  حذف @break
+                                                    @case('created') انشاء @break
+                                                   
+                                                    @default
+                                                    غير معرف
+                                                    @endswitch
+                                                    فى جدول 
+                                                        @switch($log->log_name)
+                                                        @case('Admin') مستخدم  @break 
+                                                        @case('invoice')  الاذون @break
+                                                        @case('customers') عملاء @break
+                                                        @case('suppliers') موردين @break
+                                                        @case('serial_number') سيريال @break
+                                                        @case('Product') منتجات @break
+                                                        @case('InvoiceProduct')  اذن منتجات @break
+                                                        @case('Location') موقع @break
+                                                        @case('ProductType') نوع منتج @break
+                                                      
+                                                        @default
+                                                        غير معرف
+                                                        @endswitch
+
+                                                
+                                                        
                                                     </td>
-                    
-                                                    {{-- عرض البيانات الجديدة --}}
-                                                    <td>
-                                                        @if(isset($log->properties['attributes']))
-                                                            <pre>{{ json_encode($log->properties['attributes'], JSON_PRETTY_PRINT) }}</pre>
-                                                        @else
-                                                            لا توجد بيانات جديدة
-                                                        @endif
-                                                    </td>
-                    
-                                                    <td>{{ $log->created_at }}</td>
-                    
-                                                    {{-- عرض التعديلات بين البيانات القديمة والجديدة --}}
+
                                                     <td>
                                                         @if($log->custom_changes)
                                                             <ul>
@@ -86,6 +95,29 @@
                                                             لا توجد تعديلات
                                                         @endif
                                                     </td>
+                    
+                                                    {{-- عرض البيانات القديمة --}}
+                                                   {{-- <td>
+                                                        @if(isset($log->properties['old']))
+                                                            <pre>{{ json_encode($log->properties['old'], JSON_PRETTY_PRINT) }}</pre>
+                                                        @else
+                                                            لا توجد بيانات قديمة
+                                                        @endif
+                                                    </td> --}}
+                    
+                                                    {{-- عرض البيانات الجديدة --}}
+                                                    {{-- <td>
+                                                        @if(isset($log->properties['attributes']))
+                                                            <pre> {{ json_encode($log->properties['attributes'], JSON_PRETTY_PRINT) }}</pre>
+                                                        @else
+                                                            لا توجد بيانات جديدة
+                                                        @endif
+                                                    </td> --}}
+                    
+                                                    <td>{{ $log->created_at }}</td>
+                    
+                                                    {{-- عرض التعديلات بين البيانات القديمة والجديدة --}}
+                                               
                                                 </tr>
                                             @endforeach
                                         </tbody>

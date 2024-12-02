@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use Spatie\Activitylog\Models\Activity;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogController extends Controller
 {
     public function index()
     {
-        $logs = Activity::all()->map(function($log) {
-            $log->properties = json_decode($log->properties, true);
+
+       
+        $logs = Activity::latest()->take(10)->get()->map(function($log) {
+            $log->properties =  json_decode($log->properties, true);
 
             // التأكد من وجود البيانات القديمة والجديدة
             $changes = null;
