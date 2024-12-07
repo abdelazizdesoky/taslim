@@ -344,7 +344,23 @@ public function show($id)
     return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'serials', 'productSerialCounts'));
 }
 
+public function cancelserial(Request $request)
+{
+    try {
+        // العثور على السيريال المطلوب وحذفه
+        $serialNumber = SerialNumber::findOrFail($request->id);
 
+
+        $serialNumber->delete();
+
+        // رسالة نجاح
+        session()->flash('delete', 'تم حذف السيريال بنجاح.');
+        return redirect()->back();
+    } catch (\Exception $e) {
+        // في حالة حدوث خطأ
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+    }
+}
 
 //-------------------------------------------------------------------------------------------------------
 }

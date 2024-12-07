@@ -120,7 +120,13 @@
 															{{ 'غير موجود بالمنتجات' }}
 														@endif
 													</td>    
-													<td>{{ $serial->created_at }}</td>
+													<td>{{ $serial->created_at }}
+
+														<button  class="btn btn-sm btn-danger" data-toggle="modal" data-target="#cancelserial{{ $serial->id}}"><i class="fas ti-close"></i></button >
+
+													</td>
+
+													@include('Dashboard.Admin.Invoices.cancelserial')
 												</tr>
 											@endforeach
 
@@ -145,7 +151,7 @@
 									</div>
 									<hr class="mg-b-40">
 									
-									<a href="#" class="btn btn-danger float-left mt-3 mr-2">
+									<a href="#" class="btn btn-primary float-left mt-3 mr-2">
 										<i class="mdi mdi-printer ml-1"></i>Print
 									</a>
 							
@@ -172,7 +178,7 @@
     <!-- Print functionality -->
     <script>
 	// Print functionality
-document.querySelector('.btn-danger').addEventListener('click', function () {
+document.querySelector('.btn-primary').addEventListener('click', function () {
     window.print();
 });
 

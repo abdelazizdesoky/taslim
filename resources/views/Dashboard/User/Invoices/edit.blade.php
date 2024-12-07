@@ -169,7 +169,7 @@
                                                 <select name="products[]" class="form-control select2">
                                                     @foreach ($allProducts as $p)
                                                         <option value="{{ $p->id }}" {{ $p->id == $product->product_id ? 'selected' : '' }}>
-                                                            {{ $p->product_name }}
+                                                            {{ $p->product_code }} -  {{ $p->product_name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>
                     <select name="products[]" class="form-control select2" required>
                         @foreach ($allProducts as $product)
-                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                            <option value="{{ $product->id }}">{{ $product->product_code }} -{{ $product->product_name }}</option>
                         @endforeach
                     </select>
                 </td>

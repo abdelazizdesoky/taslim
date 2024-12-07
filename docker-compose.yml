@@ -1,58 +1,95 @@
 services:
-    laravel.test:
-        build:
-            context: ./vendor/laravel/sail/runtimes/8.3
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.3/app
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '80:80'
-            - '443:443'
-            - '${VITE_PORT:-5073}:${VITE_PORT:-5173}'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
-        volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
-        depends_on:
-            - mysql
-        restart: unless-stopped
-    mysql:
-        image: 'mysql/mysql-server:8.0'
-        ports:
-            - '3316:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
-        volumes:
-            - 'sail-mysql:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-        networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - mysqladmin
-                - ping
-                - '-p${DB_PASSWORD}'
-            retries: 3
-            timeout: 5s
-        restart: unless-stopped
+  # خدمة Traefik
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"  # لتمكين واجهة الإدارة غير الآمنة
+      - "--providers.docker=true"  # تمكين Docker كمزود
+      - "--entrypoints.web.address=:80"  # منفذ HTTP
+      - "--entrypoints.websecure.address=:443"  # منفذ HTTPS
+      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"  # التحدي للحصول على شهادة Let's Encrypt
+      - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"  # البريد الإلكتروني الخاص بك
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"  # تخزين الشهادات
+    ports:
+      - "80:80"  # HTTP
+      - "443:443"  # HTTPS
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"  # الوصول إلى Docker API
+      - "./letsencrypt:/letsencrypt"  # تخزين شهادات Let's Encrypt
+    networks:
+      - sail
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.http.rule=Host(`192.168.1.100`)"
+      - "traefik.http.routers.http.entrypoints=web"
+      - "traefik.http.routers.httpsecure.rule=Host(`192.168.1.100`)"
+      - "traefik.http.routers.httpsecure.entrypoints=websecure"
+      - "traefik.http.routers.httpsecure.tls=true"
+    restart: unless-stopped
+
+  # خدمة Laravel
+  laravel.test:
+    build:
+      context: ./vendor/laravel/sail/runtimes/8.3
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP}'
+    image: sail-8.3/app
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      WWWUSER: '${WWWUSER}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+      IGNITION_LOCAL_SITES_PATH: '${PWD}'
+    volumes:
+      - '.:/var/www/html'
+    networks:
+      - sail
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    labels:
+      # تكوين Traefik لخدمة Laravel
+      - "traefik.enable=true"
+      - "traefik.http.routers.laravel.rule=Host(`192.168.1.100`)"  # تغيير إلى اسم النطاق الخاص بك
+      - "traefik.http.routers.laravel.entrypoints=websecure"
+      - "traefik.http.routers.laravel.tls=true"
+      - "traefik.http.routers.laravel.tls.certresolver=myresolver"
+
+  # خدمة MySQL
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - 'sail-mysql:/var/lib/mysql'
+      - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - '-p${DB_PASSWORD}'
+      retries: 3
+      timeout: 5s
+    restart: unless-stopped
+
 networks:
-    sail:
-        driver: bridge
+  sail:
+    driver: bridge
+
 volumes:
-    sail-mysql:
-        driver: local
+  sail-mysql:
+    driver: local
+  letsencrypt:  # لتخزين شهادات Let's Encrypt

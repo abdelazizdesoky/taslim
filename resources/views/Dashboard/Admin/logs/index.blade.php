@@ -51,15 +51,17 @@
 
                                                     {{ $admin->name ?? 'Unknown' }}
                                                     -
-                                                   
+                                                    
                                                     @switch($log->description)
-                                                    @case('updated') تعديل  @break 
-                                                    @case('deleted')  حذف @break
-                                                    @case('created') انشاء @break
+                                                     @case('updated')  <span class="bg-info text-white">تعديل </span> @break 
+                                                    @case('deleted')   <span class=" bg-danger text-white" >   حذف </span>@break 
+                                                    @case('created')  <span class="bg-success text-white" >  انشاء </span> @break 
+                                                          
                                                    
                                                     @default
                                                     غير معرف
                                                     @endswitch
+                                              
                                                     فى جدول 
                                                         @switch($log->log_name)
                                                         @case('Admin') مستخدم  @break 
@@ -71,6 +73,7 @@
                                                         @case('InvoiceProduct')  اذن منتجات @break
                                                         @case('Location') موقع @break
                                                         @case('ProductType') نوع منتج @break
+                                                        @case('Brand') ماركة  @break
                                                       
                                                         @default
                                                         غير معرف

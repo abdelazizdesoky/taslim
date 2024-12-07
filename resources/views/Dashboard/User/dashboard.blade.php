@@ -134,8 +134,8 @@
 				<div class="card">
 					<div class="card-header pb-1">
 						<h3 class="card-title mb-2">المندوبون الأكثر مسحًا للسيريالات</h3>
-						<p class="tx-12 mb-0 text-muted">أعلى ثلاثة مندوبين قاموا بمسح أكبر عدد من السيريالات</p>
-						<br>
+						<p class="tx-12 mb-0 text-muted">أعلى  مندوبين قاموا بمسح أكبر عدد من السيريالات</p>
+					
 					</div>
 					<div class="product-timeline card-body pt-2 mt-1">
 						<ul class="timeline-1 mb-0">
@@ -147,7 +147,7 @@
 									->whereIn('admins.permission', [3, 4]) // التأكد من صلاحية المندوب
 									->groupBy('admins.id') // تجميع حسب المندوب
 									->orderByDesc('scan_count') // ترتيب تنازلي
-									->take(3) // اختيار الثلاثة الأعلى
+									->take(5) // اختيار الثلاثة الأعلى
 									->get();
 							@endphp
 			
@@ -156,8 +156,9 @@
 									<i class="icon-note icons bg-primary-gradient text-white product-icon"></i>
 									<span class="font-weight-semibold mb-4 tx-14">- {{ $employee->name }}</span>
 									<p class="mb-0 text-muted tx-12">
-										عدد عمليات المسح: {{ $employee->scan_count }}
+										 | عدد عمليات المسح: {{ $employee->scan_count }}
 									</p>
+									<br>
 								</li>
 							@endforeach
 						</ul>

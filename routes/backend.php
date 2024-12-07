@@ -41,7 +41,8 @@ Route::middleware(['auth:admin'])->group(function () {
         // Invoice Management
         Route::resource('invoices', InvoicesController::class);
         Route::post('invoices/cancel', [InvoicesController::class, 'cancel'])->name('invoices.cancel');
-        
+        Route::post('invoices/cancelserial', [InvoicesController::class, 'cancelserial'])->name('invoices.cancelserial');
+
         // Location Management
         Route::resource('locations', LocationController::class);
         

@@ -168,7 +168,7 @@
                                     <select class="form-control select2 product-select" name="items[0][product_id]" required>
                                         <option value="">-- اختر المنتج --</option>
                                         @foreach($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->id }}-{{ $product->product_name }}</option>
+                                            <option value="{{ $product->id }}">{{ $product->product_code }}-{{ $product->product_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -268,7 +268,7 @@ $(document).ready(function() {
                     <select class="form-control select2 product-select" name="items[${productCounter}][product_id]" required>
                         <option value="">-- اختر المنتج --</option>
                         @foreach($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->id }}-{{ $product->product_name }}</option>
+                            <option value="{{ $product->id }}">{{ $product->product_code }}-{{ $product->product_name }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -136,8 +136,8 @@
 				<div class="card">
 					<div class="card-header pb-1">
 						<h3 class="card-title mb-2">المندوبون الأكثر مسحًا للسيريالات</h3>
-						<p class="tx-12 mb-0 text-muted">أعلى ثلاثة مندوبين قاموا بمسح أكبر عدد من السيريالات</p>
-						<br>
+						<p class="tx-12 mb-0 text-muted">أعلى  مندوبين قاموا بمسح أكبر عدد من السيريالات</p>
+						
 					</div>
 					<div class="product-timeline card-body pt-2 mt-1">
 						<ul class="timeline-1 mb-0">
@@ -149,7 +149,7 @@
 									->whereIn('admins.permission', [3, 4]) // التأكد من صلاحية المندوب
 									->groupBy('admins.id') // تجميع حسب المندوب
 									->orderByDesc('scan_count') // ترتيب تنازلي
-									->take(3) // اختيار الثلاثة الأعلى
+									->take(4) // اختيار الثلاثة الأعلى
 									->get();
 							@endphp
 			
@@ -158,8 +158,9 @@
 									<i class="icon-note icons bg-primary-gradient text-white product-icon"></i>
 									<span class="font-weight-semibold mb-4 tx-14">- {{ $employee->name }}</span>
 									<p class="mb-0 text-muted tx-12">
-										عدد عمليات المسح: {{ $employee->scan_count }}
+									|	عدد عمليات المسح: {{ $employee->scan_count }}
 									</p>
+									<br>
 								</li>
 							@endforeach
 						</ul>
@@ -233,62 +234,66 @@
     </div>
 
 
-<div class="col-md-12 col-lg-8 col-xl-8">
-	<div class="card card-table-two">
-		<div class="d-flex justify-content-between">
-			<h4 class="card-title mb-1">Your Most Recent Earnings</h4>
-			<i class="mdi mdi-dots-horizontal text-gray"></i>
-		</div>
-		<span class="tx-12 tx-muted mb-3 ">This is your most recent earnings for today's date.</span>
-		<div class="table-responsive country-table">
-			<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
-				<thead>
-					<tr>
-						<th class="wd-lg-25p">Date</th>
-						<th class="wd-lg-25p tx-right">Sales Count</th>
-						<th class="wd-lg-25p tx-right">Earnings</th>
-						<th class="wd-lg-25p tx-right">Tax Witheld</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>05 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">34</td>
-						<td class="tx-right tx-medium tx-inverse">$658.20</td>
-						<td class="tx-right tx-medium tx-danger">-$45.10</td>
-					</tr>
-					<tr>
-						<td>06 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">26</td>
-						<td class="tx-right tx-medium tx-inverse">$453.25</td>
-						<td class="tx-right tx-medium tx-danger">-$15.02</td>
-					</tr>
-					<tr>
-						<td>07 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">34</td>
-						<td class="tx-right tx-medium tx-inverse">$653.12</td>
-						<td class="tx-right tx-medium tx-danger">-$13.45</td>
-					</tr>
-					<tr>
-						<td>08 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">45</td>
-						<td class="tx-right tx-medium tx-inverse">$546.47</td>
-						<td class="tx-right tx-medium tx-danger">-$24.22</td>
-					</tr>
-					<tr>
-						<td>09 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">31</td>
-						<td class="tx-right tx-medium tx-inverse">$425.72</td>
-						<td class="tx-right tx-medium tx-danger">-$25.01</td>
-					</tr>
-				</tbody>
-			</table>
+	<div class="col-md-12 col-lg-8 col-xl-8">
+		<div class="card card-table-two">
+			<div class="d-flex justify-content-between">
+				<h4 class="card-title mb-1">Logs System Taslim </h4>
+				<i class="mdi mdi-dots-horizontal text-gray"></i>
+			</div>
+			<span class="tx-12 tx-muted mb-3 ">This is Last 5 Logs in the System .. </span>
+			<div class="table-responsive country-table">
+				<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
+					<thead>
+						<tr>
+										 <th>#</th>
+										<th>السجل</th>
+									  <th>التاريخ</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							@foreach(\Spatie\Activitylog\Models\Activity::latest()->take(5)->get() as $log)
+							<tr>
+								<td>{{ $log->id }}</td>
+								<td>
+									@php
+										$admin = \App\Models\Admin::find($log->causer_id);
+										$actionMap = [
+											'updated' => ' تعديل',
+											'deleted' => 'حذف',
+											'created' => '  إنشاء'
+										];
+										$tableMap = [
+											'Admin' => 'مستخدم',
+											'invoice' => 'الأذون',
+											'customers' => 'عملاء',
+											'suppliers' => 'موردين',
+											'serial_number' => 'سيريال',
+											'Product' => 'منتجات',
+											'InvoiceProduct' => 'أذن منتجات',
+											'Location' => 'موقع',
+											'ProductType' => 'نوع منتج'
+										];
+									@endphp
+	
+									{{ $admin->name ?? 'Unknown' }} - 
+									{{ $actionMap[$log->description] ?? 'غير معرف' }} 
+									في جدول 
+									{{ $tableMap[$log->log_name] ?? 'غير معرف' }}
+								</td>
+	
+								<td>{{ $log->created_at }}</td>
+							</tr>
+						@endforeach
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
-</div>
-</div>
-	
-
+	</div>
+		
 			</div>
 			<!-- /row -->
 		</div>
