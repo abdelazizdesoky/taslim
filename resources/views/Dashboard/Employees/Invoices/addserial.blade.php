@@ -72,7 +72,7 @@
             <div class="form-group">
                 
                 <input type="text" class="form-control" id="serialInput" placeholder="أدخل السيريال هنا" autofocus>
-                {{-- <button type="button" class="btn btn-primary mt-2" id="startScanner">استخدام الكاميرا</button> --}}
+                <button type="button" class="btn btn-primary mt-2" id="startScanner">استخدام الكاميرا</button>
             </div>
             
             <div id="interactive" class="viewport" style="position: relative; width: 100%; height: 300px; display: none;">
@@ -97,7 +97,10 @@
 @section('js')
 <script src="{{ URL::asset('dashboard/js/quagga.min.js') }}"></script>
 <script>
-    
+
+   
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const serialInput = document.getElementById('serialInput');
     const serialsList = document.getElementById('serialsList');
@@ -105,10 +108,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const serialsHiddenInput = document.getElementById('serialsHiddenInput');
     const startScannerBtn = document.getElementById('startScanner');
     const interactive = document.getElementById('interactive');
+    const form = document.querySelector('form');
+
+    // Total quantity from the server (passed from the controller)
+    const totalQuantity = {{ $totalQuantity }};
+
+    // Products from the invoice
+    const invoiceProducts = @json($invoiceProducts);
+
+    function validateSerialForProducts(serial) {
+
+        const cleanedSerial = serial.replace(/^0+/, '');
+    // فحص السيريال بناءً على المنتجات المرتبطة بالفاتورة
+    const validSerial = invoiceProducts.some(product => {
+        // فحص السيريال بناءً على `product_code` و `type_id`
+        const matchesProductCode = cleanedSerial.startsWith(product.product_code); // فحص إذا كان السيريال يبدأ بـ product_code
+       
+
+        // إذا كان السيريال يتطابق مع `product_code` أو النوع المطلوب
+        return matchesProductCode ;
+    });
+
+    
+
+    return validSerial;
+}
+
 
     function updateSerialCount() {
         const serials = serialsList.querySelectorAll('.serial-item').length;
         serialCount.textContent = serials;
+
+        // Disable input or provide warning if max quantity reached
+        if (serials >= totalQuantity) {
+            serialInput.disabled = true;
+            serialInput.placeholder = 'تم إدخال الكمية المطلوبة';
+            startScannerBtn.disabled = true;
+            alert(`تم إدخال الكمية المطلوبة (${totalQuantity})`);
+        } else {
+            serialInput.disabled = false;
+            serialInput.placeholder = 'أدخل السيريال هنا';
+            startScannerBtn.disabled = false;
+        }
     }
 
     function updateHiddenInput() {
@@ -116,7 +157,28 @@ document.addEventListener('DOMContentLoaded', function() {
         serialsHiddenInput.value = serials.join('\n');
     }
 
+    function isSerialDuplicate(serial) {
+        const existingSerials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
+        return existingSerials.includes(serial);
+    }
+
     function createSerialItem(serial) {
+        // Validate serial before adding
+        if (isSerialDuplicate(serial)) {
+            alert('هذا السيريال مكرر على مستوى الفاتورة!');
+            return false;
+        }
+
+        if (!validateSerialForProducts(serial)) {
+            alert('هذا السيريال غير مرتبط بمنتجات الفاتورة!');
+            return false;
+        }
+
+        if (serialsList.querySelectorAll('.serial-item').length >= totalQuantity) {
+            alert(`لا يمكن إضافة المزيد. الكمية المطلوبة هي ${totalQuantity}`);
+            return false;
+        }
+
         const serialItem = document.createElement('div');
         serialItem.className = 'serial-item';
         const serialText = document.createElement('span');
@@ -134,22 +196,29 @@ document.addEventListener('DOMContentLoaded', function() {
         serialsList.appendChild(serialItem);
         updateSerialCount();
         updateHiddenInput();
+        return true;
     }
 
-    function isSerialDuplicate(serial) {
-        const existingSerials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
-        return existingSerials.includes(serial);
-    }
+    // Form submission validation
+    form.addEventListener('submit', function(event) {
+        const serials = serialsList.querySelectorAll('.serial-item');
+        
+        // Check if total serials match required quantity
+        if (serials.length !== totalQuantity) {
+            event.preventDefault();
+            alert(`يجب إدخال ${totalQuantity} سيريال. تم إدخال ${serials.length} فقط.`);
+            return;
+        }
+    });
 
     serialInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             const serial = serialInput.value.trim();
-            if (serial && !isSerialDuplicate(serial)) {
-                createSerialItem(serial);
-                serialInput.value = '';
-            } else {
-                alert('هذا السيريال مكرر على مستوى الفاتورة!');
+            if (serial) {
+                if (createSerialItem(serial)) {
+                    serialInput.value = '';
+                }
             }
         }
     });
@@ -170,17 +239,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         Quagga.onDetected(function(result) {
             const serial = result.codeResult.code;
-            if (serial && !isSerialDuplicate(serial)) {
-                createSerialItem(serial);
-                Quagga.stop();
-                interactive.style.display = 'none';
-            } else {
-                alert('هذا السيريال مكرر على مستوى الفاتورة!');
-                Quagga.stop();
-                interactive.style.display = 'none';
+            if (serial) {
+                if (createSerialItem(serial)) {
+                    Quagga.stop();
+                    interactive.style.display = 'none';
+                }
             }
         });
     });
+
+    // Initial count update
+    updateSerialCount();
 });
+
 </script>
 @endsection

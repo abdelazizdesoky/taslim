@@ -109,15 +109,38 @@ class EmployeeInvoiceController extends Controller
 //---------------------------------------------------
 public function edit($id)
 {
-    // جلب الفاتورة مع المنتجات المرتبطة
-    $Invoices = Invoice::with('products')->findOrFail($id);
-    
-   $totalQuantity = DB::table('invoice_products')
-    ->where('invoice_id', $id)
-    ->sum('quantity');
+    // جلب الفاتورة مع المنتجات المرتبطة والكمية من جدول invoice_products
+    $Invoices = Invoice::with(['products' => function ($query) use ($id) {
+        $query->select(
+            'products.id',
+            'products.product_name',
+            'products.product_code',
+            'ip.quantity' // الكمية من الجدول الوسيط
+        )
+        ->join('invoice_products as ip', 'products.id', '=', 'ip.product_id')
+        ->where('ip.invoice_id', $id); // الربط بالفاتورة المحددة
+    }])->findOrFail($id);
 
-    return view('Dashboard.Employees.Invoices.addserial', compact('Invoices','totalQuantity'));
+    // حساب الكمية الإجمالية من جدول invoice_products
+    $totalQuantity = DB::table('invoice_products')
+        ->where('invoice_id', $id)
+        ->sum('quantity');
+
+    // ترتيب البيانات المرتبطة بالفاتورة والمنتجات
+    $invoiceProducts = $Invoices->products->map(function ($product) {
+        return [
+            'id' => $product->id,
+            'product_code' => $product->product_code ?? '', // استخدم `product_code` بدلاً من `serial_prefix`
+        ];
+    });
+    
+
+    // إرسال البيانات إلى الـ View
+    return view('Dashboard.Employees.Invoices.addserial', compact('Invoices', 'totalQuantity', 'invoiceProducts'));
 }
+
+
+
 
 
 ///-----------------------------------------------
