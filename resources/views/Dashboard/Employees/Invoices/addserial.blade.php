@@ -98,7 +98,6 @@
 <script src="{{ URL::asset('dashboard/js/quagga.min.js') }}"></script>
 <script>
 
-   
 
 
 document.addEventListener('DOMContentLoaded', function() {

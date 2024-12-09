@@ -25,6 +25,7 @@ class UserInvoicesController extends Controller
     {
         $Invoices = Invoice::where('created_by', Auth::user()->id)
         ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
+        ->withCount('serialNumbers')
         ->orderBy('invoice_date', 'desc')
         ->get();
     
@@ -47,7 +48,7 @@ class UserInvoicesController extends Controller
             $suppliers->map(function($supplier) {
                 return [
                     'id' => $supplier->id,
-                    'name' => $supplier->name, // تم تصحيح هنا
+                    'name' => $supplier->name, 
                     'type' => 'supplier',
                 ];
             })
@@ -101,8 +102,14 @@ public function store(Request $request)
                 'contact_id' => 'required',
                 'contact_type' => 'required|in:customer,supplier'
             ]);
-            $invoice->contact_type = $request->contact_type;
-            $invoice->contact_id = $request->contact_id;
+            
+            if ($request->contact_type == 'customer') {
+                $request->validate(['contact_id' => 'exists:customers,id']);
+                $invoice['customer_id'] = $request->contact_id;
+            } else {
+                $request->validate(['contact_id' => 'exists:suppliers,id']);
+                $invoice['supplier_id'] = $request->contact_id;
+            }
         }
 
         $invoice->save();

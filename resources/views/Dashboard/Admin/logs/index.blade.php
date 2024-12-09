@@ -25,109 +25,69 @@
 									<h4 class="card-title mg-b-0">سجلات </h4>
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 								</div>
-								<p class="tx-12 tx-gray-500 mb-2">اخر 10 سجلات تمت على سيستم </p>
+								<p class="tx-12 tx-gray-500 mb-2">اخر 20 سجلات تمت على سيستم </p>
 							</div>
 							<div class="card-body">
-								<div class="table-responsive hoverable-table">
-									<table class="table  key-buttons text-md-nowrap" >
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th> السجل</th>
-                                                <th>التعديلات</th>
-                                                <th>التاريخ</th>
-                                                
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($logs as $log)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>
 
-                                                    @php
+                                @foreach($logs as $log)
+                                <div class="list-group">
+                                    <div class="list-group-item pd-y-5">
+                                         <div class="media">
+                                            <div class="d-flex mg-l-5 ">
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="media-body d-flex">
+                                                    <p class="tx-12 mb-1">
+                                                        <a href="{{ route('admin.logs.show', $log->id) }}">
+                                                        @php
                                                         $admin = \App\Models\Admin::find($log->causer_id);
                                                     @endphp
 
                                                     {{ $admin->name ?? 'Unknown' }}
-                                                    -
+                                                   </a>
+                                                </p>
+                                                    <span class="tx-10 float-left mr-auto text-muted">{{ $log->created_at }}</span>
+                                                </div>
+                                                <p class="tx-10 mg-b-10 text-muted mb-0">
                                                     
-                                                    @switch($log->description)
-                                                     @case('updated')  <span class="bg-info text-white">تعديل </span> @break 
-                                                    @case('deleted')   <span class=" bg-danger text-white" >   حذف </span>@break 
-                                                    @case('created')  <span class="bg-success text-white" >  انشاء </span> @break 
-                                                          
                                                    
-                                                    @default
-                                                    غير معرف
-                                                    @endswitch
-                                              
-                                                    فى جدول 
-                                                        @switch($log->log_name)
-                                                        @case('Admin') مستخدم  @break 
-                                                        @case('invoice')  الاذون @break
-                                                        @case('customers') عملاء @break
-                                                        @case('suppliers') موردين @break
-                                                        @case('serial_number') سيريال @break
-                                                        @case('Product') منتجات @break
-                                                        @case('InvoiceProduct')  اذن منتجات @break
-                                                        @case('Location') موقع @break
-                                                        @case('ProductType') نوع منتج @break
-                                                        @case('Brand') ماركة  @break
+
+                                                        @switch($log->description)
+                                                         @case('updated')  <span class="bg-info text-white">تعديل </span> @break 
+                                                        @case('deleted')   <span class=" bg-danger text-white" >   حذف </span>@break 
+                                                        @case('created')  <span class="bg-success text-white" >  انشاء </span> @break 
+                                                              
                                                       
                                                         @default
                                                         غير معرف
                                                         @endswitch
-
-                                                
-                                                        
-                                                    </td>
-
-                                                    <td>
-                                                        @if($log->custom_changes)
-                                                            <ul>
-                                                                @foreach($log->custom_changes as $field => $change)
-                                                                    <li>
-                                                                        <strong>{{ $field }}:</strong>
-                                                                        <span class="text-danger">قديم: {{ $change['old'] }}</span> |
-                                                                        <span class="text-success">جديد: {{ $change['new'] }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        @else
-                                                            لا توجد تعديلات
-                                                        @endif
-                                                    </td>
-                    
-                                                    {{-- عرض البيانات القديمة --}}
-                                                   {{-- <td>
-                                                        @if(isset($log->properties['old']))
-                                                            <pre>{{ json_encode($log->properties['old'], JSON_PRETTY_PRINT) }}</pre>
-                                                        @else
-                                                            لا توجد بيانات قديمة
-                                                        @endif
-                                                    </td> --}}
-                    
-                                                    {{-- عرض البيانات الجديدة --}}
-                                                    {{-- <td>
-                                                        @if(isset($log->properties['attributes']))
-                                                            <pre> {{ json_encode($log->properties['attributes'], JSON_PRETTY_PRINT) }}</pre>
-                                                        @else
-                                                            لا توجد بيانات جديدة
-                                                        @endif
-                                                    </td> --}}
-                    
-                                                    <td>{{ $log->created_at }}</td>
-                    
-                                                    {{-- عرض التعديلات بين البيانات القديمة والجديدة --}}
-                                               
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
+                                                  
+                                                        فى جدول 
+                                                            @switch($log->log_name)
+                                                            @case('Admin') مستخدم  @break 
+                                                            @case('invoice')  الاذون @break
+                                                            @case('customers') عملاء @break
+                                                            @case('suppliers') موردين @break
+                                                            @case('serial_number') سيريال @break
+                                                            @case('Product') منتجات @break
+                                                            @case('InvoiceProduct')  اذن منتجات @break
+                                                            @case('Location') موقع @break
+                                                            @case('ProductType') نوع منتج @break
+                                                            @case('Brand') ماركة  @break
+                                                          
+                                                            @default
+                                                            غير معرف
+                                                            @endswitch
 
 
-									</table>
-								</div>
+                                                </p>
+                                            </div>
+                                        </div>
+                                     
+                                    </div>
+                                </div>
+                                @endforeach
+								
 							</div><!-- bd -->
 						</div><!-- bd -->
 					</div>

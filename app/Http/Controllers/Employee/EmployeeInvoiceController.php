@@ -196,11 +196,11 @@ public function store(Request $request) {
 
         // رسائل الفلاش
         if (!empty($successfulSerials)) {
-            session()->flash('add', 'تم إضافة السيريالات: ' . implode(', ', $successfulSerials));
+            session()->flash('add');
         }
 
         if (!empty($failedSerials)) {
-            session()->flash('warning', 'السيريالات التي لم يتم إدخالها: ' . implode(', ', $failedSerials));
+            return redirect()->back()->withErrors(['error' => $e->getMessage('warning', 'السيريالات التي لم يتم إدخالها: ' . implode(', ', $failedSerials))]);;
         }
 
         return redirect()->route('Dashboard.employee');
@@ -210,138 +210,4 @@ public function store(Request $request) {
 }
 
 }
-
-//store serial with validate
-    /*
-    try {
-        $request->validate([
-            'id' => 'required|string|max:255', // Invoice ID
-            'serials' => 'required|string',    // Serials
-        ]);
-
-        $invoiceId = $request->input('id');
-        $serials = $request->input('serials');
-
-        // Clean and filter serials
-        $serialsArray = array_filter(array_map('trim', explode("\n", $serials)));
-
-        // Fetch invoice products with related products
-        $invoiceProducts = InvoiceProduct::with('product')
-                            ->where('invoice_id', $invoiceId)
-                            ->get();
-
-        if ($invoiceProducts->isEmpty()) {
-            return redirect()->back()->withErrors(['error' => 'الفاتورة غير موجودة أو لا تحتوي على منتجات.']);
-        }
-
-        // Fetch existing serials for this invoice
-        $existingSerials = SerialNumber::where('invoice_id', $invoiceId)
-                                       ->pluck('serial_number')
-                                       ->toArray();
-
-        // Tracking product serial counts
-        $productSerialCounts = [];
-
-        // Pre-populate product serial counts with existing serials
-        foreach ($existingSerials as $existingSerialsForProduct) {
-            $serialNumber = ltrim($existingSerialsForProduct, '0');
-            $serialPrefix = substr($serialNumber, 0, 7);
-
-            foreach ($invoiceProducts as $invoiceProduct) {
-                $product = $invoiceProduct->product;
-                if ($product && $serialPrefix === $product->product_code) {
-                    if (!isset($productSerialCounts[$product->id])) {
-                        $productSerialCounts[$product->id] = 0;
-                    }
-                    $productSerialCounts[$product->id]++;
-                    break;
-                }
-            }
-        }
-
-        $successfulSerials = [];
-        $failedSerials = [];
-
-        foreach ($serialsArray as $serial) {
-            // Skip if serial already exists
-            if (in_array($serial, $existingSerials)) {
-                continue;
-            }
-
-            // Extract first 7 digits for product code matching
-            $serialNumber = ltrim($serial, '0');
-            $serialPrefix = substr($serialNumber, 0, 7);
-
-            $productFound = false;
-            foreach ($invoiceProducts as $invoiceProduct) {
-                $product = $invoiceProduct->product;
-
-                if ($product && $serialPrefix === $product->product_code) {
-                    // Initialize product serial count if not exists
-                    if (!isset($productSerialCounts[$product->id])) {
-                        $productSerialCounts[$product->id] = 0;
-                    }
-
-                    // Check if we've exceeded the allowed quantity for this product
-                    if ($productSerialCounts[$product->id] < $invoiceProduct->quantity) {
-                        // Add serial number
-                        SerialNumber::create([
-                            'invoice_id' => $invoiceId,
-                            'serial_number' => $serial,
-                        ]);
-
-                        // Increment product serial count
-                        $productSerialCounts[$product->id]++;
-                        $productFound = true;
-                        $successfulSerials[] = $serial;
-                        break;
-                    } else {
-                        $failedSerials[] = $serial . ' (تجاوز الكمية المسموحة)';
-                        break;
-                    }
-                }
-            }
-
-            if (!$productFound) {
-                $failedSerials[] = $serial . ' (لا يتطابق مع أي منتج)';
-            }
-        }
-
-        // Check if all products have their required number of serials
-        $incompleteProducts = [];
-        foreach ($invoiceProducts as $invoiceProduct) {
-            $requiredQuantity = $invoiceProduct->quantity;
-            $currentQuantity = $productSerialCounts[$invoiceProduct->product_id] ?? 0;
-
-            if ($currentQuantity < $requiredQuantity) {
-                $incompleteProducts[] = "{$invoiceProduct->product->product_name} (مدخل:  المطلوب: $requiredQuantity)";
-            }
-        }
-
-        // Update invoice status if all serials are added
-        if (count($incompleteProducts) == 0) {
-            $invoice = Invoice::findOrFail($invoiceId);
-            $invoice->invoice_status = 3; // Mark as completed
-            $invoice->save();
-        }
-
-        // Prepare flash messages
-        if (!empty($successfulSerials)) {
-            session()->flash('add', 'تم إضافة السيريالات: ' . implode(', ', $successfulSerials));
-        }
-
-        if (!empty($failedSerials)) {
-            session()->flash('warning', 'السيريالات التي لم يتم إدخالها: ' . implode(', ', $failedSerials));
-        }
-
-        if (!empty($incompleteProducts)) {
-            session()->flash('error', 'المنتجات غير المكتملة: ' . implode(', ', $incompleteProducts));
-        }
-
-        return redirect()->route('Dashboard.employee');
-
-    } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-    }
-       */
 

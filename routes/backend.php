@@ -45,8 +45,11 @@ Route::middleware(['auth:admin'])->group(function () {
 
         // Location Management
         Route::resource('locations', LocationController::class);
-        
+       
+        // logs Management
         Route::get('admin/activity-logs', [ActivityLogController::class, 'index'])->name('activityLogs.index');
+        Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.show');
+
         
         // user Management
         Route::controller(AdminController::class)->prefix('admins')->name('admins.')->group(function () {

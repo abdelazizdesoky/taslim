@@ -177,7 +177,7 @@
                                                 @foreach ($invoiceProducts as $product)
                                                     <tr>
                                                         <td>
-                                                            <select name="products[]" class="form-control select2-product" required>
+                                                            <select name="products[]" class="form-control select2 product" required>
                                                                 @foreach ($allProducts as $p)
                                                                     <option value="{{ $p->id }}" {{ $p->id == $product->product_id ? 'selected' : '' }}>
                                                                         {{ $p->product_code }} - {{ $p->product_name }}
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
             <td>
-                <select name="products[]" class="form-control select2-product" required>
+                <select name="products[]" class="form-control select2 product" required>
                     <option value="" disabled selected>اختر المنتج</option>
                     @foreach ($allProducts as $product)
                         <option value="{{ $product->id }}"> {{ $product->product_code }} -{{ $product->product_name }}</option>

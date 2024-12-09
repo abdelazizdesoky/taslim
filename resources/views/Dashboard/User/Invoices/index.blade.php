@@ -56,6 +56,7 @@
 												<th > حالة الاذن </th>
 												<th > موقع </th>
 												<th >  تااريخ تحرير</th>
+												<th >  سيريال مسحوب    </th>
 												<th > ألاجراءات  </th>
 											</tr>
 										</thead>
@@ -146,6 +147,7 @@
 												
 												</td>
 												<td>{{$Invoice->created_at->diffForHumans()}}</td>
+												<td > {{ $Invoice->serial_numbers_count }}    </td>
 												 <td>
                                                     <a href="{{route('user.invoices.edit',$Invoice->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
 													<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#cancel{{$Invoice->id}}"><i class="fas ti-close"></i></button>
