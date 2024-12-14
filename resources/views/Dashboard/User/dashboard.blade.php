@@ -95,7 +95,7 @@
 							<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
 								<thead>
 									<tr>
-										<th class="wd-lg-25p">#</th>
+										
 										<th class="wd-lg-25p tx-right"> كود الاذن</th>
 										<th class="wd-lg-25p tx-right">عميل/مورد</th>
 										<th class="wd-lg-25p tx-right">تاريخ </th>
@@ -107,7 +107,7 @@
 								
 									@foreach(\App\Models\Invoice::where('created_by', Auth::user()->id)->latest()->take(5)->get()  as $invoice)
 										<tr>
-										<td>{{$loop->iteration}}</td>
+										
 										<td class="tx-right tx-medium tx-inverse"> {{$invoice->code}}</td>
 										<td class="tx-right tx-medium tx-inverse">		
 												@if($invoice->invoice_type == 2) 

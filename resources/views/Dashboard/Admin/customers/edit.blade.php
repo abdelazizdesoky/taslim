@@ -4,14 +4,14 @@
     <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
 @endsection
 @section('title')
-   اضافة عميل جديدة
+   تعديل عميل 
 @endsection
 @section('page-header')
 <!-- breadcrumb -->
 <div class="breadcrumb-header justify-content-between">
     <div class="my-auto">
         <div class="d-flex">
-            <h4 class="content-title mb-0 my-auto">عميل</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ اضافة عميل جديدة</span>
+            <h4 class="content-title mb-0 my-auto">عميل</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/  تعديل عميل </span>
         </div>
     </div>
 </div>

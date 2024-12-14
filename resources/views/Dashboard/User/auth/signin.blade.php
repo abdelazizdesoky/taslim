@@ -50,7 +50,7 @@
                 @csrf
                 <div class="form-group">
                  
-                    <input class="form-control" placeholder="ادخل الايميل" type="text" name="email" required autofocus autocomplete="username">
+                    <input class="form-control" placeholder="ادخل اسم المستخدم" type="text" name="email" required autofocus autocomplete="username">
                 </div>
                 <div class="form-group">
                    
