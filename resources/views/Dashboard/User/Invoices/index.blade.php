@@ -2,6 +2,18 @@
 @extends('Dashboard.layouts.master')
 @section('css')
     <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
+	<style>
+		/* إضافة تأثيرات Hover لتغيير لون الـ Pagination عند التمرير */
+		.pagination .page-item.active .page-link {
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.pagination .page-item:hover .page-link {
+			background-color: #0056b3;
+			border-color: #0056b3;
+		}
+	</style>
 @endsection
 @section('title')
 الاذون | تسليماتى 
@@ -164,6 +176,10 @@
 					</div>
 					<!--/div-->
 				</div>
+												<!-- عرض روابط الصفحات -->
+												<div class="d-flex justify-content-center mt-4">
+													{{ $Invoices->links('pagination::bootstrap-4') }}
+												</div>
 				<!-- /row -->
 			</div>
 			<!-- Container closed -->

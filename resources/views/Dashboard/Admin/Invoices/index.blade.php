@@ -2,6 +2,18 @@
 @extends('Dashboard.layouts.master')
 @section('css')
     <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
+	<style>
+		/* إضافة تأثيرات Hover لتغيير لون الـ Pagination عند التمرير */
+		.pagination .page-item.active .page-link {
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.pagination .page-item:hover .page-link {
+			background-color: #0056b3;
+			border-color: #0056b3;
+		}
+	</style>
 @endsection
 @section('title')
 الاذون | تسليماتى 
@@ -59,6 +71,7 @@
 												<th >  سيريال مسحوب    </th>
 												<th >  منسق    </th>
 												<th > ألاجراءات  </th>
+												<th > -  </th>
 											</tr>
 										</thead>
 										<tbody>
@@ -87,7 +100,7 @@
 													
 												</td>
 												<td>{{$Invoice->invoice_date}}</td>
-                                                <td>{{$Invoice->Admin->name}}</td>
+                                                <td>{{$Invoice->Admin->name?? '-'}}</td>
 												<td>
 													@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
 														{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
@@ -156,10 +169,15 @@
 													<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#cancel{{$Invoice->id}}"><i class="fas ti-close"></i></button>
 													
                                                 </td>
+												<td>-</td>
 											</tr>
                                             @include('Dashboard.Admin.Invoices.Deleted')
 											@include('Dashboard.Admin.Invoices.cancel')
                                         @endforeach
+
+										<!-- عرض روابط الصفحات -->
+
+
 										</tbody>
 									</table>
 								</div>
@@ -167,6 +185,10 @@
 						</div><!-- bd -->
 					</div>
 					<!--/div-->
+				</div>
+								<!-- عرض روابط الصفحات -->
+				<div class="d-flex justify-content-center mt-4">
+					{{ $Invoices->links('pagination::bootstrap-4') }}
 				</div>
 				<!-- /row -->
 			</div>

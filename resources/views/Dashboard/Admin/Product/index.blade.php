@@ -37,6 +37,7 @@
 												<th>اسم المنتج</th>
 												<th> كود</th>
 												<th> اجراءات</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -61,6 +62,7 @@
 													<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$product->id}}"><i class="fas fa-trash"></i></button>
 
 												</td>
+												<td></td>
 											</tr>
 
 											@include('Dashboard.Admin.Product.Deleted')
