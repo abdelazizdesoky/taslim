@@ -11,9 +11,8 @@ class CustomersController extends Controller
 {
     public function index()
     {
-        $customers = Cache::remember('customers', 60, function () {
-            return Customers::all();
-        });
+        $customers = Customers::select('id', 'code', 'name','status')->paginate(50);
+    
         return view('Dashboard.Admin.customers.index', compact('customers'));
     }
 

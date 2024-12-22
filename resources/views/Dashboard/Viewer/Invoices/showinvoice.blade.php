@@ -82,14 +82,38 @@
 									</div>
 									<div class="table-responsive mg-t-20">
 										<table class="table table-striped mg-b-0 text-md-nowrap">
-											<thead>
+											<thead>	
+												<tr class="bg-secondary-gradient">
+													<th class="wd-10p">#</th>
+													<th class="wd-20p">المنتج  </th>
+													<th class="wd-20p">الكمية المطلوبة   </th>
+													<th class="wd-20p">عدد السيريال المسحوب  </th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($productsWithSerialCounts as $index => $productData)
 												<tr>
+													<td>{{ $index + 1 }}</td>
+													<td>{{ $productData['product_name'] }}</td>
+													<td>{{ $productData['quantity_required'] }}</td>
+													<td>{{ $productData['serial_count'] }}</td>
+												</tr>
+											@endforeach
+										
+											</tbody>
+
+											<thead>
+											
+												<tr class="bg-secondary-gradient">												
 													<th class="wd-10p">#</th>
 													<th class="wd-20p">سيريال </th>
 													<th class="wd-20p">المنتج </th>
 													<th class="wd-20p">تاريخ سحب </th>
 												
 												</tr>
+											</tbody>
+
 											</thead>
 											<tbody>
 
@@ -120,27 +144,21 @@
 															{{ 'غير موجود بالمنتجات' }}
 														@endif
 													</td>    
-													<td>{{ $serial->created_at }}</td>
+													<td>{{ $serial->created_at }}
+
+													
+
+													</td>
+
+												
 												</tr>
 											@endforeach
 
 												
 											
-											<tr>
-												<th class="wd-10p">#</th>
-												<th class="wd-20p">المنتج  </th>
-												<th class="wd-20p">العدد  </th>
-												
-											</tr>
-											@foreach($productSerialCounts as $productData)
-											<tr>
-												<td>{{ $loop->iteration }}</td>
-												<td>{{ $productData['product_name'] ?? 'اسم المنتج غير موجود' }}</td>
-												<td>{{ $productData['serial_count'] }}</td>
-											</tr>
-										@endforeach
-										
+											
 											</tbody>
+									
 										</table>
 									</div>
 									<hr class="mg-b-40">
@@ -175,52 +193,67 @@
 document.querySelector('.btn-danger').addEventListener('click', function () {
     window.print();
 });
-
-// Save to Excel functionality
 document.querySelector('.btn-success').addEventListener('click', function () {
-    // Fetch the table and invoice details
-    var table = document.querySelector('.table-striped'); // Update the selector if necessary
+    // إعداد اسم الملف بناءً على كود الفاتورة
     var invoiceCode = "{{ $invoice->code }}";
-    var customerName = "{{ $invoice->customer->name ?? $invoice->supplier->name  }}";
-    var employeeName = "{{ $invoice->admin->name ?? '-' }}";
-    var serialsCount = "{{ $serials->count() }}";
+    var fileName = invoiceCode + '-invoice.xlsx';
 
-    // Create a new workbook and add a worksheet
+    // --- 1. إنشاء ملف Excel وورقة عمل ---
     var wb = XLSX.utils.book_new();
-
-    // Add invoice details and serial numbers to the same sheet
     var wsData = [];
 
-    // Add invoice details
-    wsData.push(["كود الفاتورة:", invoiceCode]);
-    wsData.push(["العميل:", customerName]);
-    wsData.push(["المندوب:", employeeName]);
-    wsData.push(["مجموع سيريالات المسحوبة:", serialsCount]); // Add serial count
+    // --- 2. إضافة تفاصيل الفاتورة ---
+    wsData.push(["تفاصيل الفاتورة"]); // العنوان
+    wsData.push(["كود الفاتورة", "{{ $invoice->code }}"]);
+    wsData.push(["تاريخ الفاتورة", "{{ $invoice->invoice_date }}"]);
+    wsData.push(["المورد / العميل", "{{ $invoice->supplier->name ?? $invoice->customer->name ?? '-' }}"]);
+    wsData.push(["رقم الهاتف", "{{ $invoice->supplier->phone ?? $invoice->customer->phone ?? '-' }}"]);
+    wsData.push(["المنسق", "{{ $invoice->creator->name ?? '-' }}"]);
+    wsData.push(["المندوب", "{{ $invoice->admin->name ?? '-' }}"]);
+    wsData.push(["إجمالي السيريالات", "{{ $serials->count() }}"]);
 
-    // Add an empty row for spacing
+    // إضافة صف فارغ للفصل
     wsData.push([]);
 
-    // Add table headers
-    wsData.push(["#", "سيريال", "المنتج", "تاريخ سحب"]);
+    // --- 3. إضافة جدول المنتجات ---
+    wsData.push(["جدول المنتجات"]); // عنوان الجدول
+    wsData.push(["#", "المنتج", "الكمية المطلوبة", "عدد السيريال المسحوب"]); // رؤوس الجدول
 
-    // Add table data
-    var rows = table.querySelectorAll('tbody tr');
-    rows.forEach(row => {
+    document.querySelectorAll('.table-striped tbody')[0].querySelectorAll('tr').forEach((row, index) => {
         var cells = row.querySelectorAll('td');
-        var rowData = [];
-        cells.forEach(cell => {
-            rowData.push(cell.innerText);
-        });
-        wsData.push(rowData);
+        wsData.push([
+            index + 1,
+            cells[1].innerText, // المنتج
+            cells[2].innerText, // الكمية المطلوبة
+            cells[3].innerText  // عدد السيريال المسحوب
+        ]);
     });
 
-    // Create a sheet and add the data
-    var ws = XLSX.utils.aoa_to_sheet(wsData);
-    XLSX.utils.book_append_sheet(wb, ws, "Invoice Data");
+    // إضافة صف فارغ للفصل
+    wsData.push([]);
 
-    // Save the workbook
-    XLSX.writeFile(wb, invoiceCode + '-invoice.xlsx');
+    // --- 4. إضافة جدول السيريالات ---
+    wsData.push(["جدول السيريالات"]); // عنوان الجدول
+    wsData.push(["#", "السيريال", "المنتج", "تاريخ السحب"]); // رؤوس الجدول
+
+    document.querySelectorAll('.table-striped tbody')[1].querySelectorAll('tr').forEach((row, index) => {
+        var cells = row.querySelectorAll('td');
+        wsData.push([
+            index + 1,
+            cells[1].innerText, // السيريال
+            cells[2].innerText, // المنتج
+            cells[3].innerText  // تاريخ السحب
+        ]);
+    });
+
+    // --- 5. تحويل البيانات إلى ورقة عمل واحدة ---
+    var ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, "Invoice");
+
+    // --- 6. حفظ ملف Excel ---
+    XLSX.writeFile(wb, fileName);
 });
+
 
     </script>
 

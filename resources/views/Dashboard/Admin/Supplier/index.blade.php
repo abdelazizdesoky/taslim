@@ -41,6 +41,7 @@
 												<th> تليفون مورد </th>
 												<th > الحالة </th>
 												<th > ألاجراءات  </th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -60,6 +61,7 @@
                                                     <a href="{{route('admin.supplier.edit',$Supplier->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
                                                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$Supplier->id}}"><i class="fas fa-trash"></i></button>
                                                 </td>
+												<td></td>
 											</tr>
                                             @include('Dashboard.Admin.Supplier.Deleted')
                                         @endforeach

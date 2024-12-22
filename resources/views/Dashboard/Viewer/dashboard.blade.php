@@ -112,7 +112,7 @@
 									@foreach(\App\Models\Invoice::latest()->take(5)->get()  as $invoice)
 										<tr>
 										<td>{{$invoice->invoice_date}}</td>
-										<td class="tx-right tx-medium tx-inverse"> <a href="{{route('admin.invoices.show',$invoice->id)}}">{{$invoice->code}}</a></td>
+										<td class="tx-right tx-medium tx-inverse"> <a href="{{route('viewer.invoices.show',$invoice->id)}}">{{$invoice->code}}</a></td>
 										<td class="tx-right tx-medium tx-inverse">		
 												@if($invoice->invoice_type == 2) 
 												{{ $invoice->customer->name ??'-' }} 
@@ -233,62 +233,6 @@
         </div>
     </div>
 
-
-<div class="col-md-12 col-lg-8 col-xl-8">
-	<div class="card card-table-two">
-		<div class="d-flex justify-content-between">
-			<h4 class="card-title mb-1">Your Most Recent Earnings</h4>
-			<i class="mdi mdi-dots-horizontal text-gray"></i>
-		</div>
-		<span class="tx-12 tx-muted mb-3 ">This is your most recent earnings for today's date.</span>
-		<div class="table-responsive country-table">
-			<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
-				<thead>
-					<tr>
-						<th class="wd-lg-25p">Date</th>
-						<th class="wd-lg-25p tx-right">Sales Count</th>
-						<th class="wd-lg-25p tx-right">Earnings</th>
-						<th class="wd-lg-25p tx-right">Tax Witheld</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>05 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">34</td>
-						<td class="tx-right tx-medium tx-inverse">$658.20</td>
-						<td class="tx-right tx-medium tx-danger">-$45.10</td>
-					</tr>
-					<tr>
-						<td>06 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">26</td>
-						<td class="tx-right tx-medium tx-inverse">$453.25</td>
-						<td class="tx-right tx-medium tx-danger">-$15.02</td>
-					</tr>
-					<tr>
-						<td>07 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">34</td>
-						<td class="tx-right tx-medium tx-inverse">$653.12</td>
-						<td class="tx-right tx-medium tx-danger">-$13.45</td>
-					</tr>
-					<tr>
-						<td>08 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">45</td>
-						<td class="tx-right tx-medium tx-inverse">$546.47</td>
-						<td class="tx-right tx-medium tx-danger">-$24.22</td>
-					</tr>
-					<tr>
-						<td>09 Dec 2019</td>
-						<td class="tx-right tx-medium tx-inverse">31</td>
-						<td class="tx-right tx-medium tx-inverse">$425.72</td>
-						<td class="tx-right tx-medium tx-danger">-$25.01</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-</div>
-</div>
-	
 
 			</div>
 			<!-- /row -->

@@ -41,6 +41,7 @@
 												<th > الحالة   </th>
 												<th > انشئ منذ  </th>
 												<th > ألاجراءات  </th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -92,6 +93,7 @@
 														</div>
 													</div>
                                                 </td>
+												<td></td>
 											</tr>
                                             @include('Dashboard.Admin.admin.Deleted')
 											@include('Dashboard.Admin.admin.update_password')
