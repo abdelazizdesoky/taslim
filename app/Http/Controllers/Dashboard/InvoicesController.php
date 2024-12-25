@@ -27,7 +27,7 @@ public function index()
 {
     $Invoices = Invoice::with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
     ->withCount('serialNumbers')
-    ->orderBy('invoice_date', 'desc')
+    ->orderBy('created_at', 'desc')
     ->paginate(100);
 
     return view('Dashboard.Admin.Invoices.index',compact('Invoices'));
@@ -341,23 +341,32 @@ public function show($id)
     // تجهيز بيانات المنتجات وكميات السيريالات
     $productsWithSerialCounts = [];
     foreach ($invoiceProducts as $invoiceProduct) {
+        $product = $invoiceProduct->product;
+
+        // التحقق من وجود المنتج
+        if ($product) {
+            // التحقق من وجود productType و brand
+            $productName = optional($product->productType)->type_name . ' ' .
+                           optional($product->productType->brand)->brand_name . ' ' .
+                           $product->product_name;
+        } else {
+            $productName = 'اسم المنتج غير متاح'; // نص افتراضي في حال عدم وجود المنتج
+        }
+
         $productId = $invoiceProduct->product_id;
 
         // حساب عدد السيريالات المرتبطة بكل منتج
         $serialCount = isset($serialsGroupedByProduct[$productId]) ? $serialsGroupedByProduct[$productId]->count() : 0;
 
         $productsWithSerialCounts[] = [
-            'product_name' => $invoiceProduct->product->productType->type_name . ' ' .
-                              $invoiceProduct->product->productType->brand->brand_name . ' ' .
-                              $invoiceProduct->product->product_name,
+            'product_name' => $productName,
             'quantity_required' => $invoiceProduct->quantity, // الكمية المطلوبة
             'serial_count' => $serialCount, // عدد السيريالات المسحوبة
         ];
     }
 
-    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'productsWithSerialCounts', 'serials'));
+    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'serials', 'productsWithSerialCounts'));
 }
-
 
 
 //----------------------------------------------
