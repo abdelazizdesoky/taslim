@@ -113,7 +113,7 @@
                         <div class="col-md-9">
                             <select class="form-control select2" name="employee_id"  style="width: 100%;">
                                 @foreach($admins as $admin)
-                                    <option value="{{ $admin->id }}" {{ $Invoices->employee_id == $admin->id ? 'selected' : '' }}>{{ $admin->name }}-{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }}</option>
+                                    <option value="{{ $admin->id }}"  {{ $Invoices->employee_id == $admin->id ? 'selected' : '' }}>{{ $admin->name }}-{{$admin->permission == 3? 'مندوب تسليم ':'امين مخزن ' }} -{{$admin->id}} </option>
                                 @endforeach
                             </select>
                         </div>

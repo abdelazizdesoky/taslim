@@ -98,7 +98,7 @@
 													
 												</td>
 												<td>{{$Invoice->invoice_date}}</td>
-                                                <td>{{$Invoice->Admin->name}}</td>
+                                                <td>{{$Invoice->Admin->name??'-'}}</td>
 												<td>
 													@if($Invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
 														{{ $Invoice->customer->name ??'-' }} <!-- اسم العميل -->
