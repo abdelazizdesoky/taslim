@@ -89,6 +89,7 @@
                                     <option value="1">ادمن </option>
                                     <option value="2">منسق </option>
                                     <option value="3"> مندوب </option> 
+                                    <option value="6">  مندوب جوكر </option>
                                     <option value="4"> امين مخزن </option>
                                     <option value="5">  مشرف </option>
                                 </select>

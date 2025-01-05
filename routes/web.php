@@ -34,7 +34,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
   
       Route::get('/Dashboard/employee', function () {
           return view('Dashboard.Employees.dashboard');
-      })->middleware('permission:3,4')->name('Dashboard.employee');
+      })->middleware('permission:3,4,6')->name('Dashboard.employee');
 
 
       Route::get('/Dashboard/viewer', function () {

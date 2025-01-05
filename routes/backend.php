@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\{
     SerialNumberController,
     AdminController,
     ActivityLogController,
+    BackupController,
     
 };
 use App\Http\Controllers\User\UserInvoicesController;
@@ -71,7 +72,11 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::get('/',[SerialNumberController::class, 'index'])->name('serial.index');
         Route::post('/invoices/search',[SerialNumberController::class, 'searchInvoices'])->name('invoices.search');
 
-       
+       //backup Management
+        Route::post('/admin/manual-backup', [BackupController::class, 'manualBackup'])->name('manual-backup');
+        Route::get('/show-backups', [BackupController::class, 'showBackups'])->name('show-backups');
+        Route::get('/download-backup/{id}', [BackupController::class, 'downloadBackup'])->name('download-backup');
+        Route::delete('/delete-backup/{id}', [BackupController::class, 'deleteBackup'])->name('delete-backup');
         
         // Data Migration
         Route::get('/migrate-data', [DataController::class, 'migrateData'])->name('migrate-data');
@@ -98,7 +103,7 @@ Route::middleware(['auth:admin'])->group(function () {
      /**
      * Deliver Routes (Permission Level 3)
      */
-    Route::middleware('permission:3,4')->prefix('employee')->name('employee.')->group(function () {
+    Route::middleware('permission:3,4,6')->prefix('employee')->name('employee.')->group(function () {
 
       Route::controller(EmployeeInvoiceController::class)->name('invoices.')->group(function () {
         Route::get('index', 'index')->name('index');

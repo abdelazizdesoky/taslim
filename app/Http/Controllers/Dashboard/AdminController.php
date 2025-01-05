@@ -30,14 +30,14 @@ class AdminController extends Controller
      // إضافة التحقق على المدخلات
      $request->validate([
         'email' => 'required|unique:admins,email',
-        'password' => 'required|min:8',
+        'password' => 'required|min:5',
         'name' => 'required|string|max:255',
-        'permission' => 'required|in:1,2,3,4,5',
+        'permission' => 'required|in:1,2,3,4,5,6',
     ], [
         'email.required' => 'البريد الإلكتروني مطلوب.',
         'email.unique' => 'اسم   مسجل بالفعل.',
         'password.required' => 'كلمة المرور مطلوبة.',
-        'password.min' => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
+        'password.min' => 'يجب أن تتكون كلمة المرور من 5 أحرف على الأقل.',
         'name.required' => 'الاسم مطلوب.',
         'permission.required' => 'الرجاء تحديد نوع الصلاحية.',
         'permission.in' => 'نوع الصلاحية غير صالح.',
@@ -49,7 +49,7 @@ class AdminController extends Controller
             $admin->email = $request->email;
             $admin->password = Hash::make($request->password);
             $admin->name = $request->name;
-            $admin->permission = $request->permission;//--1 admin 2- user  3- deliver 4-store
+            $admin->permission = $request->permission;//--1 admin 2- user  3- deliver 4-store 5-viewer 6-deliver joker
             $admin->status = 1;
             $admin->save();
 
@@ -84,7 +84,7 @@ class AdminController extends Controller
            
            
             'name' => 'required|string|max:255',
-            'permission' => 'required|in:1,2,3,4,5',
+            'permission' => 'required|in:1,2,3,4,5,6',
             'status' => 'required|in:1,2',
         ], [
           
@@ -124,11 +124,11 @@ class AdminController extends Controller
 
         $request->validate([
            
-          'password' => 'required|min:8',
+          'password' => 'required|min 5',
         ], [
           
             'password.required' => 'كلمة المرور مطلوبة.',
-            'password.min' => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
+            'password.min' => 'يجب أن تتكون كلمة المرور من 5 أحرف على الأقل.',
         ]);
         
         try {
