@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Backup;
 use Illuminate\Support\Facades\Artisan;
 
 class BackupController extends Controller
@@ -15,10 +16,9 @@ class BackupController extends Controller
     public function manualBackup()
     {
         try {
-            // تنفيذ أمر النسخ الاحتياطي
+        
             Artisan::call('db:backup');
-    
-            // التحقق من نجاح العملية
+
             $lastBackup = DB::table('backups')->latest('id')->first();
     
             if ($lastBackup) {
@@ -41,9 +41,9 @@ class BackupController extends Controller
 
     //--------------------------------------------------------------
 
-    public function downloadBackup($id)
+    public function downloadBackup(request $request)
     {
-        $backup = DB::table('backups')->where('id', $id)->first();
+        $backup =  Backup::findOrFail($request->id);
 
         if (!$backup) {
             return redirect()->back()->with('error', 'النسخة الاحتياطية غير موجودة.');
@@ -58,22 +58,20 @@ class BackupController extends Controller
 
     //--------------------------------------------------------------
 
-    public function deleteBackup($id)
+    public function deleteBackup(request $request)
     {
-        $backup = DB::table('backups')->where('id', $id)->first();
+        $backup = Backup::findOrFail($request->id); 
 
 
         if (!$backup) {
             return redirect()->back()->with('error', 'النسخة الاحتياطية غير موجودة.');
         }
 
-        // حذف الملف من التخزين
         if (file_exists($backup->path)) {
             unlink($backup->path);
         }
 
-        // حذف السجل من قاعدة البيانات
-        DB::table('backups')->where('id', $id)->delete();
+        Backup::destroy($request->id);
 
         return redirect()->back()->with('success', 'تم حذف النسخة الاحتياطية بنجاح.');
     }

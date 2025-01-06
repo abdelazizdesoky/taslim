@@ -94,7 +94,8 @@ class EmployeeInvoiceController extends Controller
     {
        
         //مكتمل 
-        
+        if (Auth::user()->permission == 3 && Auth::user()->permission == 4) {
+
          $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
          ->where('invoice_status', 3)
          ->count();
@@ -107,6 +108,21 @@ class EmployeeInvoiceController extends Controller
        
 
             return view('Dashboard.Employees.Invoices.compinvoice',compact('Invoices','activeInvoicesCount') );
+
+        }elseif (Auth::user()->permission == 6) {
+   
+            $activeInvoicesCount = Invoice::where('invoice_status', 3) ->count();
+                 
+                   $Invoices = Invoice::where('invoice_status', 3) 
+                   ->orderBy('invoice_date', 'desc')
+                   ->paginate(100);   
+          
+   
+               return view('Dashboard.Employees.Invoices.compinvoice',compact('Invoices','activeInvoicesCount') );   
+
+        }else {
+            return redirect()->back()->with('error', 'ليس لديك صلاحية الوصول إلى هذه الصفحة.');
+        }
 
     }
 
