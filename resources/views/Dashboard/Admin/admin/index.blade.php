@@ -64,6 +64,10 @@
 											        مندوب   
 													@break
 
+													@case(6)
+											        مندوب جوكر  
+													@break
+
 													@case(4)
 													امين مخزن   
 													   @break

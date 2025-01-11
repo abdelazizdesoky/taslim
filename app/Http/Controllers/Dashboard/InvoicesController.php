@@ -351,6 +351,18 @@ public function show($id)
             $productName = 'اسم المنتج غير متاح'; // نص افتراضي في حال عدم وجود المنتج
         }
 
+        $product = $invoiceProduct->product;
+
+        // التحقق من وجود المنتج
+        if ($product) {
+            // التحقق من وجود productType و brand
+            $productName = optional($product->productType)->type_name . ' ' .
+                           optional($product->productType->brand)->brand_name . ' ' .
+                           $product->product_name;
+        } else {
+            $productName = 'اسم المنتج غير متاح'; // نص افتراضي في حال عدم وجود المنتج
+        }
+
         $productId = $invoiceProduct->product_id;
 
         // حساب عدد السيريالات المرتبطة بكل منتج
@@ -363,7 +375,7 @@ public function show($id)
         ];
     }
 
-    return view('Dashboard.Viewer.Invoices.showinvoice', compact('invoice', 'serials', 'productsWithSerialCounts'));
+    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'serials', 'productsWithSerialCounts'));
 }
 
 

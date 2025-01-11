@@ -31,6 +31,7 @@ class CheckPermission
                     return redirect()->route('Dashboard.user');
                 case 3:
                 case 4:
+                case 6:
                     return redirect()->route('Dashboard.employee');
                case 5:
                     return redirect()->route('Dashboard.viewer');
