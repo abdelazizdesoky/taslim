@@ -15,23 +15,24 @@ use App\Models\SerialNumber;
 use Illuminate\Http\Request;
 use App\Models\InvoiceProduct;
 use Illuminate\Support\Carbon;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Log;
+use App\DataTables\InvoiceDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class InvoicesController extends Controller
 {
     //-------------------------------------------------------------------------------------------------------
-public function index()
-{
-    $Invoices = Invoice::with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
-    ->withCount('serialNumbers')
-    ->orderBy('invoice_date', 'desc')
-    ->paginate(100);
-
-    return view('Dashboard.Admin.Invoices.index',compact('Invoices'));
-}
+    public function index(InvoiceDataTable $datatable)
+    {
+        if (request()->ajax()) {
+            return $datatable->ajax();
+        }
+        return $datatable->render('Dashboard.Admin.Invoices.index');
+    }
 //-------------------------------------------------------------------------------------------------------
 public function create()
 {
@@ -69,7 +70,7 @@ public function store(Request $request)
         'invoice_date' => 'required',
         'invoice_type' => 'required',
         'employee_id' => 'required|exists:admins,id',
-        'items' => 'required|array',
+        'items' => 'required|array|min:1',
         'items.*.product_id' => 'required|exists:products,id',
         'items.*.quantity' => 'required|integer|min:1',
     ]);
@@ -111,13 +112,12 @@ public function store(Request $request)
         $invoice->save();
 
         // حفظ المنتجات
-        $productsData = json_decode($request->products_data, true);
-
-        if (!empty($productsData)) {
-            foreach ($productsData as &$productData) {
-                $productData['invoice_id'] = $invoice->id;
-            }
-            InvoiceProduct::insert($productsData);
+        foreach ($request->items as $item) {
+            InvoiceProduct::create([
+                'invoice_id' => $invoice->id,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity']
+            ]);
         }
 
         DB::commit();
@@ -166,8 +166,6 @@ public function edit($id)
 
 
 //--------------------------------------------------
-
-
 public function update(Request $request, $id)
 {
     $invoice = Invoice::findOrFail($id);
@@ -341,23 +339,32 @@ public function show($id)
     // تجهيز بيانات المنتجات وكميات السيريالات
     $productsWithSerialCounts = [];
     foreach ($invoiceProducts as $invoiceProduct) {
+        $product = $invoiceProduct->product;
+
+        // التحقق من وجود المنتج
+        if ($product) {
+            // التحقق من وجود productType و brand
+            $productName = optional($product->productType)->type_name . ' ' .
+                           optional($product->productType->brand)->brand_name . ' ' .
+                           $product->product_name;
+        } else {
+            $productName = 'اسم المنتج غير متاح'; // نص افتراضي في حال عدم وجود المنتج
+        }
+
         $productId = $invoiceProduct->product_id;
 
         // حساب عدد السيريالات المرتبطة بكل منتج
         $serialCount = isset($serialsGroupedByProduct[$productId]) ? $serialsGroupedByProduct[$productId]->count() : 0;
 
         $productsWithSerialCounts[] = [
-            'product_name' => $invoiceProduct->product->productType->type_name . ' ' .
-                              $invoiceProduct->product->productType->brand->brand_name . ' ' .
-                              $invoiceProduct->product->product_name,
+            'product_name' => $productName,
             'quantity_required' => $invoiceProduct->quantity, // الكمية المطلوبة
             'serial_count' => $serialCount, // عدد السيريالات المسحوبة
         ];
     }
 
-    return view('Dashboard.Admin.Invoices.showinvoice', compact('invoice', 'productsWithSerialCounts', 'serials'));
+    return view('Dashboard.Viewer.Invoices.showinvoice', compact('invoice', 'serials', 'productsWithSerialCounts'));
 }
-
 
 
 //----------------------------------------------
