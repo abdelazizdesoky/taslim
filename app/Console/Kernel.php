@@ -18,7 +18,6 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('db:backup --type=2')->dailyAt('21:33');
     }
-
     /**
      * Register the commands for the application.
      *
