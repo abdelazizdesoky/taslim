@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
-  
 
 
-    protected $guarded=[];
+
+    protected $guarded = [];
 
     public function productType()
     {
@@ -26,16 +26,26 @@ class Product extends Model
     }
 
     public function invoices()
-{
-    return $this->belongsToMany(Invoice::class, 'invoice_products')
-                ->withPivot('quantity')
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(Invoice::class, 'invoice_products')
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 
-use TracksActivity;
+    public function serialNumbers()
+    {
+        return $this->hasMany(SerialNumber::class);
+    }
 
-protected static $logAttributes = ['product_name','product_code','detail_name'];
-protected static $logName = 'Product';
-protected static $logOnlyDirty = true;
+    // العلاقة مع جدول invoice_products
+    public function invoiceProducts()
+    {
+        return $this->hasMany(InvoiceProduct::class);
+    }
 
+    use TracksActivity;
+
+    protected static $logAttributes = ['product_name', 'product_code', 'detail_name'];
+    protected static $logName = 'Product';
+    protected static $logOnlyDirty = true;
 }
