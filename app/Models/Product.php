@@ -6,12 +6,11 @@ use App\Models\ProductType;
 use App\Traits\TracksActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Collection;
 
 class Product extends Model
 {
     use HasFactory;
-
-
 
     protected $guarded = [];
 
@@ -41,6 +40,20 @@ class Product extends Model
     public function invoiceProducts()
     {
         return $this->hasMany(InvoiceProduct::class);
+    }
+
+    public static function latestProduct(int $count = 5): Collection
+    {
+        return self::query()
+            ->select(
+                'id',
+                'product_name',
+                'product_code'
+              
+            )
+            ->latest()
+            ->take($count)
+            ->get();
     }
 
     use TracksActivity;

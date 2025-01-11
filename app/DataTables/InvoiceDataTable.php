@@ -93,9 +93,9 @@ class InvoiceDataTable extends DataTable
             ->setTableId('invoice-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->responsive()
-            ->dom('Bfrtip')
-            ->orderBy([10, 'desc'])
+            //->responsive()
+             ->dom('Bfrtip')
+            ->orderBy([11, 'desc'])
             ->selectStyleSingle()
             ->buttons([
                 Button::make('excel'),
@@ -151,7 +151,8 @@ class InvoiceDataTable extends DataTable
             Column::make('serial_numbers_count')
                 ->title('سيريال ')
                 ->searchable(false),
-          
+            Column::make('creator.name')
+                ->title('منسق'),
             Column::make('created_at')
                 ->title('تاريخ تحرير'),
             Column::make('actions')
@@ -161,8 +162,7 @@ class InvoiceDataTable extends DataTable
                 ->searchable(false)
                 ->width(60)
                 ->addClass('text-center'),
-            Column::make('creator.name')
-                ->title('منسق'),
+            
           
         ];
     }

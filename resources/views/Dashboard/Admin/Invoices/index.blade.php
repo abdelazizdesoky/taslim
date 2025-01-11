@@ -45,7 +45,7 @@
 @endsection
 @section('js')
     {!! $dataTable->scripts() !!}
-    |
+    
     <script></script>
     <!--Internal  Notify js -->
     <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>

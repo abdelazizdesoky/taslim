@@ -40,47 +40,14 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="example" class="table key-buttons text-md-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th> رقم العميل </th>
-                                    <th> اسم العميل </th>
-                                    <th> الحالة </th>
-                                    <th> ألاجراءات </th>
-									<th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($customers as $customer)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$customer->code}}</td>
-                                    <td>{{$customer->name}}</td>
-                                    <td>
-                                        <div class="dot-label bg-{{$customer->status == 1 ? 'success':'danger'}} ml-1"></div>
-                                        {{$customer->status == 1 ? 'مفعلة':'غير مفعلة'}}
-                                    </td>
-                                    <td>
-                                        <a href="{{route('admin.customers.edit',$customer->id)}}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
-                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#Deleted{{$customer->id}}"><i class="fas fa-trash"></i></button>
-                                    </td>
-									<td></td>
-                                </tr>
-                                @include('Dashboard.Admin.customers.Deleted')
-                            @endforeach
-                            </tbody>
-                        </table>
+                        {!! $dataTable->table() !!}
                     </div>
                 </div><!-- bd -->
             </div><!-- bd -->
         </div>
         <!--/div-->
     </div>
-    <!-- عرض روابط الصفحات -->
-    <div class="d-flex justify-content-center mt-4">
-        {{ $customers->links('pagination::bootstrap-4') }}
-    </div>
+
     <!-- /row -->
 </div>
 <!-- Container closed -->
@@ -88,6 +55,7 @@
 <!-- main-content closed -->
 @endsection
 @section('js')
+{!! $dataTable->scripts() !!}
     <!--Internal  Notify js -->
     <script src="{{URL::asset('dashboard/plugins/notify/js/notifIt.js')}}"></script>
     <script src="{{URL::asset('/plugins/notify/js/notifit-custom.js')}}"></script>
