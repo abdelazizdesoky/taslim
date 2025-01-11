@@ -19,3 +19,4 @@ yarn-error.log
 docker-compose.yml
 /letsencrypt
 taslim
+app/Console/Commands/dbBackup.php
