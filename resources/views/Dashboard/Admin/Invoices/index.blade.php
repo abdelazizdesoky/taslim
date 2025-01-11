@@ -43,13 +43,13 @@
 
 									
 								</div>
-								<form action="{{ route('import.excel') }}" method="POST" enctype="multipart/form-data">
+								{{-- <form action="{{ route('import.excel') }}" method="POST" enctype="multipart/form-data">
 									@csrf
 									<br>
 									<button class="btn btn-primary" type="submit">Import</button>
 									<input class="" type="file" name="file" />
 								
-								</form>
+								</form> --}}
 								
 							</div>
 							<div class="card-body">
