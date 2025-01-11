@@ -13,7 +13,7 @@ class dbBackup extends Command
      *
      * @var string
      */
-    protected $signature = 'db:backup {--type=1}'; // 1-manual 2-auto
+    protected $signature = 'db:backup {--type=1}'; // 1-manual, 2-auto
 
     /**
      * The console command description.
@@ -29,42 +29,52 @@ class dbBackup extends Command
      */
     public function handle()
     {
+        
+
         $database = env('DB_DATABASE');
         $username = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
         $host = env('DB_HOST');
 
-        $namebatabase = $database . '_' . date('Y-m-d_H-i-s') . '.sql';
-        $backupPath = storage_path('app/backups/' . $namebatabase);
+        $this->info("Database: $database, Username: $username, Host: $host, Password: $password");
+
+
+  
+        
+        $backupDir = storage_path('app/backups');
+        $backupFile = $database . '_' . date('Y-m-d_H-i-s') . '.sql';
+        $backupPath = $backupDir . '/' . $backupFile;
 
         // Ensure the backup directory exists
-        if (!File::exists(storage_path('app/backups'))) {
-            File::makeDirectory(storage_path('app/backups'), 0755, true);
+        if (!File::exists($backupDir)) {
+            File::makeDirectory($backupDir, 0755, true);
         }
 
-        $command = "mysqldump --user={$username} --password={$password} --host={$host} {$database} > {$backupPath}";
+        // Build the mysqldump command
+     
+        $command = "mysqldump --column-statistics=0 -h 127.0.0.1 -P 3316 -u root -p'Taslim$$2024' taslim_app > {$backupPath}";
+         
 
-        $result = null;
-        $output = null;
-        exec($command, $output, $result);
+        // Execute the command
+        exec($command . ' 2>&1', $output, $result);
 
         if ($result === 0) {
-            
-            $type = $this->option('type');
-
+            // Insert backup info into the database
             DB::table('backups')->insert([
                 'path' => $backupPath,
                 'size' => File::size($backupPath),
-                'type' => $type,
+                'type' => $this->option('type'),
                 'created_at' => now(),
             ]);
 
-            $this->info('Database backup was successful.');
+            $this->info("Database backup was successful. File saved at: {$backupPath}");
             return Command::SUCCESS;
-            
         } else {
+            // Log and display error details
             $this->error('Database backup failed.');
-            return Command::FAILURE;
+            $this->error('Error Details: ' . implode("\n", $output));
+            $this->error('Command Executed: ' . $command);
+            
         }
     }
 }
