@@ -34,14 +34,15 @@ class UserInvoicesController extends Controller
     //-------------------------------------------------------------------------------------------------------
     public function create()
     {
-        $customers = Customers::select('id', 'name')->where('status', 1)->get();
-        $suppliers = Supplier::select('id', 'name')->where('status', 1)->get();
+        $customers = Customers::select('id', 'name','code')->where('status', 1)->get();
+        $suppliers = Supplier::select('id', 'name','code')->where('status', 1)->get();
         $products = Product::all(); // جلب المنتجات المتاحة
         // دمج الاثنين في قائمة واحدة
         $contacts = $customers->map(function($customer) {
             return [
                 'id' => $customer->id,
                 'name' => $customer->name,
+                'code' => $customer->code,
                 'type' => 'customer',
             ];
         })->merge(
@@ -49,6 +50,7 @@ class UserInvoicesController extends Controller
                 return [
                     'id' => $supplier->id,
                     'name' => $supplier->name, 
+                    'code' => $supplier->code,
                     'type' => 'supplier',
                 ];
             })
@@ -153,6 +155,7 @@ public function edit($id)
         return [
             'id' => $customer->id,
             'name' => $customer->name,
+            'code' => $customer->code,
             'type' => 'customer',
         ];
     })->merge(
@@ -160,6 +163,7 @@ public function edit($id)
             return [
                 'id' => $supplier->id,
                 'name' => $supplier->name,
+                'code' => $supplier->code,
                 'type' => 'supplier',
             ];
         })

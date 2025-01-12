@@ -82,7 +82,7 @@
                                     <select class="form-control" name="supplier_id">
                                         <option value="" disabled>--اختر المورد</option>
                                         @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}">{{ $supplier->id }}-{{ $supplier->name }}</option>
+                                            <option value="{{ $supplier->code }}">{{ $supplier->code}}-{{ $supplier->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -93,7 +93,7 @@
                                     <select class="form-control select2" name="customer_id" style="width: 100%;">
                                         <option value="" disabled>--اختر العميل</option>
                                         @foreach($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->id }}-{{ $customer->name }}</option>
+                                            <option value="{{ $customer->code }}">{{ $customer->code}}-{{ $customer->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -105,7 +105,7 @@
                                         <option value="" disabled>--اختر العميل أو المورد</option>
                                         @foreach($contacts as $contact)
                                             <option value="{{ $contact['id'] }}" data-type="{{ $contact['type'] }}">
-                                                {{ $contact['id'] }} - {{ $contact['name'] }} ({{ $contact['type'] == 'customer' ? 'عميل' : 'مورد' }})
+                                                {{ $contact['code'] }} - {{ $contact['name'] }} ({{ $contact['type'] == 'customer' ? 'عميل' : 'مورد' }})
                                             </option>
                                         @endforeach
                                     </select>
