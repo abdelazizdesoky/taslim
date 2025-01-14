@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\DataTables\CustomerDataTable;
 use App\Models\Customers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,12 +10,16 @@ use Illuminate\Support\Facades\Cache;
 
 class CustomersController extends Controller
 {
-    public function index()
+  
+    public function index(CustomerDataTable $datatable)
     {
-        $customers = Customers::select('id', 'code', 'name','status')->paginate(50);
-    
-        return view('Dashboard.Admin.customers.index', compact('customers'));
+
+        if (request()->ajax()) {
+            return $datatable->ajax();
+        }
+        return $datatable->render('Dashboard.Admin.customers.index');
     }
+
 
     public function create()
     {

@@ -16,8 +16,8 @@
 							<h5>{{\App\Models\Invoice::count()}}</h5>
 						</div>
 						<div>
-							<label class="tx-13">عدد المنديب   </label>
-							<h5>{{\App\Models\Admin::whereIn('permission', [3,4])->count()}}</h5>
+							<label class="tx-13"> عدد سيريال    </label>
+							<h5>{{\App\Models\SerialNumber::count()}}</h5>
 						</div>
 					</div>
 				</div>
@@ -171,11 +171,11 @@
 			<!-- row close -->
 			
 			<!-- row opened -->
-<div class="row row-sm row-deck">
+{{-- <div class="row row-sm row-deck">
     <div class="col-md-12 col-lg-4 col-xl-4">
         <div class="card card-dashboard-eight pb-2">
             <h6 class="card-title">المنتجات   </h6>
-            <span class="d-block mg-b-10 text-muted tx-12">اكبر عدد منتجات تم ادخال سيريالات لها بالسيستم   .</span>
+            <span class="d-block mg-b-10 text-muted tx-12"> اكبر عدد منتجات تم ادخال سيريالات لها بالسيستم   .</span>
             <div class="list-group">
 			@php
 				use App\Models\SerialNumber;
@@ -217,7 +217,7 @@
 						<i class="fe fe-shopping-cart tx-20"></i>
 						<p>
 							@if ($product && property_exists($product, 'product_name')) {{-- تحقق من وجود اسم المنتج --}}
-								{{ $product->product_name }}
+								{{-- {{ $product->product_name }}
 							@else
 								غير معرف بالمنتجات
 							@endif
@@ -231,7 +231,7 @@
 				
             </div>
         </div>
-    </div>
+    </div> --}} 
 
 
 	<div class="col-md-12 col-lg-8 col-xl-8">

@@ -14,6 +14,8 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Collection;
+
 
 
 
@@ -22,12 +24,27 @@ class Invoice extends Model
     use HasFactory;
     protected $guarded=[];
 
+    protected static $logAttributes = [
+        'code',
+        'invoice_date',
+        'invoice_status',
+        'invoice_type',
+        'location_id',
+        'employee_id',
+        'supplier_id',
+        'customer_id',
+        'created_by',
+    ];
+
+    protected static $logName = 'invoice';
+    protected static $logOnlyDirty = true;
 
     use TracksActivity;
    
     public function supplier()
     {
         return $this->belongsTo(Supplier::class,'supplier_id');
+        
     }
 
     public function customer()
@@ -51,10 +68,9 @@ class Invoice extends Model
         return $this->belongsTo(Location::class,'location_id');
     }
 
-
     public function serialNumbers()
     {
-        return $this->hasMany(SerialNumber::class); 
+        return $this->hasMany(SerialNumber::class);
     }
 
     public function products()
@@ -65,23 +81,22 @@ class Invoice extends Model
 }
 
 
-
-protected static $logAttributes = [
-    'code',
-    'invoice_date',
-    'invoice_status',
-    'invoice_type',
-    'location_id',
-    'employee_id',
-    'supplier_id',
-    'customer_id',
-    'created_by',
-];
-
-protected static $logName = 'invoice';
-protected static $logOnlyDirty = true;
-
-
+public static function latestInvoices(int $count = 5): Collection
+{
+    return self::query()
+        ->with('customer:id,name')
+        ->with('supplier:id,name')
+        ->withCount('serialNumbers')
+        ->select(
+            'id',
+            'code',
+            'invoice_date',
+            'invoice_type',
+        )
+        ->latest()
+        ->take($count)
+        ->get();
+}
 
   
 }

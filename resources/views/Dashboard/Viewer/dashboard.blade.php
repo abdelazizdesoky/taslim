@@ -171,7 +171,7 @@
 			<!-- row close -->
 			
 			<!-- row opened -->
-<div class="row row-sm row-deck">
+{{-- <div class="row row-sm row-deck">
     <div class="col-md-12 col-lg-4 col-xl-4">
         <div class="card card-dashboard-eight pb-2">
             <h6 class="card-title">المنتجات   </h6>
@@ -217,7 +217,7 @@
 						<i class="fe fe-shopping-cart tx-20"></i>
 						<p>
 							@if ($product && property_exists($product, 'product_name')) {{-- تحقق من وجود اسم المنتج --}}
-								{{ $product->product_name }}
+								{{-- {{ $product->product_name }}
 							@else
 								غير معرف بالمنتجات
 							@endif
@@ -234,7 +234,7 @@
     </div>
 
 
-			</div>
+			</div> --}} 
 			<!-- /row -->
 		</div>
 	</div>

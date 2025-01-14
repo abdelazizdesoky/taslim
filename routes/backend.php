@@ -15,6 +15,7 @@ use App\Http\Controllers\Dashboard\{
     AdminController,
     ActivityLogController,
     BackupController,
+    ReportController,
     
 };
 use App\Http\Controllers\User\UserInvoicesController;
@@ -77,6 +78,13 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::get('/show-backups', [BackupController::class, 'showBackups'])->name('show-backups');
         Route::get('/download-backup/{id}', [BackupController::class, 'downloadBackup'])->name('download-backup');
         Route::delete('/delete-backup/{id}', [BackupController::class, 'deleteBackup'])->name('delete-backup');
+
+        //report 
+        Route::get('report', [ReportController::class, 'index'])->name('report.index');
+        Route::get('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
+        Route::get('/report/inventory', [ReportController::class, 'inventoryReport'])->name('report.inventory');
+
+        
         
         // Data Migration
         Route::get('/migrate-data', [DataController::class, 'migrateData'])->name('migrate-data');
@@ -139,7 +147,10 @@ Route::middleware(['auth:admin'])->group(function () {
 
     });
 
-    
+    //report 
+    Route::get('report', [ReportController::class, 'index'])->name('report.index');
+    Route::get('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
+    Route::get('/report/inventory', [ReportController::class, 'inventoryReport'])->name('report.inventory');
  
        
     });

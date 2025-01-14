@@ -6,14 +6,13 @@ use App\Models\ProductType;
 use App\Traits\TracksActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Collection;
 
 class Product extends Model
 {
     use HasFactory;
-  
 
-
-    protected $guarded=[];
+    protected $guarded = [];
 
     public function productType()
     {
@@ -26,16 +25,40 @@ class Product extends Model
     }
 
     public function invoices()
-{
-    return $this->belongsToMany(Invoice::class, 'invoice_products')
-                ->withPivot('quantity')
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(Invoice::class, 'invoice_products')
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 
-use TracksActivity;
+    public function serialNumbers()
+    {
+        return $this->hasMany(SerialNumber::class);
+    }
 
-protected static $logAttributes = ['product_name','product_code','detail_name'];
-protected static $logName = 'Product';
-protected static $logOnlyDirty = true;
+    // العلاقة مع جدول invoice_products
+    public function invoiceProducts()
+    {
+        return $this->hasMany(InvoiceProduct::class);
+    }
 
+    public static function latestProduct(int $count = 5): Collection
+    {
+        return self::query()
+            ->select(
+                'id',
+                'product_name',
+                'product_code'
+              
+            )
+            ->latest()
+            ->take($count)
+            ->get();
+    }
+
+    use TracksActivity;
+
+    protected static $logAttributes = ['product_name', 'product_code', 'detail_name'];
+    protected static $logName = 'Product';
+    protected static $logOnlyDirty = true;
 }

@@ -124,7 +124,7 @@ class AdminController extends Controller
 
         $request->validate([
            
-          'password' => 'required|min 5',
+          'password' => 'required|min:5',
         ], [
           
             'password.required' => 'كلمة المرور مطلوبة.',
