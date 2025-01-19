@@ -179,28 +179,31 @@ class ReportController extends Controller
 
     public function inventoryReport(Request $request)
     {
-        // جلب عدد السيريالات لكل منتج مباشرة من قاعدة البيانات
-        $productSerialCounts = DB::table('serial_numbers')
+    
+        $productSerialCounts = DB::table('products')
             ->select(
                 'products.id as product_id',
                 'products.product_name',
-                DB::raw('COUNT(serial_numbers.id) as serial_count')
+                DB::raw('COUNT(serial_numbers.id) as total_serial_count'),
+                DB::raw('SUM(CASE WHEN invoices.invoice_type = 1 THEN 1 ELSE 0 END) as delivery_serial_count'),
+                DB::raw('SUM(CASE WHEN invoices.invoice_type = 2 THEN 1 ELSE 0 END) as receipt_serial_count')
             )
-            ->join('products', function ($join) {
+            ->leftJoin('serial_numbers', function ($join) {
                 $join->on(DB::raw('SUBSTRING(serial_numbers.serial_number, 1, 7)'), '=', 'products.product_code')
                     ->orWhere(DB::raw('SUBSTRING(serial_numbers.serial_number, 1, 7)'), '=', DB::raw('LPAD(products.product_code, 7, "0")'));
             })
+            ->leftJoin('invoices', 'serial_numbers.invoice_id', '=', 'invoices.id') 
             ->groupBy('products.id', 'products.product_name')
-            ->orderByDesc('serial_count')
-            ->paginate(500); // الترقيم مباشرة من الاستعلام
+            ->orderByDesc('total_serial_count')
+            ->paginate(20);
 
-        // حساب المجموع الكلي للسيريالات
         $totalSerials = DB::table('serial_numbers')->count();
 
-        // تمرير البيانات إلى الـ View
+      
         return view('Dashboard.Admin.Report.inventory', [
             'productSerialCounts' => $productSerialCounts,
             'totalSerials' => $totalSerials,
         ]);
     }
+
 }
