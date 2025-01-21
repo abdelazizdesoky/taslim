@@ -108,7 +108,7 @@ class ReportController extends Controller
             ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
             ->withCount('serialNumbers')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(20);
     }
 
     // دالة لجلب الاذن  تحت التسليم
@@ -119,7 +119,7 @@ class ReportController extends Controller
             ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
             ->withCount('serialNumbers')
             ->orderBy('created_at', 'desc')
-            ->get();
+             ->paginate(20);
     }
 
     // دالة لجلب الاذن  الملغية
@@ -130,7 +130,7 @@ class ReportController extends Controller
             ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
             ->withCount('serialNumbers')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(20);
     }
 
     // دالة لجلب الاذن  مرتجع
@@ -141,7 +141,7 @@ class ReportController extends Controller
             ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
             ->withCount('serialNumbers')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(20);
     }
 
     // دالة لجلب العملاء

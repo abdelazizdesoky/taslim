@@ -36,9 +36,9 @@
                             </p>
                         </div>
                     </div>
-
+                    <div class="card-body">
                     <!-- جدول عرض الفواتير -->
-                    <table id="example" class="table key-buttons text-md-nowrap">
+                    <table class="table  key-buttons table-bordered mg-b-0 text-md-nowrap">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -68,12 +68,12 @@
                     </table>
 
                     <!-- الترقيم -->
-                    {{-- <div class="d-flex justify-content-center mt-4">
+                    <div class="d-flex justify-content-center mt-4">
                         {{ $data->links('pagination::bootstrap-4') }}
-                    </div> --}}
+                    </div> 
                 </div>
             </div>
-
+        </div>
 
 
 

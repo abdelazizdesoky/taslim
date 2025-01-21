@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Collection;
 class Invoice extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+    protected $guarded = [];
 
     protected static $logAttributes = [
         'code',
@@ -40,11 +40,10 @@ class Invoice extends Model
     protected static $logOnlyDirty = true;
 
     use TracksActivity;
-   
+
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class,'supplier_id');
-        
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
     public function customer()
@@ -52,20 +51,20 @@ class Invoice extends Model
         return $this->belongsTo(Customers::class, 'customer_id');
     }
 
-    
+
     public function admin()
     {
-        return $this->belongsTo(Admin::class,'employee_id');
+        return $this->belongsTo(Admin::class, 'employee_id');
     }
 
-        public function creator()
+    public function creator()
     {
         return $this->belongsTo(Admin::class, 'created_by');
     }
 
     public function location()
     {
-        return $this->belongsTo(Location::class,'location_id');
+        return $this->belongsTo(Location::class, 'location_id');
     }
 
     public function serialNumbers()
@@ -74,29 +73,33 @@ class Invoice extends Model
     }
 
     public function products()
-{
-    return $this->belongsToMany(Product::class, 'invoice_products')
-                ->withPivot('quantity')
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(Product::class, 'invoice_products')
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 
+    public function productsSumQuantity()
+    {
+        return $this->products()
+            ->selectRaw('sum(invoice_products.quantity) as total_quantity')
+            ->groupBy('invoice_products.invoice_id');
+    }
 
-public static function latestInvoices(int $count = 5): Collection
-{
-    return self::query()
-        ->with('customer:id,name')
-        ->with('supplier:id,name')
-        ->withCount('serialNumbers')
-        ->select(
-            'id',
-            'code',
-            'invoice_date',
-            'invoice_type',
-        )
-        ->latest()
-        ->take($count)
-        ->get();
-}
-
-  
+    public static function latestInvoices(int $count = 5): Collection
+    {
+        return self::query()
+            ->with('customer:id,name')
+            ->with('supplier:id,name')
+            ->withCount('serialNumbers')
+            ->select(
+                'id',
+                'code',
+                'invoice_date',
+                'invoice_type',
+            )
+            ->latest()
+            ->take($count)
+            ->get();
+    }
 }

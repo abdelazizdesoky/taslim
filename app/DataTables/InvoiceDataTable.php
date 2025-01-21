@@ -46,18 +46,23 @@ class InvoiceDataTable extends DataTable
                         default => 'مرتجع',
                     },
                     3 => 'مكتمل',
-                    4 => 'مرتجع', 
+                    4 => 'مرتجع',
                     5 => 'ملغى',
                     default => 'غير محدد',
                 };
             })
 
             ->editColumn('actions', function ($item) {
-                    return view('Dashboard.Admin.Invoices._actions', ['Invoice' => $item]);
+                return view('Dashboard.Admin.Invoices._actions', ['Invoice' => $item]);
             })
 
             ->editColumn('code', function ($item) {
-                    return '<a href="' . route('admin.invoices.show', $item->id) . '">' . $item->code . '</a>';
+                return '<a href="' . route('admin.invoices.show', $item->id) . '">' . $item->code . '</a>';
+            })
+
+            ->editColumn('created_at', fn($item) => $item->created_at->diffForHumans())
+            ->editColumn('products_sum_quantity', function ($item) {
+                return $item->products_sum_quantity ?? 0; // عرض القيمة أو 0 إذا لم توجد
             })
             ->rawColumns(['code']) // Ensure the code column is rendered as HTML
             ->setRowId('id');
@@ -79,9 +84,10 @@ class InvoiceDataTable extends DataTable
             ->with('location:id,location_name')
             ->with('admin:id,name')
             ->with('creator:id,name')
-            ->withCount('serialNumbers');
+            ->withCount('products')
+            ->withCount('serialNumbers')
+            ->withSum('products as products_sum_quantity', 'invoice_products.quantity');
     }
-
     /**
      * Optional method if you want to use html builder.
      *
@@ -94,12 +100,15 @@ class InvoiceDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             //->responsive()
-             ->dom('Bfrtip')
-            ->orderBy([11, 'desc'])
+            ->dom('Bfrtip')
+            ->orderBy([13, 'desc'])
+            ->lengthMenu([[10, 20, 50, 100], [10, 20, 50, 100]]) // Add length menu options
             ->selectStyleSingle()
             ->buttons([
                 Button::make('excel'),
-               
+                Button::make('pageLength')
+
+
             ])
             ->createdRow('function(row, data, dataIndex) {
                 var statusCell = $("td:eq(7)", row); // Adjust the index based on the position of the invoice_status column
@@ -148,6 +157,15 @@ class InvoiceDataTable extends DataTable
                 ->title('حالة الاذن'),
             Column::make('location.location_name')
                 ->title('موقع'),
+            Column::make('products_count')
+                ->title(' المنتجات')
+                ->searchable(false)
+                ->orderable(false),
+            Column::make('products_sum_quantity')
+                ->title('مطلوب   ')
+                ->searchable(false)
+                ->orderable(false),
+
             Column::make('serial_numbers_count')
                 ->title('سيريال ')
                 ->searchable(false),
@@ -162,8 +180,8 @@ class InvoiceDataTable extends DataTable
                 ->searchable(false)
                 ->width(60)
                 ->addClass('text-center'),
-            
-          
+
+
         ];
     }
 
