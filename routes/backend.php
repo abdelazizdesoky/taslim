@@ -81,7 +81,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
         //report 
         Route::get('report', [ReportController::class, 'index'])->name('report.index');
-        Route::get('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
+        Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
         Route::get('/report/inventory', [ReportController::class, 'inventoryReport'])->name('report.inventory');
 
         
@@ -149,7 +149,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     //report 
     Route::get('report', [ReportController::class, 'index'])->name('report.index');
-    Route::get('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
+    Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
     Route::get('/report/inventory', [ReportController::class, 'inventoryReport'])->name('report.inventory');
  
        

@@ -39,15 +39,32 @@
                             @php $permission = Auth::guard('admin')->user()->permission; @endphp
                     
                             @if ($permission == 1)
-                            <form class="form" method="GET" action="{{ route('admin.report.generate') }}">
+                            <form class="form" method="POST" action="{{ route('admin.report.generate') }}">
                                 @csrf
                             @elseif($permission == 5)
-                            <form class="form" method="GET" action="{{ route('viewer.report.generate') }}">
+                            <form class="form" method="POST" action="{{ route('viewer.report.generate') }}">
                                 @csrf
                             @endif
                     
                         @endif
-                            
+
+                    <div class="row mg-t-10">
+                            <div class="col-lg-3">
+                                <label class="rdiobox">
+                                    <input name="stutus" type="radio" value="1" > 
+                                    <span>استلام</span>
+                                </label>
+                            </div>
+                            <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+                                <label class="rdiobox">
+                                    <input checked name="stutus" type="radio" value="2" > 
+                                    <span>تسليم</span>
+                                </label>
+                            </div>
+                        </div>
+             
+                        
+                            <hr>
                                     <div class="form-group mb-4">
                                         <label for="report_for">التقرير عن:</label>
                                         <select class="form-control" id="report_for" name="report_for" required>

@@ -178,25 +178,23 @@ public function edit($id)
 
 
 ///-----------------------------------------------
-
 public function store(Request $request) {
-
-
-    
     try {
         $request->validate([
-            'id' => 'required|string|max:255', // Invoice ID
-            'serials' => 'required|string',    // Serials
+            'id' => 'required|string|max:255',
+            'serials' => 'required|string',
         ]);
 
         $invoiceId = $request->input('id');
         $serials = $request->input('serials');
 
-        // تقسيم السيريالات إلى مصفوفة بعد تنظيفها
-        $serialsArray = array_filter(array_map('trim', explode("\n", $serials)));
+        // تنظيف السيريالات وإزالة التكرارات في نفس الطلب
+        $serialsArray = array_unique(array_filter(array_map('trim', explode("\n", $serials))));
 
-        // إحضار السيريالات الحالية لهذا الفاتورة
-        $existingSerials = SerialNumber::where('invoice_id', $invoiceId)
+        DB::beginTransaction();
+
+        // جلب السيريالات الحالية في الفاتورة الحالية فقط
+        $existingSerialsInInvoice = SerialNumber::where('invoice_id', $invoiceId)
             ->pluck('serial_number')
             ->toArray();
 
@@ -204,44 +202,54 @@ public function store(Request $request) {
         $failedSerials = [];
 
         foreach ($serialsArray as $serial) {
-            // تخطي إذا كان السيريال موجود بالفعل
-            if (in_array($serial, $existingSerials)) {
+            if (empty($serial)) {
+                $failedSerials[] = $serial . ' (سيريال فارغ)';
+                continue;
+            }
+
+            // التحقق من التكرار في الفاتورة الحالية فقط
+            if (in_array($serial, $existingSerialsInInvoice)) {
+                $failedSerials[] = $serial . ' (مكرر في الفاتورة)';
                 continue;
             }
 
             try {
-                // حفظ السيريال مباشرة دون التحقق من النوع أو الكمية
                 SerialNumber::create([
                     'invoice_id' => $invoiceId,
                     'serial_number' => $serial,
                 ]);
 
                 $successfulSerials[] = $serial;
-
-                if (!count($successfulSerials) == 0) {
-                    $invoice = Invoice::findOrFail($invoiceId);
-                    $invoice->invoice_status = 3; // Mark as completed
-                    $invoice->save();
-                }
+                $existingSerialsInInvoice[] = $serial; // تحديث القائمة لتجنب التكرار في نفس الطلب
             } catch (\Exception $e) {
-                $failedSerials[] = $serial . ' (خطأ أثناء الحفظ)';
+                $failedSerials[] = $serial . ' (خطأ غير معروف)';
             }
         }
 
-        // رسائل الفلاش
+        // تحديث حالة الفاتورة إذا كان هناك سيريالات ناجحة
         if (!empty($successfulSerials)) {
-            session()->flash('add');
+            $invoice = Invoice::findOrFail($invoiceId);
+            $invoice->invoice_status = 3;
+            $invoice->save();
+        }
+
+        DB::commit();
+
+        // رسائل التنبيه
+        if (!empty($successfulSerials)) {
+            session()->flash('add', 'تم إضافة السيريالات بنجاح: ' . implode(', ', $successfulSerials));
         }
 
         if (!empty($failedSerials)) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage('warning', 'السيريالات التي لم يتم إدخالها: ' . implode(', ', $failedSerials))]);;
+            session()->flash('warning', 'السيريالات التي فشلت: ' . implode(', ', $failedSerials));
         }
 
         return redirect()->route('Dashboard.employee');
+
     } catch (\Exception $e) {
+        DB::rollBack();
         return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
 }
-
 }
 

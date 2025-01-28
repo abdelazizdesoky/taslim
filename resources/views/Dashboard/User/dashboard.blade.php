@@ -117,7 +117,7 @@
 											@endif
 										</td>
 										<td class="tx-right tx-medium tx-danger">{{$invoice->invoice_date}}</td>
-										<td class="tx-right tx-medium tx-danger">{{$invoice->Admin->name}}</td>
+										<td class="tx-right tx-medium tx-danger">{{$invoice->Admin->name??'-'}}</td>
 										<td class="tx-right tx-medium tx-danger">{{App\Models\SerialNumber::where('invoice_id',$invoice->id )->count()}}</td>
 									</tr>
 										@endforeach

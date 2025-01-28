@@ -38,7 +38,8 @@
                     </div>
                     <div class="card-body">
                     <!-- جدول عرض الفواتير -->
-                    <table class="table  key-buttons table-bordered mg-b-0 text-md-nowrap">
+                    <div class="table-responsive">
+                        <table id="example" class="table key-buttons text-md-nowrap">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -47,21 +48,30 @@
                                 <th>المورد</th>
                                 <th>العميل</th>
                                 <th>الموقع</th>
-                                <th>عدد السيريالات</th>
+                                <th>السيريال المطلوب  </th>
+                                <th> السيريالات مسحوب </th>
+                               
+                          
                                 <th>مندوب </th>
+                                <th>منسق </th>
+                                <th> </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $invoice)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $invoice->code }}</td>
+                                    <td><a href="{{route('admin.invoices.show',$invoice->id)}}">{{$invoice->code}}</a></td>
                                     <td>{{ $invoice->invoice_date }}</td>
                                     <td>{{ $invoice->supplier->name ?? '-' }}</td>
                                     <td>{{ $invoice->customer->name ?? '-' }}</td>
                                     <td>{{ $invoice->location->name ?? '-' }}</td>
-                                    <td>{{ $invoice->serial_numbers_count }}</td>
+                                    <td>{{$invoice->products_sum_quantity}}</td>
+                                    <td>{{ $invoice->total_serials_pulled }}</td>
                                     <td>{{ $invoice->Admin->name?? '-'}}</td>
+                                    <td>{{ $invoice->creator->name?? '-'}}</td>
+                                    <td>  </td>
+                                        
                                 </tr>
                             @endforeach
                         </tbody>
@@ -69,13 +79,13 @@
 
                     <!-- الترقيم -->
                     <div class="d-flex justify-content-center mt-4">
-                        {{ $data->links('pagination::bootstrap-4') }}
+                        {{--$data->links('pagination::bootstrap-4') --}}
                     </div> 
                 </div>
             </div>
         </div>
 
-
+    </div>
 
 
 

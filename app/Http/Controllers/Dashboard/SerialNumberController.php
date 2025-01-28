@@ -31,7 +31,7 @@ class SerialNumberController extends Controller
             // التأكد من وجود معرفات فواتير
             if ($invoiceIds->isNotEmpty()) {
                 // جلب الفواتير
-                $invoices = Invoice::whereIn('id', $invoiceIds)->get();
+                $invoices = Invoice::whereIn('id', $invoiceIds)->orderBy('invoice_date','asc')->get();
     
                 // التأكد من وجود فواتير
                 if ($invoices->count() > 0) {

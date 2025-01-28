@@ -32,12 +32,15 @@ class ReportController extends Controller
 
     public function generate(Request $request)
     {
+
         // التحقق من صحة البيانات
         $request->validate([
             'report_for' => 'required|string',
+            'stutus' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
+
 
         // تحديد الفترة الزمنية
         $startDate = Carbon::parse($request->start_date)->startOfDay();
@@ -45,29 +48,34 @@ class ReportController extends Controller
 
         // تحديد نوع التقرير
         $reportFor = $request->report_for;
+        $stutus = $request->stutus;
+        if (!is_array($stutus)) {
+            $stutus = [$stutus];
+        }
 
         // إنشاء التقرير بناءً على الخيار المحدد
         switch ($reportFor) {
             case 'completed_invoices':
-                $data = $this->getCompletedInvoices($startDate, $endDate);
+                $data = $this->getCompletedInvoices($startDate, $endDate, $stutus);
                 $title = 'الاذن  المكتملة';
              
                 break;
 
             case 'pending_invoices':
-                $data = $this->getPendingInvoices($startDate, $endDate);
+                $data = $this->getPendingInvoices($startDate, $endDate, $stutus);
                 $title = 'الاذن  تحت التسليم';
                
                 break;
+                
 
             case 'canceled_invoices':
-                $data = $this->getCanceledInvoices($startDate, $endDate);
+                $data = $this->getCanceledInvoices($startDate, $endDate, $stutus);
                 $title = 'الاذن  الملغية';
               
                 break;
 
             case 'reviers_invoices':
-                $data = $this->getreversInvoices($startDate, $endDate);
+                $data = $this->getreversInvoices($startDate, $endDate, $stutus);
                 $title = 'الاذن  المرتجعة';
                
                 break;
@@ -101,47 +109,64 @@ class ReportController extends Controller
     }
 
     // دالة لجلب الاذن  المكتملة
-    private function getCompletedInvoices($startDate, $endDate)
+    private function getCompletedInvoices($startDate, $endDate, $status)
     {
         return Invoice::where('invoice_status', 3)
+            ->whereIn('invoice_type', $status)
             ->whereBetween('invoice_date', [$startDate, $endDate])
-            ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
-            ->withCount('serialNumbers')
+            ->with(['supplier', 'customer', 'admin', 'location'])
+            ->withCount([
+                'serialNumbers as total_serials_pulled', // عدد السيريالات المرتبطة
+            ])
+            ->withSum('products as products_sum_quantity', 'invoice_products.quantity') // مجموع الكميات المطلوبة من المنتجات
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->get();
     }
+    
 
     // دالة لجلب الاذن  تحت التسليم
-    private function getPendingInvoices($startDate, $endDate)
+    private function getPendingInvoices($startDate, $endDate,$stutus)
     {
         return Invoice::where('invoice_status', 1)
+        ->whereIn('invoice_type',$stutus)
             ->whereBetween('invoice_date', [$startDate, $endDate])
             ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
-            ->withCount('serialNumbers')
+            ->withCount([
+                'serialNumbers as total_serials_pulled', // عدد السيريالات المرتبطة
+            ])
+            ->withSum('products as products_sum_quantity', 'invoice_products.quantity') // مجموع الكميات المطلوبة من المنتجات
             ->orderBy('created_at', 'desc')
-             ->paginate(20);
+            ->get();
     }
 
     // دالة لجلب الاذن  الملغية
-    private function getCanceledInvoices($startDate, $endDate)
+    private function getCanceledInvoices($startDate, $endDate,$stutus)
     {
         return Invoice::where('invoice_status', 5)
+        ->whereIn('invoice_type',$stutus)
             ->whereBetween('invoice_date', [$startDate, $endDate])
             ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
-            ->withCount('serialNumbers')
+            ->withCount([
+                'serialNumbers as total_serials_pulled', // عدد السيريالات المرتبطة
+            ])
+            ->withSum('products as products_sum_quantity', 'invoice_products.quantity') // مجموع الكميات المطلوبة من المنتجات
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->get();
     }
 
     // دالة لجلب الاذن  مرتجع
-    private function getreversInvoices($startDate, $endDate)
+    private function getreversInvoices($startDate, $endDate,$stutus)
     {
         return Invoice::where('invoice_status', 4)
+        ->whereIn('invoice_type',$stutus)
             ->whereBetween('invoice_date', [$startDate, $endDate])
             ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
-            ->withCount('serialNumbers')
+            ->withCount([
+                'serialNumbers as total_serials_pulled', // عدد السيريالات المرتبطة
+            ])
+            ->withSum('products as products_sum_quantity', 'invoice_products.quantity') // مجموع الكميات المطلوبة من المنتجات
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->get();
     }
 
     // دالة لجلب العملاء
