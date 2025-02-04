@@ -61,7 +61,21 @@
                             @foreach ($data as $invoice)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td><a href="{{route('admin.invoices.show',$invoice->id)}}">{{$invoice->code}}</a></td>
+                                    <td>
+                                        @if (Auth::guard('admin')->check())
+                                        @php $permission = Auth::guard('admin')->user()->permission; @endphp
+                                
+                                        @if ($permission == 1)
+                                        <a href="{{route('admin.invoices.show',$invoice->id)}}">
+                                            @csrf
+                                        @elseif($permission == 5)
+                                        <a href="{{route('viewer.invoices.show',$invoice->id)}}">
+                                            @csrf
+                                        @endif
+                                
+                                        @endif
+   
+                                            {{$invoice->code}}</a></td>
                                     <td>{{ $invoice->invoice_date }}</td>
                                     <td>{{ $invoice->supplier->name ?? '-' }}</td>
                                     <td>{{ $invoice->customer->name ?? '-' }}</td>
