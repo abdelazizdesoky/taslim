@@ -38,7 +38,7 @@ class EmployeeInvoiceController extends Controller
           ->whereIn('invoice_status', [1])
           ->whereIn('invoice_type', [$id,3]) // -مرتجعات | تسليم
           ->orderBy('invoice_date', 'desc')
-          ->paginate(100);    
+          ->paginate(500);    
  
 
       return view('Dashboard.Employees.Invoices.invoice2',compact('Invoices','activeInvoicesCount') );
@@ -57,7 +57,7 @@ class EmployeeInvoiceController extends Controller
           ->whereIn('invoice_status', [1])
           ->whereIn('invoice_type',[2,3]) // "استلام"
           ->orderBy('invoice_date', 'desc')
-          ->paginate(100);  
+          ->paginate(500);  
  
 
       return view('Dashboard.Employees.Invoices.invoice',compact('Invoices','activeInvoicesCount') );
@@ -75,7 +75,7 @@ class EmployeeInvoiceController extends Controller
                $Invoices = Invoice::whereIn('invoice_status', [1])
                ->whereIn('invoice_type',[2,3]) // "استلام"
                ->orderBy('invoice_date', 'desc')
-               ->paginate(100);    
+               ->paginate(500);    
       
      
            return view('Dashboard.Employees.Invoices.invoice2',compact('Invoices','activeInvoicesCount') );
