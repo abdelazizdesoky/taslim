@@ -1,8 +1,7 @@
 @extends('Dashboard.layouts.master')
 @section('css')
     <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
-
-	@endsection
+@endsection
 @section('title')
     الاذون | تسليماتى
 @endsection
@@ -45,7 +44,7 @@
 @endsection
 @section('js')
     {!! $dataTable->scripts() !!}
-    
+
     <script></script>
     <!--Internal  Notify js -->
     <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>

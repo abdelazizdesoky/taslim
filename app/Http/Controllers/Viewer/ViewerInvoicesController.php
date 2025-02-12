@@ -9,23 +9,23 @@ use App\Models\Product;
 use App\Models\SerialNumber;
 use Illuminate\Http\Request;
 use App\Models\InvoiceProduct;
+use App\DataTables\ProductDataTable;
 use App\Http\Controllers\Controller;
+use App\DataTables\ViewerInvoiceDataTable;
 
 
 class ViewerInvoicesController extends Controller
 {
         //-------------------------------------------------------------------------------------------------------
-  
-        public function index()
+        public function index(ViewerInvoiceDataTable $datatable)
         {
-            $Invoices = Invoice::with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
-            ->withCount('serialNumbers')
-            ->orderBy('invoice_date', 'desc')
-            ->paginate(100);
-        
-            return view('Dashboard.Viewer.Invoices.index', compact('Invoices'));
+            if (request()->ajax()) {
+                return $datatable->ajax();
+            }
+            return $datatable->render('Dashboard.Viewer.Invoices.index');
         }
-        
+   
+
   
     //-------------------------------------------------------------------------------------------------------
     public function create()
@@ -138,13 +138,15 @@ public function show($id)
 
 //-------------------------------------------------------------------------------------------------------
 
-public function viewProduct()
+public function viewProduct(ProductDataTable $datatable)
 {
 
-    $products = Product::with(['productType.brand'])->get();
+    if (request()->ajax()) {
+        return $datatable->ajax();
+    }
 
-    return view('Dashboard.Viewer.Product.index',compact('products'));
 
+    return $datatable->render('Dashboard.Viewer.Product.index');
 }
 
 

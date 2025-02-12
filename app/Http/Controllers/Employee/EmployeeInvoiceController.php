@@ -13,243 +13,220 @@ use Illuminate\Support\Facades\Auth;
 
 class EmployeeInvoiceController extends Controller
 {
-    public function index()
-    {
-
-    
+    public function index() {}
 
 
-    }
-
-  
 
     public function update($id)
     {
 
-     if ($id == 1){
-     //اذن التسليم 
+        if ($id == 1) {
+            //اذن التسليم 
 
-          $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1])//,مرتجع  حالة الفاتورة تحت تسليم  
-          ->whereIn('invoice_type',[$id,3]) // إتسليم 
-          ->count();
+            $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
+                ->whereIn('invoice_status', [1]) //,مرتجع  حالة الفاتورة تحت تسليم  
+                ->whereIn('invoice_type', [$id, 3]) // إتسليم 
+                ->count();
 
-          $Invoices = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1])
-          ->whereIn('invoice_type', [$id,3]) // -مرتجعات | تسليم
-          ->orderBy('invoice_date', 'desc')
-          ->paginate(100);    
- 
-
-      return view('Dashboard.Employees.Invoices.invoice2',compact('Invoices','activeInvoicesCount') );
+            $Invoices = Invoice::where('employee_id', Auth::user()->id)
+                ->whereIn('invoice_status', [1])
+                ->whereIn('invoice_type', [$id, 3]) // -مرتجعات | تسليم
+                ->orderBy('invoice_date', 'desc')
+                ->paginate(500);
 
 
-     }elseif($id == 2){
+            return view('Dashboard.Employees.Invoices.invoice2', compact('Invoices', 'activeInvoicesCount'));
+        } elseif ($id == 2) {
 
-   // الاذن الاستلام 
+            // الاذن الاستلام 
 
-          $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1])  // حالة الفاتورة تحت استلام 
-          ->whereIn('invoice_type', [2,3]) // استلام
-          ->count();
+            $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
+                ->whereIn('invoice_status', [1])  // حالة الفاتورة تحت استلام 
+                ->whereIn('invoice_type', [2, 3]) // استلام
+                ->count();
 
-          $Invoices = Invoice::where('employee_id', Auth::user()->id)
-          ->whereIn('invoice_status', [1])
-          ->whereIn('invoice_type',[2,3]) // "استلام"
-          ->orderBy('invoice_date', 'desc')
-          ->paginate(100);  
- 
-
-      return view('Dashboard.Employees.Invoices.invoice',compact('Invoices','activeInvoicesCount') );
+            $Invoices = Invoice::where('employee_id', Auth::user()->id)
+                ->whereIn('invoice_status', [1])
+                ->whereIn('invoice_type', [2, 3]) // "استلام"
+                ->orderBy('invoice_date', 'desc')
+                ->paginate(500);
 
 
+            return view('Dashboard.Employees.Invoices.invoice', compact('Invoices', 'activeInvoicesCount'));
+        } elseif ($id == 3) {
 
-     }elseif($id == 3){
+            // الاذن تسلسم الجوكر  
 
-        // الاذن تسلسم الجوكر  
-     
-               $activeInvoicesCount = Invoice::whereIn('invoice_status', [1])  // حالة الفاتورة تحت استلام 
-               ->whereIn('invoice_type', [2,3]) // استلام
-               ->count();
-     
-               $Invoices = Invoice::whereIn('invoice_status', [1])
-               ->whereIn('invoice_type',[2,3]) // "استلام"
-               ->orderBy('invoice_date', 'desc')
-               ->paginate(100);    
-      
-     
-           return view('Dashboard.Employees.Invoices.invoice2',compact('Invoices','activeInvoicesCount') );
-     
-     
-     
-          }
+            $activeInvoicesCount = Invoice::whereIn('invoice_status', [1])  // حالة الفاتورة تحت استلام 
+                ->whereIn('invoice_type', [2, 3]) // استلام
+                ->count();
+
+            $Invoices = Invoice::whereIn('invoice_status', [1])
+                ->whereIn('invoice_type', [2, 3]) // "استلام"
+                ->orderBy('invoice_date', 'desc')
+                ->paginate(500);
 
 
-              
+            return view('Dashboard.Employees.Invoices.invoice2', compact('Invoices', 'activeInvoicesCount'));
+        }
     }
 
-//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
 
     public function Compinvoice()
     {
-       
+
         //مكتمل 
         if (Auth::user()->permission == 3 && Auth::user()->permission == 4) {
 
-         $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-         ->where('invoice_status', 3)
-         ->count();
-              
+            $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
+                ->where('invoice_status', 3)
+                ->count();
 
-                $Invoices = Invoice::where('employee_id', Auth::user()->id)
-                ->where('invoice_status', 3) 
+
+            $Invoices = Invoice::where('employee_id', Auth::user()->id)
+                ->where('invoice_status', 3)
                 ->orderBy('invoice_date', 'desc')
-                ->paginate(100);   
-       
+                ->paginate(100);
 
-            return view('Dashboard.Employees.Invoices.compinvoice',compact('Invoices','activeInvoicesCount') );
 
-        }elseif (Auth::user()->permission == 6) {
-   
-            $activeInvoicesCount = Invoice::where('invoice_status', 3) ->count();
-                 
-                   $Invoices = Invoice::where('invoice_status', 3) 
-                   ->orderBy('invoice_date', 'desc')
-                   ->paginate(100);   
-          
-   
-               return view('Dashboard.Employees.Invoices.compinvoice',compact('Invoices','activeInvoicesCount') );   
+            return view('Dashboard.Employees.Invoices.compinvoice', compact('Invoices', 'activeInvoicesCount'));
+        } elseif (Auth::user()->permission == 6) {
 
-        }else {
+            $activeInvoicesCount = Invoice::where('invoice_status', 3)->count();
+
+            $Invoices = Invoice::where('invoice_status', 3)
+                ->orderBy('invoice_date', 'desc')
+                ->paginate(100);
+
+
+            return view('Dashboard.Employees.Invoices.compinvoice', compact('Invoices', 'activeInvoicesCount'));
+        } else {
             return redirect()->back()->with('error', 'ليس لديك صلاحية الوصول إلى هذه الصفحة.');
         }
-
     }
 
 
     public function show($id)
     {
-      
-            //اذن  
-       
-            $invoice = Invoice::with(['products'])->where('id', $id)->firstOrFail();
-        
-       
-             return view('Dashboard.Employees.Invoices.invoicedateils',compact('invoice') );
+
+        //اذن  
+
+        $invoice = Invoice::with(['products'])->where('id', $id)->firstOrFail();
 
 
+        return view('Dashboard.Employees.Invoices.invoicedateils', compact('invoice'));
     }
 
-//---------------------------------------------------
-public function edit($id)
-{
-    // جلب الفاتورة مع المنتجات المرتبطة والكمية من جدول invoice_products
-    $Invoices = Invoice::with(['products' => function ($query) use ($id) {
-        $query->select(
-            'products.id',
-            'products.product_name',
-            'products.product_code',
-            'ip.quantity' // الكمية من الجدول الوسيط
-        )
-        ->join('invoice_products as ip', 'products.id', '=', 'ip.product_id')
-        ->where('ip.invoice_id', $id); // الربط بالفاتورة المحددة
-    }])->findOrFail($id);
+    //---------------------------------------------------
+    public function edit($id)
+    {
+        // جلب الفاتورة مع المنتجات المرتبطة والكمية من جدول invoice_products
+        $Invoices = Invoice::with(['products' => function ($query) use ($id) {
+            $query->select(
+                'products.id',
+                'products.product_name',
+                'products.product_code',
+                'ip.quantity' // الكمية من الجدول الوسيط
+            )
+                ->join('invoice_products as ip', 'products.id', '=', 'ip.product_id')
+                ->where('ip.invoice_id', $id); // الربط بالفاتورة المحددة
+        }])->findOrFail($id);
 
-    // حساب الكمية الإجمالية من جدول invoice_products
-    $totalQuantity = DB::table('invoice_products')
-        ->where('invoice_id', $id)
-        ->sum('quantity');
+        // حساب الكمية الإجمالية من جدول invoice_products
+        $totalQuantity = DB::table('invoice_products')
+            ->where('invoice_id', $id)
+            ->sum('quantity');
 
-    // ترتيب البيانات المرتبطة بالفاتورة والمنتجات
-    $invoiceProducts = $Invoices->products->map(function ($product) {
-        return [
-            'id' => $product->id,
-            'product_code' => $product->product_code ?? '', // استخدم `product_code` بدلاً من `serial_prefix`
-        ];
-    });
-    
-
-    // إرسال البيانات إلى الـ View
-    return view('Dashboard.Employees.Invoices.addserial', compact('Invoices', 'totalQuantity', 'invoiceProducts'));
-}
+        // ترتيب البيانات المرتبطة بالفاتورة والمنتجات
+        $invoiceProducts = $Invoices->products->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'product_code' => $product->product_code ?? '', // استخدم `product_code` بدلاً من `serial_prefix`
+            ];
+        });
 
 
+        // إرسال البيانات إلى الـ View
+        return view('Dashboard.Employees.Invoices.addserial', compact('Invoices', 'totalQuantity', 'invoiceProducts'));
+    }
 
 
 
-///-----------------------------------------------
-public function store(Request $request) {
-    try {
-        $request->validate([
-            'id' => 'required|string|max:255',
-            'serials' => 'required|string',
-        ]);
 
-        $invoiceId = $request->input('id');
-        $serials = $request->input('serials');
 
-        // تنظيف السيريالات وإزالة التكرارات في نفس الطلب
-        $serialsArray = array_unique(array_filter(array_map('trim', explode("\n", $serials))));
+    ///-----------------------------------------------
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required|string|max:255',
+                'serials' => 'required|string',
+            ]);
 
-        DB::beginTransaction();
+            $invoiceId = $request->input('id');
+            $serials = $request->input('serials');
 
-        // جلب السيريالات الحالية في الفاتورة الحالية فقط
-        $existingSerialsInInvoice = SerialNumber::where('invoice_id', $invoiceId)
-            ->pluck('serial_number')
-            ->toArray();
+            // تنظيف السيريالات وإزالة التكرارات في نفس الطلب
+            $serialsArray = array_unique(array_filter(array_map('trim', explode("\n", $serials))));
 
-        $successfulSerials = [];
-        $failedSerials = [];
+            DB::beginTransaction();
 
-        foreach ($serialsArray as $serial) {
-            if (empty($serial)) {
-                $failedSerials[] = $serial . ' (سيريال فارغ)';
-                continue;
+            // جلب السيريالات الحالية في الفاتورة الحالية فقط
+            $existingSerialsInInvoice = SerialNumber::where('invoice_id', $invoiceId)
+                ->pluck('serial_number')
+                ->toArray();
+
+            $successfulSerials = [];
+            $failedSerials = [];
+
+            foreach ($serialsArray as $serial) {
+                if (empty($serial)) {
+                    $failedSerials[] = $serial . ' (سيريال فارغ)';
+                    continue;
+                }
+
+                // التحقق من التكرار في الفاتورة الحالية فقط
+                if (in_array($serial, $existingSerialsInInvoice)) {
+                    $failedSerials[] = $serial . ' (مكرر في الفاتورة)';
+                    continue;
+                }
+
+                try {
+                    SerialNumber::create([
+                        'invoice_id' => $invoiceId,
+                        'serial_number' => $serial,
+                    ]);
+
+                    $successfulSerials[] = $serial;
+                    $existingSerialsInInvoice[] = $serial; // تحديث القائمة لتجنب التكرار في نفس الطلب
+                } catch (\Exception $e) {
+                    $failedSerials[] = $serial . ' (خطأ غير معروف)';
+                }
             }
 
-            // التحقق من التكرار في الفاتورة الحالية فقط
-            if (in_array($serial, $existingSerialsInInvoice)) {
-                $failedSerials[] = $serial . ' (مكرر في الفاتورة)';
-                continue;
+            // تحديث حالة الفاتورة إذا كان هناك سيريالات ناجحة
+            if (!empty($successfulSerials)) {
+                $invoice = Invoice::findOrFail($invoiceId);
+                $invoice->invoice_status = 3;
+                $invoice->save();
             }
 
-            try {
-                SerialNumber::create([
-                    'invoice_id' => $invoiceId,
-                    'serial_number' => $serial,
-                ]);
+            DB::commit();
 
-                $successfulSerials[] = $serial;
-                $existingSerialsInInvoice[] = $serial; // تحديث القائمة لتجنب التكرار في نفس الطلب
-            } catch (\Exception $e) {
-                $failedSerials[] = $serial . ' (خطأ غير معروف)';
+            // رسائل التنبيه
+            if (!empty($successfulSerials)) {
+                session()->flash('add', 'تم إضافة السيريالات بنجاح: ' . implode(', ', $successfulSerials));
             }
+
+            if (!empty($failedSerials)) {
+                session()->flash('warning', 'السيريالات التي فشلت: ' . implode(', ', $failedSerials));
+            }
+
+            return redirect()->route('Dashboard.employee');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
-
-        // تحديث حالة الفاتورة إذا كان هناك سيريالات ناجحة
-        if (!empty($successfulSerials)) {
-            $invoice = Invoice::findOrFail($invoiceId);
-            $invoice->invoice_status = 3;
-            $invoice->save();
-        }
-
-        DB::commit();
-
-        // رسائل التنبيه
-        if (!empty($successfulSerials)) {
-            session()->flash('add', 'تم إضافة السيريالات بنجاح: ' . implode(', ', $successfulSerials));
-        }
-
-        if (!empty($failedSerials)) {
-            session()->flash('warning', 'السيريالات التي فشلت: ' . implode(', ', $failedSerials));
-        }
-
-        return redirect()->route('Dashboard.employee');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
 }
-}
-

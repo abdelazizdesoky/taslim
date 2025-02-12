@@ -169,67 +169,7 @@
 			<!-- row close -->
 			
 			<!-- row opened -->
-<div class="row row-sm row-deck">
-    <div class="col-md-12 col-lg-4 col-xl-4">
-        <div class="card card-dashboard-eight pb-2">
-            <h6 class="card-title">المنتجات   </h6>
-            <span class="d-block mg-b-10 text-muted tx-12">اكبر عدد منتجات تم ادخال سيريالات لها بالسيستم   .</span>
-            <div class="list-group">
-			@php
-				use App\Models\SerialNumber;
-				use App\Models\Product;
 
-				// جلب السيريالات
-				$serials = SerialNumber::all();
-
-				// تجميع السيريالات حسب أول 7 أرقام بعد إزالة الأصفار
-				$products = $serials->groupBy(function ($serial) {
-					// إزالة الأصفار الزائدة من السيريال واستخراج أول 7 أرقام
-					$serialPrefix = ltrim(substr($serial->serial_number, 0, 7), '0');
-					
-					// البحث عن المنتج بناءً على الـ product_code
-					return Product::where('product_code', $serialPrefix)->first(); // إرجاع المنتج المطابق
-				})->filter();
-
-				// حساب عدد السيريالات لكل منتج
-				$productSerialCounts = $products->map(function ($serials, $product) {
-					return [
-						'product' => $product, // تأكد من أن المنتج ليس فارغًا
-						'serial_count' => $serials->count(),
-					];
-				})->sortByDesc('serial_count')->take(5); // ترتيب حسب عدد السيريالات واختيار الخمس الأوائل
-			
-		
-			@endphp
-
-				<div class="list-group">
-					@foreach($productSerialCounts as $productData)
-					@php
-						// فك ترميز المنتج إذا كان JSON
-						$product = $productData['product'];
-						if (is_string($product)) {
-							$product = json_decode($product); // تحويل JSON إلى كائن
-						}
-					@endphp
-					<div class="list-group-item border-top-0">
-						<i class="fe fe-shopping-cart tx-20"></i>
-						<p>
-							@if ($product && property_exists($product, 'product_name')) {{-- تحقق من وجود اسم المنتج --}}
-								{{ $product->product_name }}
-							@else
-								غير معرف بالمنتجات
-							@endif
-						</p>
-						<span>{{ $productData['serial_count'] }} سيريال</span>
-					</div>
-				@endforeach
-
-				</div>
-
-				
-            </div>
-        </div>
-    </div>
 
 			
 			</div>

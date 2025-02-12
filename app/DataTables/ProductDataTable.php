@@ -3,14 +3,15 @@
 namespace App\DataTables;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 class ProductDataTable extends DataTable
 {
@@ -20,7 +21,9 @@ class ProductDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addIndexColumn()
             ->editColumn('actions', function ($item) {
-                return view('Dashboard.Admin.Product._actions', ['product' => $item]);
+        if (Auth::guard('admin')->user()->permission == 1){
+            return view('Dashboard.Admin.Product._actions', ['product' => $item]);
+        }
             })
            
             ->setRowId('id');

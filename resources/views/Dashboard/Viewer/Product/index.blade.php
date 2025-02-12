@@ -25,42 +25,7 @@
 							</div>
 							<div class="card-body">
 								<div class="table-responsive">
-									<table id="example" class="table key-buttons mg-b-0 text-md-nowrap">
-										<thead>
-											<tr>
-												<th> #</th>
-												<th>اسم المنتج</th>
-												<th> كود</th>
-												<th> </th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach ($products as $product)
-											<tr>
-
-											<td>{{$loop->iteration}}	</td>
-											<td>
-												{{ $product->productType->type_name }}
-												 {{ $product->productType->brand->brand_name }}
-												  {{ $product->product_name }}
-												   {{ $product->detail_name }} 	
-											</td>
-											<td>
-												{{ $product->product_code }}
-											    
-											</td>
-												
-											<td>
-												
-											    
-											</td>
-												
-											</tr>
-
-								
-										@endforeach
-										</tbody>
-									</table>
+									{!! $dataTable->table() !!}
 								</div>
 							</div><!-- bd -->
 						</div><!-- bd -->
@@ -74,5 +39,5 @@
 		<!-- main-content closed -->
 @endsection
 @section('js')
-
+{!! $dataTable->scripts() !!}
 @endsection

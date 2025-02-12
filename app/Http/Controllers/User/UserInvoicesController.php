@@ -17,21 +17,23 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\DataTables\UserInvoiceDataTable;
 
 class UserInvoicesController extends Controller
 {
         //-------------------------------------------------------------------------------------------------------
-    public function index()
-    {
-        $Invoices = Invoice::where('created_by', Auth::user()->id)
-        ->with(['supplier', 'customer', 'admin', 'location', 'serialNumbers'])
-        ->withCount('serialNumbers')
-        ->orderBy('invoice_date', 'desc')
-        ->paginate(50);
+
+        public function index(UserInvoiceDataTable $datatable)
+        {
+            if (request()->ajax()) {
+                return $datatable->ajax();
+            }
+            return $datatable->render('Dashboard.User.Invoices.index');
+        }
+   
+
+  ///-------------------------------------------------------------------------------------------------------
     
-        return view('Dashboard.User.Invoices.index',compact('Invoices'));
-    }
-    //-------------------------------------------------------------------------------------------------------
     public function create()
     {
         $customers = Customers::select('id', 'name','code')->where('status', 1)->get();
