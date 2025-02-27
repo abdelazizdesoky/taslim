@@ -67,6 +67,13 @@ public function create()
 //-----------------------------------
 public function store(Request $request)
 {
+    $minId = Invoice::where('id', '<', 20000000)->min('id');
+
+    // تحديد أقل قيمة أقل من 20,000,000
+    $newId = $minId ? $minId - 1 : 19999999;
+    
+
+
     $request->validate([
         'code' => 'required|unique:invoices,code',
         'invoice_date' => 'required',
@@ -82,6 +89,7 @@ public function store(Request $request)
     try {
         // إنشاء الفاتورة
         $invoice = new Invoice();
+        $invoice->id=$newId;
         $invoice->code = $request->code;
         $invoice->invoice_date = Carbon::createFromFormat('m/d/Y', $request->invoice_date)->format('Y-m-d');
         $invoice->invoice_type = $request->invoice_type;
@@ -403,5 +411,31 @@ public function cancelserial(Request $request)
     }
 }
 
+
+
+
 //-------------------------------------------------------------------------------------------------------
+public function getInvoiceChartData()
+{
+    $invoiceTypes = Invoice::selectRaw('invoice_type, COUNT(*) as count')
+        ->groupBy('invoice_type')
+        ->get();
+
+    $invoiceStatuses = Invoice::selectRaw('invoice_status, COUNT(*) as count')
+        ->groupBy('invoice_status')
+        ->get();
+
+    return response()->json([
+        'invoiceTypes' => $invoiceTypes,
+        'invoiceStatuses' => $invoiceStatuses
+    ]);
+}
+
+
+public function getInvoice()
+{
+ return view('Dashboard.Admin.Invoices.chart');
+}
+
+
 }

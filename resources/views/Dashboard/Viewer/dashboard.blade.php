@@ -168,78 +168,114 @@
 				</div>
 			</div>
 		</div>
-			<!-- row close -->
-			
-			<!-- row opened -->
-{{-- <div class="row row-sm row-deck">
-    <div class="col-md-12 col-lg-4 col-xl-4">
-        <div class="card card-dashboard-eight pb-2">
-            <h6 class="card-title">المنتجات   </h6>
-            <span class="d-block mg-b-10 text-muted tx-12">اكبر عدد منتجات تم ادخال سيريالات لها بالسيستم   .</span>
-            <div class="list-group">
-			@php
-				use App\Models\SerialNumber;
-				use App\Models\Product;
-
-				// جلب السيريالات
-				$serials = SerialNumber::all();
-
-				// تجميع السيريالات حسب أول 7 أرقام بعد إزالة الأصفار
-				$products = $serials->groupBy(function ($serial) {
-					// إزالة الأصفار الزائدة من السيريال واستخراج أول 7 أرقام
-					$serialPrefix = ltrim(substr($serial->serial_number, 0, 7), '0');
-					
-					// البحث عن المنتج بناءً على الـ product_code
-					return Product::where('product_code', $serialPrefix)->first(); // إرجاع المنتج المطابق
-				})->filter();
-
-				// حساب عدد السيريالات لكل منتج
-				$productSerialCounts = $products->map(function ($serials, $product) {
-					return [
-						'product' => $product, // تأكد من أن المنتج ليس فارغًا
-						'serial_count' => $serials->count(),
-					];
-				})->sortByDesc('serial_count')->take(5); // ترتيب حسب عدد السيريالات واختيار الخمس الأوائل
-			
-		
-			@endphp
-
-				<div class="list-group">
-					@foreach($productSerialCounts as $productData)
-					@php
-						// فك ترميز المنتج إذا كان JSON
-						$product = $productData['product'];
-						if (is_string($product)) {
-							$product = json_decode($product); // تحويل JSON إلى كائن
-						}
-					@endphp
-					<div class="list-group-item border-top-0">
-						<i class="fe fe-shopping-cart tx-20"></i>
-						<p>
-							@if ($product && property_exists($product, 'product_name')) {{-- تحقق من وجود اسم المنتج --}}
-								{{-- {{ $product->product_name }}
-							@else
-								غير معرف بالمنتجات
-							@endif
-						</p>
-						<span>{{ $productData['serial_count'] }} سيريال</span>
-					</div>
-				@endforeach
-
+		<div class="row row-sm">
+			<div class="col-xl-4 col-md-12 col-lg-6">
+				<div class="card card-table-two">
+	
+					<h4>📊 عدد الفواتير حسب النوع</h4>
+					<canvas id="invoiceTypeChart"></canvas>
+					<hr>
+	
+	
 				</div>
-
-				
-            </div>
-        </div>
-    </div>
-
-
-			</div> --}} 
-			<!-- /row -->
+			</div>
+			<div class="col-xl-4 col-md-12 col-lg-6">
+				<div class="card card-table-two">
+	
+					<h4>📊 عدد الفواتير حسب الحالة</h4>
+					<canvas id="invoiceStatusChart"></canvas>
+	
+				</div>
+			</div>
 		</div>
-	</div>
-	<!-- Container closed -->
-@endsection
-@section('js')
-
-@endsection
+		</div>
+		</div>
+		<!-- /row -->
+		</div>
+		</div>
+		<!-- Container closed -->
+	@endsection
+	@section('js')
+		<!--Internal  Chart.bundle js -->
+		<script src="{{ URL::asset('dashboard/plugins/chart.js/Chart.bundle.min.js') }}"></script>
+		<!--Internal Apexchart js-->
+		<script src="{{ URL::asset('dashboard/js/apexcharts.js') }}"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				fetch('/viewer/invoice-chart-data')
+					.then(response => response.json())
+					.then(data => {
+						console.log("✅ البيانات المسترجعة:", data);
+	
+						if (!data.invoiceTypes || !data.invoiceStatuses) {
+							console.error("🚨 لا توجد بيانات متاحة!");
+							return;
+						}
+	
+						renderInvoiceTypeChart(data.invoiceTypes);
+						renderInvoiceStatusChart(data.invoiceStatuses);
+					})
+					.catch(error => console.error("❌ خطأ أثناء جلب البيانات:", error));
+			});
+	
+			function renderInvoiceTypeChart(invoiceTypes) {
+				const typeLabels = {
+					1: "استلام",
+					2: "تسليم",
+					3: "مرتجعات"
+				};
+	
+				const labels = invoiceTypes.map(item => typeLabels[item.invoice_type] || `نوع ${item.invoice_type}`);
+				const counts = invoiceTypes.map(item => item.count);
+	
+				new Chart(document.getElementById('invoiceTypeChart').getContext('2d'), {
+					type: 'bar',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: 'عدد الفواتير لكل نوع',
+							data: counts,
+							backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+							borderWidth: 1
+						}]
+					},
+					options: {
+						responsive: true,
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				});
+			}
+	
+			function renderInvoiceStatusChart(invoiceStatuses) {
+				const statusLabels = {
+					1: "تحت استلام",
+					3: "مكتمل",
+					5: "ملغى"
+				};
+	
+				const labels = invoiceStatuses.map(item => statusLabels[item.invoice_status] || `حالة ${item.invoice_status}`);
+				const counts = invoiceStatuses.map(item => item.count);
+	
+				new Chart(document.getElementById('invoiceStatusChart').getContext('2d'), {
+					type: 'pie',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: 'عدد الفواتير حسب الحالة',
+							data: counts,
+							backgroundColor: ['#4CAF50', '#36A2EB', '#FF6384'],
+							borderWidth: 1
+						}]
+					},
+					options: {
+						responsive: true
+					}
+				});
+			}
+		</script>
+	@endsection
+	

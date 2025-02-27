@@ -35,10 +35,69 @@
     <div class="row row-sm">
         <!--div-->
         <div class="col-xl-12">
+            <!---start --->
+            <div class="col-lg-8">
+                <div class="row row-sm">
+                    <div class="col-sm-12 col-xl-4 col-lg-12 col-md-12">
+                        <div class="card ">
+                            <div class="card-body">
+                                <div class="counter-status d-flex md-mb-0">
+                                    <div class="counter-icon bg-primary-transparent">
+                                        <i class="icon-layers text-primary"></i>
+                                    </div>
+                                    <div class="mr-auto">
+                                        <h5 class="tx-13">الاذون</h5>
+                                        <h2 class="mb-0 tx-22 mb-1 mt-1"> {{ \App\Models\Invoice::count() }}</h2>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xl-4 col-lg-12 col-md-12">
+                        <div class="card ">
+                            <div class="card-body">
+                                <div class="counter-status d-flex md-mb-0">
+                                    <div class="counter-icon bg-danger-transparent">
+                                        <i class="icon-paypal text-danger"></i>
+                                    </div>
+                                    <div class="mr-auto">
+                                        <h5 class="tx-13">الاذون المفعلة </h5>
+                                        <h2 class="mb-0 tx-22 mb-1 mt-1">
+                                            {{ \App\Models\Invoice::where('invoice_status', 1)->count() }}</h2>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xl-4 col-lg-12 col-md-12">
+                        <div class="card ">
+                            <div class="card-body">
+                                <div class="counter-status d-flex md-mb-0">
+                                    <div class="counter-icon bg-success-transparent">
+                                        <i class="icon-rocket text-success"></i>
+                                    </div>
+                                    <div class="mr-auto">
+                                        <h5 class="tx-13">الاذون المكتملة </h5>
+                                        <h2 class="mb-0 tx-22 mb-1 mt-1">
+                                            {{ \App\Models\Invoice::where('invoice_status', 3)->count() }}</h2>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!---end --->
             <div class="card mg-b-20">
                 <div class="card-header pb-0">
                     <div class="d-flex justify-content-between">
-                        <i class="mdi mdi-dots-horizontal text-gray"></i>
+                        
                     </div>
                 </div>
                 <div class="card-body">

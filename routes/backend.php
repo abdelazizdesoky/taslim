@@ -44,6 +44,9 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::resource('invoices', InvoicesController::class);
         Route::post('invoices/cancel', [InvoicesController::class, 'cancel'])->name('invoices.cancel');
         Route::post('invoices/cancelserial', [InvoicesController::class, 'cancelserial'])->name('invoices.cancelserial');
+        Route::get('/invoice-chart-data', [InvoicesController::class, 'getInvoiceChartData'])->name('invoice-chart-data');
+        Route::get('/invoice-chart', [InvoicesController::class, 'getInvoice']);
+
 
         // Location Management
         Route::resource('locations', LocationController::class);
@@ -105,6 +108,7 @@ Route::middleware(['auth:admin'])->group(function () {
             'destroy' => 'invoices.destroy',
         ]);
         Route::post('invoices/cancel', [UserInvoicesController::class, 'cancel'])->name('invoices.cancel');
+
     });
 
 
@@ -151,7 +155,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('report', [ReportController::class, 'index'])->name('report.index');
     Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
     Route::get('/report/inventory', [ReportController::class, 'inventoryReport'])->name('report.inventory');
- 
+    Route::get('/invoice-chart-data', [InvoicesController::class, 'getInvoiceChartData'])->name('invoice-chart-data');
+    Route::get('/invoice-chart', [InvoicesController::class, 'getInvoice']);
        
     });
 
