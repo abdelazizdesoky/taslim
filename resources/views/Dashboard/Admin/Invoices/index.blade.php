@@ -37,7 +37,12 @@
                                     <div class="mr-auto">
                                         <h5 class="tx-13">الاذون</h5>
                                         <h2 class="mb-0 tx-22 mb-1 mt-1"> {{ \App\Models\Invoice::count() }}</h2>
-
+                                        <p class="text-muted mb-0 tx-11">
+                                            <i class="si si-arrow-up-circle text-success mr-1"></i>
+                                             استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->count() }}
+                                               <i class="si si-arrow-down-circle text-danger mr-1"></i> 
+                                              تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->count() }}
+                                            </p>
                                     </div>
                                 </div>
                             </div>
@@ -52,9 +57,13 @@
                                     </div>
                                     <div class="mr-auto">
                                         <h5 class="tx-13">الاذون المفعلة </h5>
-                                        <h2 class="mb-0 tx-22 mb-1 mt-1">
-                                            {{ \App\Models\Invoice::where('invoice_status', 1)->count() }}</h2>
-
+                                        <h2 class="mb-0 tx-22 mb-1 mt-1">{{ \App\Models\Invoice::where('invoice_status', 1)->count() }}</h2>
+                                        <p class="text-muted mb-0 tx-11">
+                                            <i class="si si-arrow-up-circle text-success mr-1"></i>
+                                             استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 1)->count() }}
+                                               <i class="si si-arrow-down-circle text-danger mr-1"></i> 
+                                              تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 1)->count() }}
+                                            </p>
                                     </div>
                                 </div>
                             </div>
@@ -68,19 +77,23 @@
                                         <i class="icon-rocket text-success"></i>
                                     </div>
                                     <div class="mr-auto">
-                                        <h5 class="tx-13">الاذون المكتملة </h5>
-                                        <h2 class="mb-0 tx-22 mb-1 mt-1">
-                                            {{ \App\Models\Invoice::where('invoice_status', 3)->count() }}</h2>
-
+                                        <h5 class="tx-13">الاذون المكتملة  </h5>
+                                        <h2 class="mb-0 tx-22 mb-1 mt-1">{{ \App\Models\Invoice::where('invoice_status', 3)->count() }}</h2>
+                                        <p class="text-muted mb-0 tx-11">
+                                            <i class="si si-arrow-up-circle text-success mr-1"></i>
+                                             استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 3)->count() }}
+                                               <i class="si si-arrow-down-circle text-danger mr-1"></i> 
+                                              تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 3)->count() }}
+                                            </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
+                    
+                    
                 </div>
-            </div>
+            </div> 
 
             <!---end --->
             <div class="card mg-b-20">
