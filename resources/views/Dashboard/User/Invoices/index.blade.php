@@ -69,14 +69,16 @@
                                 <i class="icon-paypal text-danger"></i>
                             </div>
                             <div class="mr-auto">
-                                <p class="text-muted mb-0 tx-11">
-                                    <i class="si si-arrow-up-circle text-success mr-1"></i>
-                                     استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 1)->count() }}
-                                      <br> <i class="si si-arrow-down-circle text-danger mr-1"></i> 
-                                      تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 1)->count() }}
-                                     <br> <i class="si si-arrow-down-circle text-secondary mr-1"></i> 
-                                      مرتجعات  -  {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 1)->count() }}
-                                    </p>
+                                <h5 class="tx-13">الاذون المفعلة </h5>
+                                        <h2 class="mb-0 tx-22 mb-1 mt-1">{{ \App\Models\Invoice::where('invoice_status', 1)->count() }}</h2>
+                                        <p class="text-muted mb-0 tx-11">
+                                            <i class="si si-arrow-up-circle text-success mr-1"></i>
+                                             استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 1)->count() }}
+                                              <br> <i class="si si-arrow-down-circle text-danger mr-1"></i> 
+                                              تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 1)->count() }}
+                                             <br> <i class="si si-arrow-down-circle text-secondary mr-1"></i> 
+                                              مرتجعات  -  {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 1)->count() }}
+                                            </p>
                             </div>
                         </div>
                     </div>
