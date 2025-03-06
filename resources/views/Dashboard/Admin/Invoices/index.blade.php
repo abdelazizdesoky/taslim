@@ -40,8 +40,10 @@
                                         <p class="text-muted mb-0 tx-11">
                                             <i class="si si-arrow-up-circle text-success mr-1"></i>
                                              استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->count() }}
-                                               <i class="si si-arrow-down-circle text-danger mr-1"></i> 
+                                             <br>  <i class="si si-arrow-down-circle text-danger mr-1"></i> 
                                               تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->count() }}
+                                             <br> <i class="si si-arrow-down-circle text-secondary  mr-1"></i> 
+                                              مرتجعات  -  {{ \App\Models\Invoice::where('invoice_type', 3)->count() }}
                                             </p>
                                     </div>
                                 </div>
@@ -61,8 +63,10 @@
                                         <p class="text-muted mb-0 tx-11">
                                             <i class="si si-arrow-up-circle text-success mr-1"></i>
                                              استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 1)->count() }}
-                                               <i class="si si-arrow-down-circle text-danger mr-1"></i> 
+                                              <br> <i class="si si-arrow-down-circle text-danger mr-1"></i> 
                                               تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 1)->count() }}
+                                             <br> <i class="si si-arrow-down-circle text-secondary mr-1"></i> 
+                                              مرتجعات  -  {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 1)->count() }}
                                             </p>
                                     </div>
                                 </div>
@@ -82,8 +86,10 @@
                                         <p class="text-muted mb-0 tx-11">
                                             <i class="si si-arrow-up-circle text-success mr-1"></i>
                                              استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 3)->count() }}
-                                               <i class="si si-arrow-down-circle text-danger mr-1"></i> 
+                                             <br>  <i class="si si-arrow-down-circle text-danger mr-1"></i> 
                                               تسليم -  {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 3)->count() }}
+                                             <br> <i class="si si-arrow-down-circle text-secondary mr-1"></i> 
+                                              مرتجعات -  {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 3)->count() }}
                                             </p>
                                     </div>
                                 </div>
