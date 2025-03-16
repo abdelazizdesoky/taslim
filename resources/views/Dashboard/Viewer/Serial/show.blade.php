@@ -61,15 +61,15 @@
                                                <p>
 												@if($invoice->invoice_type == 2) <!-- إذا كان نوع الفاتورة تسليم -->
 
-                                                {{ $invoice->customer->name ??'-' }} <!-- اسم العميل -->
+                                                {{ $invoice->customer->name ??'-' }} -{{ $invoice->customer->code ??'-' }} 
 
                                                 @elseif($invoice->invoice_type == 1)
 
-											    {{ $invoice->supplier->name ??'-'}}
+											    {{ $invoice->supplier->name ??'-'}}-{{ $invoice->supplier->code ??'-' }}
 
 												@elseif($invoice->invoice_type == 3)
 
-                                                {{ $invoice->supplier->name ??$invoice->customer->name}}
+                                                {{ $invoice->supplier->name ??$invoice->customer->name}}-{{ $invoice->customer->code ?? $invoice->supplier->code  }}
 											     @else
 											    {{ '-' }}
                                                  @endif

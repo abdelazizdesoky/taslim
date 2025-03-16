@@ -71,7 +71,7 @@
 											@break
 
 											@default
-											<p class="invoice-info-row"><span>مورد/العميل   :</span> <span>{{ $invoice->customer->name ??$invoice->supplier->name }}-{{ $invoice->customer->phone ??$invoice->supplier->phone }}</span></p>
+											<p class="invoice-info-row"><span>مورد/العميل   :</span> <span>{{ $invoice->customer->name ??$invoice->supplier->name }}-{{ $invoice->customer->code ??$invoice->supplier->code }}</span></p>
 											@endswitch
 										
 											
