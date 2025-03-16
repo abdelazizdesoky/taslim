@@ -63,11 +63,11 @@
 
 											@switch($invoice->invoice_type)
 											@case(1)
-											<p class="invoice-info-row"><span>المورد  :</span> <span>{{ $invoice->supplier->name ??'-' }}-{{ $invoice->supplier->phone ??'-' }}</span></p>
+											<p class="invoice-info-row"><span>المورد  :</span> <span>{{ $invoice->supplier->name ??'-' }}-{{ $invoice->supplier->code ??'-' }}</span></p>
 											@break
 
 											@case(2)
-											<p class="invoice-info-row"><span>العميل  :</span> <span>{{ $invoice->customer->name ??'-' }}-{{ $invoice->customer->phone ??'-' }}</span></p>
+											<p class="invoice-info-row"><span>العميل  :</span> <span>{{ $invoice->customer->name ??'-' }}-{{ $invoice->customer->code ??'-' }}</span></p>
 											@break
 
 											@default
@@ -78,6 +78,7 @@
 											<p class="invoice-info-row"><span>المنسق :</span> <span>	{{$invoice->creator->name??'-'}}</span></p>
 											<p class="invoice-info-row"><span>المندوب :</span> <span>{{ $invoice->admin->name ??'-' }}</span></p>
 											<p class="invoice-info-row"><span>مجموع سيريالات المسحوبة  :</span> <span>{{$serials->count()}}</span></p>
+											<p class="invoice-info-row"><span>   ملاحظات :</span> <span>{{$invoice->notes}}</span></p>
 										</div>
 									</div>
 									<div class="table-responsive mg-t-20">

@@ -78,6 +78,7 @@
 											<p class="invoice-info-row"><span>المنسق :</span> <span>	{{$invoice->creator->name??'-'}}</span></p>
 											<p class="invoice-info-row"><span>المندوب :</span> <span>{{ $invoice->admin->name ??'-' }}</span></p>
 											<p class="invoice-info-row"><span>مجموع سيريالات المسحوبة  :</span> <span>{{$serials->count()}}</span></p>
+											<p class="invoice-info-row"><span>   ملاحظات :</span> <span>{{$invoice->notes}}</span></p>
 										</div>
 									</div>
 									<div class="table-responsive mg-t-20">

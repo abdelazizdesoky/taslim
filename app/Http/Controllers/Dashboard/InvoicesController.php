@@ -90,6 +90,7 @@ class InvoicesController extends Controller
             $invoice->employee_id = $request->employee_id;
             $invoice->created_by = Auth::user()->id;
             $invoice->location_id = $request->location_id;
+            $invoice->notes = $request->notes;
 
             // تعيين المورد أو العميل حسب نوع الفاتورة
             if ($request->invoice_type == 1) {
@@ -184,10 +185,12 @@ class InvoicesController extends Controller
             'created_by' => 'required|exists:admins,id',
             'invoice_status' => 'required',
             'location_id' => 'required',
+            'notes' => 'nullable',
             'products' => 'required|array|min:1',
             'quantities' => 'required|array|min:1',
             'products.*' => 'required|exists:products,id',
             'quantities.*' => 'required|numeric|min:1',
+
         ]);
 
         try {
@@ -203,6 +206,7 @@ class InvoicesController extends Controller
                 'created_by' => $validatedData['created_by'],
                 'invoice_status' => $validatedData['invoice_status'],
                 'location_id' => $validatedData['location_id'],
+                'notes' => $validatedData['notes'],
             ];
 
             // Handle invoice type specific validation and updates

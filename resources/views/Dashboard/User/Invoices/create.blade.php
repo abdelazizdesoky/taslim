@@ -145,7 +145,16 @@
 											</div>
 										</div>	
                                     </div>
-                     
+                                    <div class="form-group ">
+										<div class="row">
+											<div class="col-md-3">
+												<label class="form-label"> ملاحظات  </label>
+											</div>
+											<div class="col-md-9">
+                                                <textarea class="form-control" name="notes" rows="3"></textarea>
+											</div>
+										</div>	
+                                    </div>
                              
 
 							</div>
