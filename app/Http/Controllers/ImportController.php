@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\InvoicesImport;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\InvoiceTemplateExport;
 
 class ImportController extends Controller
 {
@@ -13,14 +15,19 @@ class ImportController extends Controller
         return view('import');
     }
 
-    public function import(Request $request)
+    public function importExcel(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls',
+            'file' => 'required|mimes:xlsx,xls,csv',
         ]);
 
         Excel::import(new InvoicesImport, $request->file('file'));
 
         return redirect()->back()->with('success', 'Invoices Imported Successfully!');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new InvoiceTemplateExport, 'invoice_template.xlsx');
     }
 }

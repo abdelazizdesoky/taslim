@@ -21,6 +21,7 @@ use App\Http\Controllers\Dashboard\{
 use App\Http\Controllers\User\UserInvoicesController;
 use App\Http\Controllers\Employee\EmployeeInvoiceController;
 use App\Http\Controllers\Viewer\ViewerInvoicesController;
+use App\Http\Controllers\ImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,14 +40,16 @@ Route::middleware(['auth:admin'])->group(function () {
         
         // Customer Management
         Route::resource('customers', CustomersController::class);
-        
+     
         // Invoice Management
         Route::resource('invoices', InvoicesController::class);
         Route::post('invoices/cancel', [InvoicesController::class, 'cancel'])->name('invoices.cancel');
         Route::post('invoices/cancelserial', [InvoicesController::class, 'cancelserial'])->name('invoices.cancelserial');
         Route::get('/invoice-chart-data', [InvoicesController::class, 'getInvoiceChartData'])->name('invoice-chart-data');
         Route::get('/invoice-chart', [InvoicesController::class, 'getInvoice']);
-
+      
+        Route::get('/download-template', [ImportController::class, 'downloadTemplate'])->name('invoices.downloadTemplate');
+        Route::post('/import-invoices', [ImportController::class, 'importExcel'])->name('invoices.import');
 
         // Location Management
         Route::resource('locations', LocationController::class);
@@ -108,6 +111,9 @@ Route::middleware(['auth:admin'])->group(function () {
             'destroy' => 'invoices.destroy',
         ]);
         Route::post('invoices/cancel', [UserInvoicesController::class, 'cancel'])->name('invoices.cancel');
+
+        Route::get('/download-template', [ImportController::class, 'downloadTemplate'])->name('invoices.downloadTemplate');
+        Route::post('/import-invoices', [ImportController::class, 'importExcel'])->name('invoices.import');
 
     });
 
