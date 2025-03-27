@@ -35,6 +35,7 @@ class dbBackup extends Command
         $username = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
         $host = env('DB_HOST');
+        $port = env('DB_PORT');
 
         $this->info("Database: $database, Username: $username, Host: $host, Password: $password");
 
@@ -51,8 +52,9 @@ class dbBackup extends Command
         }
 
         // Build the mysqldump command
-     
-        $command = "mysqldump --column-statistics=0 -h 127.0.0.1 -P 3316 -u root -p'Taslim$$2024' taslim_app > {$backupPath}";
+       // mysqldump --column-statistics=0 -h 127.0.0.1 -P 3306 -u root -ptaslimpass taslim_app > /mnt/srv/taslim/storage/app/backups/taslim_app_2025-03-27_08-02-40.sql
+
+        $command = "mysqldump --column-statistics=0 -h $host -P  $port -u $username -p$password $database > {$backupPath}";
         
     
         // Execute the command
