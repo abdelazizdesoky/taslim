@@ -15,6 +15,7 @@ use App\Models\SerialNumber;
 use Illuminate\Http\Request;
 use App\Models\InvoiceProduct;
 use Illuminate\Support\Carbon;
+use App\Imports\InvoicesImport;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Builder;
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Log;
 use App\DataTables\InvoiceDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\InvoiceTemplateExport;
 
 class InvoicesController extends Controller
 {
@@ -446,4 +449,9 @@ class InvoicesController extends Controller
     {
         return view('Dashboard.Admin.Invoices.chart');
     }
+
+
+
+
+
 }
