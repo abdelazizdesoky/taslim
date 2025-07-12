@@ -143,6 +143,8 @@ class EmployeeInvoiceController extends Controller
             return [
                 'id' => $product->id,
                 'product_code' => $product->product_code ?? '', // استخدم `product_code` بدلاً من `serial_prefix`
+                'product_name' => $product->product_name ?? '',
+                'quantity' => $product->quantity ?? 0, // الكمية من جدول invoice_products
             ];
         });
 
@@ -229,4 +231,12 @@ class EmployeeInvoiceController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    public function checkSerialExists($serial)
+{
+    $exists = SerialNumber::where('serial_number', $serial)->exists();
+    return response()->json(['exists' => $exists]);
+}
+   
+
 }

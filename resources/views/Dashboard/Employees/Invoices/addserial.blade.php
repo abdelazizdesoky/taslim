@@ -97,9 +97,6 @@
 @section('js')
 <script src="{{ URL::asset('dashboard/js/quagga.min.js') }}"></script>
 <script>
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
     const serialInput = document.getElementById('serialInput');
     const serialsList = document.getElementById('serialsList');
@@ -115,30 +112,76 @@ document.addEventListener('DOMContentLoaded', function() {
     // Products from the invoice
     const invoiceProducts = @json($invoiceProducts);
 
+    // إضافة الستايلات المخصصة
+    const additionalStyles = `
+        .serial-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+            min-height: 60px;
+        }
+        
+        .serial-item span {
+            flex: 1;
+            line-height: 1.4;
+        }
+        
+        .product-message {
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    `;
+
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = additionalStyles;
+    document.head.appendChild(styleSheet);
+
+
     function validateSerialForProducts(serial) {
+        const cleanedSerial = serial.replace(/^0+/, '').substring(0, 7);
 
-        const cleanedSerial = serial.replace(/^0+/, '');
-    // فحص السيريال بناءً على المنتجات المرتبطة بالفاتورة
-    const validSerial = invoiceProducts.some(product => {
-        // فحص السيريال بناءً على `product_code` و `type_id`
-        const matchesProductCode = cleanedSerial.startsWith(product.product_code); // فحص إذا كان السيريال يبدأ بـ product_code
-       
+        const matchedProduct = invoiceProducts.find(product => {
+            const matchesProductCode = cleanedSerial.startsWith(product.product_code);
+            return matchesProductCode;
+        });
 
-        // إذا كان السيريال يتطابق مع `product_code` أو النوع المطلوب
-        return matchesProductCode ;
-    });
+        if (matchedProduct) {
+          
+            return true;
+        }
+        
+        return false;
+    }
 
-    
-
-    return validSerial;
-}
-
+    async function checkSerialExistsGlobally(serial) {
+        try {
+            const response = await fetch(`{{ url('/employee/check-serial-exists') }}/${serial}`);
+            const data = await response.json();
+            return data.exists;
+        } catch (error) {
+            console.error("Error checking serial:", error);
+            return false;
+        }
+    }
 
     function updateSerialCount() {
         const serials = serialsList.querySelectorAll('.serial-item').length;
         serialCount.textContent = serials;
 
-        // Disable input or provide warning if max quantity reached
         if (serials >= totalQuantity) {
             serialInput.disabled = true;
             serialInput.placeholder = 'تم إدخال الكمية المطلوبة';
@@ -152,57 +195,82 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateHiddenInput() {
-        const serials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
+        const serials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => {
+            const serialText = item.querySelector('span strong').textContent;
+            return serialText;
+        });
         serialsHiddenInput.value = serials.join('\n');
     }
 
     function isSerialDuplicate(serial) {
-        const existingSerials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => item.querySelector('span').textContent);
+        const existingSerials = Array.from(serialsList.querySelectorAll('.serial-item')).map(item => {
+            return item.querySelector('span strong').textContent;
+        });
         return existingSerials.includes(serial);
     }
 
-    function createSerialItem(serial) {
-        // Validate serial before adding
-        if (isSerialDuplicate(serial)) {
-            alert('هذا السيريال مكرر على مستوى الفاتورة!');
-            return false;
-        }
-
-        if (!validateSerialForProducts(serial)) {
-            alert('هذا السيريال غير مرتبط بمنتجات الفاتورة!');
-            return false;
-        }
-
-        if (serialsList.querySelectorAll('.serial-item').length >= totalQuantity) {
-            alert(`لا يمكن إضافة المزيد. الكمية المطلوبة هي ${totalQuantity}`);
-            return false;
-        }
-
-        const serialItem = document.createElement('div');
-        serialItem.className = 'serial-item';
-        const serialText = document.createElement('span');
-        serialText.textContent = serial;
-        serialItem.appendChild(serialText);
-        const removeButton = document.createElement('button');
-        removeButton.textContent = '×';
-        removeButton.className = 'remove-serial-btn';
-        removeButton.addEventListener('click', function() {
-            serialsList.removeChild(serialItem);
-            updateSerialCount();
-            updateHiddenInput();
-        });
-        serialItem.appendChild(removeButton);
-        serialsList.appendChild(serialItem);
-        updateSerialCount();
-        updateHiddenInput();
-        return true;
+   async function createSerialItem(serial) {
+    if (isSerialDuplicate(serial)) {
+        alert('هذا السيريال مكرر على مستوى الفاتورة!');
+        return false;
     }
 
-    // Form submission validation
+    const cleanedSerial = serial.replace(/^0+/, '');
+    const serialPrefix = cleanedSerial.substring(0, 7);
+
+    const matchedProduct = invoiceProducts.find(product => {
+        return product.product_code === serialPrefix;
+    });
+
+    if (!matchedProduct) {
+        alert('هذا السيريال غير مرتبط بمنتجات الفاتورة!');
+        return false;
+    }
+
+    if (serialsList.querySelectorAll('.serial-item').length >= totalQuantity) {
+        alert(`لا يمكن إضافة المزيد. الكمية المطلوبة هي ${totalQuantity}`);
+        return false;
+    }
+
+    const invoiceType = {{ $Invoices->invoice_type }};
+    if (invoiceType === 1) {
+        const existsGlobally = await checkSerialExistsGlobally(serial);
+        if (existsGlobally) {
+            alert('هذا السيريال موجود مسبقًا في قاعدة البيانات!');
+            return false;
+        }
+    }
+
+    const serialItem = document.createElement('div');
+    serialItem.className = 'serial-item';
+
+    const serialText = document.createElement('span');
+    serialText.innerHTML = `
+        <strong>${serial}</strong><br>
+        <span class="product-message"> ${matchedProduct.product_name} -  المطلوبة: ${matchedProduct.quantity}</span>
+    `;
+    serialItem.appendChild(serialText);
+
+    const removeButton = document.createElement('button');
+    removeButton.textContent = '×';
+    removeButton.className = 'remove-serial-btn';
+    removeButton.addEventListener('click', function () {
+        serialsList.removeChild(serialItem);
+        updateSerialCount();
+        updateHiddenInput();
+    });
+
+    serialItem.appendChild(removeButton);
+    serialsList.appendChild(serialItem);
+
+    updateSerialCount();
+    updateHiddenInput();
+    return true;
+}
+
     form.addEventListener('submit', function(event) {
         const serials = serialsList.querySelectorAll('.serial-item');
         
-        // Check if total serials match required quantity
         if (serials.length !== totalQuantity) {
             event.preventDefault();
             alert(`يجب إدخال ${totalQuantity} سيريال. تم إدخال ${serials.length} فقط.`);
@@ -247,9 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Initial count update
     updateSerialCount();
 });
-
 </script>
 @endsection

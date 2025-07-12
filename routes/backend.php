@@ -136,7 +136,8 @@ Route::middleware(['auth:admin'])->group(function () {
 
     });
 
-    
+    Route::get('/check-serial-exists/{serial}', [EmployeeInvoiceController::class, 'checkSerialExists'])
+    ->name('check.serial.exists');
      
   });
 
