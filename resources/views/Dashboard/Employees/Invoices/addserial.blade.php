@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const serialText = document.createElement('span');
     serialText.innerHTML = `
         <strong>${serial}</strong><br>
-        <span class="product-message"> ${matchedProduct.product_name} -  المطلوبة: ${matchedProduct.quantity}</span>
+        <span class="product-message"> ${matchedProduct.product_name} </span>
     `;
     serialItem.appendChild(serialText);
 
