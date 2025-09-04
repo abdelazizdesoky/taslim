@@ -70,7 +70,6 @@
             <p>عدد السيريالات: <span id="serialCount">0</span></p>
             
             <div class="form-group">
-                
                 <input type="text" class="form-control" id="serialInput" placeholder="أدخل السيريال هنا" autofocus>
                 <button type="button" class="btn btn-primary mt-2" id="startScanner">استخدام الكاميرا</button>
             </div>
@@ -150,21 +149,24 @@ document.addEventListener('DOMContentLoaded', function() {
     styleSheet.textContent = additionalStyles;
     document.head.appendChild(styleSheet);
 
-
     function validateSerialForProducts(serial) {
-        const cleanedSerial = serial.replace(/^0+/, '').substring(0, 7);
+        // محاكاة منطق PHP باستخدام JavaScript
+        const patterns = [/^09\/1-/];
+        let cleanedSerial = serial;
+        for (let pattern of patterns) {
+            cleanedSerial = cleanedSerial.replace(pattern, '');
+        }
+        cleanedSerial = cleanedSerial.replace(/^0+/, '');
+        const serialPrefix = cleanedSerial.substring(0, 7);
 
         const matchedProduct = invoiceProducts.find(product => {
-            const matchesProductCode = cleanedSerial.startsWith(product.product_code);
-            return matchesProductCode;
+            return serialPrefix === product.product_code;
         });
 
         if (matchedProduct) {
-          
-            return true;
+            return { isValid: true, product: matchedProduct };
         }
-        
-        return false;
+        return { isValid: false, product: null };
     }
 
     async function checkSerialExistsGlobally(serial) {
@@ -209,64 +211,58 @@ document.addEventListener('DOMContentLoaded', function() {
         return existingSerials.includes(serial);
     }
 
-   async function createSerialItem(serial) {
-    if (isSerialDuplicate(serial)) {
-        alert('هذا السيريال مكرر على مستوى الفاتورة!');
-        return false;
-    }
-
-    const cleanedSerial = serial.replace(/^0+/, '');
-    const serialPrefix = cleanedSerial.substring(0, 7);
-
-    const matchedProduct = invoiceProducts.find(product => {
-        return product.product_code === serialPrefix;
-    });
-
-    if (!matchedProduct) {
-        alert('هذا السيريال غير مرتبط بمنتجات الفاتورة!');
-        return false;
-    }
-
-    if (serialsList.querySelectorAll('.serial-item').length >= totalQuantity) {
-        alert(`لا يمكن إضافة المزيد. الكمية المطلوبة هي ${totalQuantity}`);
-        return false;
-    }
-
-    const invoiceType = {{ $Invoices->invoice_type }};
-    if (invoiceType === 1) {
-        const existsGlobally = await checkSerialExistsGlobally(serial);
-        if (existsGlobally) {
-            alert('هذا السيريال موجود مسبقًا في قاعدة البيانات!');
+    async function createSerialItem(serial) {
+        if (isSerialDuplicate(serial)) {
+            alert('هذا السيريال مكرر على مستوى الفاتورة!');
             return false;
         }
-    }
 
-    const serialItem = document.createElement('div');
-    serialItem.className = 'serial-item';
+        const validationResult = validateSerialForProducts(serial);
+        if (!validationResult.isValid) {
+            alert('هذا السيريال غير مرتبط بمنتجات الفاتورة!');
+            return false;
+        }
 
-    const serialText = document.createElement('span');
-    serialText.innerHTML = `
-        <strong>${serial}</strong><br>
-        <span class="product-message"> ${matchedProduct.product_name} </span>
-    `;
-    serialItem.appendChild(serialText);
+        if (serialsList.querySelectorAll('.serial-item').length >= totalQuantity) {
+            alert(`لا يمكن إضافة المزيد. الكمية المطلوبة هي ${totalQuantity}`);
+            return false;
+        }
 
-    const removeButton = document.createElement('button');
-    removeButton.textContent = '×';
-    removeButton.className = 'remove-serial-btn';
-    removeButton.addEventListener('click', function () {
-        serialsList.removeChild(serialItem);
+        const invoiceType = {{ $Invoices->invoice_type }};
+        if (invoiceType === 1) {
+            const existsGlobally = await checkSerialExistsGlobally(serial);
+            if (existsGlobally) {
+                alert('هذا السيريال موجود مسبقًا في قاعدة البيانات!');
+                return false;
+            }
+        }
+
+        const serialItem = document.createElement('div');
+        serialItem.className = 'serial-item';
+
+        const serialText = document.createElement('span');
+        serialText.innerHTML = `
+            <strong>${serial}</strong><br>
+            <span class="product-message"> ${validationResult.product.product_name} </span>
+        `;
+        serialItem.appendChild(serialText);
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = '×';
+        removeButton.className = 'remove-serial-btn';
+        removeButton.addEventListener('click', function () {
+            serialsList.removeChild(serialItem);
+            updateSerialCount();
+            updateHiddenInput();
+        });
+
+        serialItem.appendChild(removeButton);
+        serialsList.appendChild(serialItem);
+
         updateSerialCount();
         updateHiddenInput();
-    });
-
-    serialItem.appendChild(removeButton);
-    serialsList.appendChild(serialItem);
-
-    updateSerialCount();
-    updateHiddenInput();
-    return true;
-}
+        return true;
+    }
 
     form.addEventListener('submit', function(event) {
         const serials = serialsList.querySelectorAll('.serial-item');
