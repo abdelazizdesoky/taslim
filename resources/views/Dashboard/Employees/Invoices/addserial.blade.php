@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function validateSerialForProducts(serial) {
         // محاكاة منطق PHP باستخدام JavaScript
-        const patterns = [/^09\/1-/];
+        const patterns = [/^09\/I-/];
         let cleanedSerial = serial;
         for (let pattern of patterns) {
             cleanedSerial = cleanedSerial.replace(pattern, '');

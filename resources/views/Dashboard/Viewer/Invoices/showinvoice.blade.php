@@ -124,7 +124,7 @@
 													<td>{{ $serial->serial_number }}</td>
 													<td>
 														@php
-                                                            $patterns = ['/^09\/1-/']; 
+                                                            $patterns = ['/^09\/I-/']; 
 															$serialNumber = preg_replace($patterns, '', $serial->serial_number); 
 															$serialNumber = ltrim($serialNumber, '0'); 
 															$serialPrefix = substr($serialNumber, 0, 7); 
