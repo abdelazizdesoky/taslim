@@ -69,7 +69,9 @@ class ActivityLogDataTable extends DataTable
      */
     public function query(Activity $model): QueryBuilder
     {
-        return $model->newQuery();
+         return $model->newQuery()
+        ->select(['id', 'causer_id', 'description', 'log_name', 'created_at'])
+        ->latest();  // Order by created_at DESC
     }
 
     /**
@@ -83,19 +85,36 @@ class ActivityLogDataTable extends DataTable
                     ->setTableId('activitylog-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                  //  ->dom('Bfrtip')
+                    ->dom('Bfrtip')
                     ->orderBy(4, 'desc')
                     ->selectStyleSingle()
                      // إضافة هذا السطر لتحديد عدد الصفوف
                     ->pageLength(20)
-                    ->buttons([
-                        // Button::make('excel'),
-                        // Button::make('csv'),
-                        // Button::make('pdf'),
-                        // Button::make('print'),
-                        // Button::make('reset'),
-                        // Button::make('reload')
-                    ]);
+                  ->parameters([
+                    'processing' => true,
+                    'serverSide' => true,
+                    'responsive' => true,
+                      'deferRender' => true, // تحسين الأداء
+                      'scroller' => true,    // تمكين التمرير الافتراضي
+                    'scrollY' => '500px',  // ارتفاع الجدول
+                    'scrollCollapse' => true,
+                    'language' => [
+                        'processing' => 'جاري التحميل...',
+                        'lengthMenu' => 'عرض _MENU_ سجل',
+                        'zeroRecords' => 'لم يتم العثور على سجلات',
+                        'info' => 'عرض _START_ إلى _END_ من _TOTAL_ سجل',
+                        'infoEmpty' => 'عرض 0 إلى 0 من 0 سجل',
+                        'infoFiltered' => '(تصفية من _MAX_ سجل)',
+                        'search' => 'بحث:',
+                        'paginate' => [
+                            'first' => 'الأول',
+                            'last' => 'الأخير',
+                            'next' => 'التالي',
+                            'previous' => 'السابق'
+                        ],
+                    ]
+                ])
+                ->buttons([]);
     }
 
     /**
