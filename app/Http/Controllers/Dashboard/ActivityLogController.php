@@ -5,29 +5,19 @@ namespace App\Http\Controllers\Dashboard;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Spatie\Activitylog\Models\Activity;
+use App\DataTables\ActivityLogDataTable;
 
 class ActivityLogController extends Controller
 {
-    public function index()
+
+
+     public function index(ActivityLogDataTable $datatable)
     {
-
-       
-        $logs = Activity::latest()->take(20)->get()->map(function($log) {
-            $log->properties =  json_decode($log->properties, true);
-
-            // التأكد من وجود البيانات القديمة والجديدة
-            $changes = null;
-            if (isset($log->properties['old']) && isset($log->properties['attributes'])) {
-                $changes = $this->compareOldAndNew($log->properties['old'], $log->properties['attributes']);
-            }
-           
-            // إضافة التغييرات إلى الكائن دون تعديل الخاصية `changes`
-            $log->setAttribute('custom_changes', $changes);
-
-            return $log;
-        });
-
-        return view('Dashboard.Admin.logs.index', compact('logs'));
+        if (request()->ajax()) {
+            return $datatable->ajax();
+        }
+        return $datatable->render('Dashboard.Admin.logs.index');
+ 
     }
 
     // دالة للمقارنة بين البيانات القديمة والجديدة
