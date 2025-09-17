@@ -22,7 +22,18 @@ use Illuminate\Database\Eloquent\Collection;
 class Invoice extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+       protected $fillable = [
+        'code',
+        'invoice_date',
+        'invoice_status',
+        'invoice_type',
+        'location_id',
+        'employee_id',
+        'supplier_id',
+        'customer_id',
+        'created_by',
+        'products_data'
+    ];
 
     protected static $logAttributes = [
         'code',

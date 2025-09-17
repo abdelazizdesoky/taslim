@@ -11,7 +11,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ProductType extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+      protected $fillable = [
+        
+        'type_name',
+        'brand_id'
+    ];
+
     
     public function brand()
     {

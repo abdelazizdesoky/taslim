@@ -9,7 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Backup extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+      protected $fillable = [
+        'path',
+        'size',
+        'type'
+    ];
 
 
     use TracksActivity;
