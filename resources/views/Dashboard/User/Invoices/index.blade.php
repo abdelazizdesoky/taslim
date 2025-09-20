@@ -47,14 +47,14 @@
                                     </div>
                                     <div class="mr-auto">
                                         <h5 class="tx-13">الاذون</h5>
-                                        <h2 class="mb-0 tx-22 mb-1 mt-1"> {{ \App\Models\Invoice::count() }}</h2>
+                                        <h2 class="mb-0 tx-22 mb-1 mt-1"> {{\App\Models\Invoice::where('created_by', Auth::id())->count()}}</h2>
                                         <p class="text-muted mb-0 tx-11">
                                             <i class="si si-arrow-up-circle text-success mr-1"></i>
-                                            استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->count() }}
+                                            استلام - {{ \App\Models\Invoice::where('invoice_type', 1)->where('created_by', Auth::id())->count() }}
                                             <br> <i class="si si-arrow-down-circle text-danger mr-1"></i>
-                                            تسليم - {{ \App\Models\Invoice::where('invoice_type', 2)->count() }}
+                                            تسليم - {{ \App\Models\Invoice::where('invoice_type', 2)->where('created_by', Auth::id())->count() }}
                                             <br> <i class="si si-arrow-down-circle text-secondary  mr-1"></i>
-                                            مرتجعات - {{ \App\Models\Invoice::where('invoice_type', 3)->count() }}
+                                            مرتجعات - {{ \App\Models\Invoice::where('invoice_type', 3)->where('created_by', Auth::id())->count() }}
                                         </p>
                                     </div>
                                 </div>
@@ -71,17 +71,17 @@
                                     <div class="mr-auto">
                                         <h5 class="tx-13">الاذون المفعلة </h5>
                                         <h2 class="mb-0 tx-22 mb-1 mt-1">
-                                            {{ \App\Models\Invoice::where('invoice_status', 1)->count() }}</h2>
+                                            {{ \App\Models\Invoice::where('invoice_status', 1)->where('created_by', Auth::id())->count() }}</h2>
                                         <p class="text-muted mb-0 tx-11">
                                             <i class="si si-arrow-up-circle text-success mr-1"></i>
                                             استلام -
-                                            {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 1)->count() }}
+                                            {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 1)->where('created_by', Auth::id())->count() }}
                                             <br> <i class="si si-arrow-down-circle text-danger mr-1"></i>
                                             تسليم -
-                                            {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 1)->count() }}
+                                            {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 1)->where('created_by', Auth::id())->count() }}
                                             <br> <i class="si si-arrow-down-circle text-secondary mr-1"></i>
                                             مرتجعات -
-                                            {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 1)->count() }}
+                                            {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 1)->where('created_by', Auth::id())->count() }}
                                         </p>
                                     </div>
                                 </div>
@@ -98,17 +98,20 @@
                                     <div class="mr-auto">
                                         <h5 class="tx-13">الاذون المكتملة </h5>
                                         <h2 class="mb-0 tx-22 mb-1 mt-1">
-                                            {{ \App\Models\Invoice::where('invoice_status', 3)->count() }}</h2>
+                                            {{ \App\Models\Invoice::where('invoice_status', 3)->where('created_by', Auth::id())->count() }}</h2>
                                         <p class="text-muted mb-0 tx-11">
                                             <i class="si si-arrow-up-circle text-success mr-1"></i>
                                             استلام -
-                                            {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 3)->count() }}
+                                            {{ \App\Models\Invoice::where('invoice_type', 1)->where('invoice_status', 3)->where('created_by', Auth::id())->count() }}
                                             <br> <i class="si si-arrow-down-circle text-danger mr-1"></i>
                                             تسليم -
-                                            {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 3)->count() }}
+                                            {{ \App\Models\Invoice::where('invoice_type', 2)->where('invoice_status', 3)->where('created_by', Auth::id())->count() }}
                                             <br> <i class="si si-arrow-down-circle text-secondary mr-1"></i>
                                             مرتجعات -
-                                            {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 3)->count() }}
+                                            {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 3)->where('created_by', Auth::id())->count() }}
+                                             <i class=" text-danger mr-1">X</i>
+                                            ملغى  -
+                                            {{ \App\Models\Invoice::where('invoice_status', 5)->where('created_by', Auth::id())->count() }}
                                         </p>
                                     </div>
                                 </div>
@@ -134,7 +137,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-2">
+                                    {{-- <div class="col-2">
                                         <div class="d-flex justify-content-between">
                                             <a href="{{ route('user.invoices.downloadTemplate') }}"
                                                 class="btn btn-primary">تحميل نموذج Excel</a>
@@ -153,7 +156,7 @@
                                             </div>
                                         </form>
 
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
