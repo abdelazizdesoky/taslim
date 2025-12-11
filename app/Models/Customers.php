@@ -11,7 +11,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Customers extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+       protected $fillable = [
+     
+        'code',
+        'name',
+        'address',
+        'phone',
+        'status'
+    ];
+
     
     public static function latestProduct(int $count = 5): Collection
     {

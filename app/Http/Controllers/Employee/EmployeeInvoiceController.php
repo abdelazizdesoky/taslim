@@ -76,18 +76,18 @@ class EmployeeInvoiceController extends Controller
     public function Compinvoice()
     {
 
-        //مكتمل 
-        if (Auth::user()->permission == 3 && Auth::user()->permission == 4) {
+        // //مكتمل 
+        if (Auth::user()->permission == 3 || Auth::user()->permission == 4) {
 
             $activeInvoicesCount = Invoice::where('employee_id', Auth::user()->id)
-                ->where('invoice_status', 3)
-                ->count();
+            ->where('invoice_status', 3)
+            ->count();
 
 
             $Invoices = Invoice::where('employee_id', Auth::user()->id)
-                ->where('invoice_status', 3)
-                ->orderBy('invoice_date', 'desc')
-                ->paginate(100);
+            ->where('invoice_status', 3)
+            ->orderBy('invoice_date', 'desc')
+            ->paginate(100);
 
 
             return view('Dashboard.Employees.Invoices.compinvoice', compact('Invoices', 'activeInvoicesCount'));

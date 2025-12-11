@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Supplier extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+        protected $fillable = [
+            'code', 'name', 'address','phone','status'
+        ];
 
     use TracksActivity;
 

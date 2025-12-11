@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Location extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+      protected $fillable = [
+        'location_name'
+    ];
 
 
 

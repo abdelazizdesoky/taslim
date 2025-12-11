@@ -9,7 +9,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class InvoiceProduct extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+      protected $fillable = [
+       
+        'invoice_id',
+        'product_id',
+        'quantity'
+    ];
+
 
    use TracksActivity;
    

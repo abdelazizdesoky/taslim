@@ -98,6 +98,9 @@
                                             <br> <i class="si si-arrow-down-circle text-secondary mr-1"></i>
                                             مرتجعات -
                                             {{ \App\Models\Invoice::where('invoice_type', 3)->where('invoice_status', 3)->count() }}
+                                             <i class=" text-danger mr-1">X</i>
+                                            ملغى  -
+                                            {{ \App\Models\Invoice::where('invoice_status', 5)->count() }}
                                         </p>
                                     </div>
                                 </div>
