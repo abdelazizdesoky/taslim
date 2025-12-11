@@ -89,6 +89,7 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::get('report', [ReportController::class, 'index'])->name('report.index');
         Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
         Route::get('/report/inventory', [ReportController::class, 'inventoryReport'])->name('report.inventory');
+         Route::get('/report/inv', [ReportController::class, 'invReport'])->name('report.inv');
 
         
         

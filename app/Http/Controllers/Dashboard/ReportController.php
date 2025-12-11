@@ -231,4 +231,30 @@ class ReportController extends Controller
         ]);
     }
 
+
+public function invReport(Request $request)
+{
+    // استخدام التاريخ المرسل أو تاريخ اليوم
+    $date = $request->has('date') ? Carbon::parse($request->date) : Carbon::today();
+
+    $invoices = Invoice::whereDate('invoices.invoice_date', $date)
+        ->leftJoin('invoice_products', 'invoices.id', '=', 'invoice_products.invoice_id')
+        ->leftJoin('products', 'products.id', '=', 'invoice_products.product_id')
+        ->leftJoin('serial_numbers', 'invoices.id', '=', 'serial_numbers.invoice_id')
+        ->select([
+            'invoices.invoice_date as date',
+            DB::raw('COUNT(DISTINCT invoices.id) as count'), 
+            DB::raw('COUNT(DISTINCT CASE WHEN invoices.invoice_type = 2 THEN invoices.id END) as total_in'), 
+            DB::raw('COUNT(DISTINCT CASE WHEN invoices.invoice_type = 1 THEN invoices.id END) as total_out'), 
+            DB::raw('COUNT(DISTINCT CASE WHEN invoices.invoice_status = 4 THEN invoices.id END) as total_return'), 
+            DB::raw('COUNT(DISTINCT products.id) as products_count'), 
+            DB::raw('SUM(invoice_products.quantity) as total_requested_serials'),
+            DB::raw('COUNT(DISTINCT serial_numbers.id) as total_scanned_serials') 
+        ])
+        ->groupBy('invoices.invoice_date')
+        ->get();
+
+    return view('Dashboard.Admin.Report.invreport', compact('invoices', 'date'));
+}
+
 }
