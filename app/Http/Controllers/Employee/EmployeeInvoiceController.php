@@ -188,6 +188,12 @@ class EmployeeInvoiceController extends Controller
                     continue;
                 }
 
+                // التحقق من طول السيريال (يجب ألا يقل عن 8 أحرف)
+                if (mb_strlen($serial) < 8) {
+                    $failedSerials[] = $serial . ' (السيريال قصير - يجب أن لا يقل عن 8 أحرف)';
+                    continue;
+                }
+
                 // التحقق من التكرار في الفاتورة الحالية فقط
                 if (in_array($serial, $existingSerialsInInvoice)) {
                     $failedSerials[] = $serial . ' (مكرر في الفاتورة)';

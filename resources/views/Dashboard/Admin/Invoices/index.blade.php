@@ -124,15 +124,25 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-2  mr-auto">
+                                        <div class="d-flex justify-content-end">
+                                            <form action="{{ route('admin.report.inv') }}" method="GET" class="d-flex align-items-center">
+                                                <input type="date" name="date" class="form-control ml-2" value="{{ date('Y-m-d') }}" required>
+                                                <button type="submit" class="btn btn-primary">تقرير اليومى</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                          
+                         
+                                    {{-- <div class="col-2">
                                         <div class="d-flex justify-content-between">
                                             <a href="{{ route('admin.invoices.downloadTemplate') }}"
                                                 class="btn btn-primary">تحميل نموذج Excel</a>
 
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="d-flex justify-content-between">
+                                    {{-- <div class="d-flex justify-content-between">
                                         <form action="{{ route('admin.invoices.import') }}" method="POST"
                                             enctype="multipart/form-data">
                                             @csrf
@@ -142,8 +152,7 @@
                                                     type="submit">استيراد البيانات</button>
                                             </div>
                                         </form>
-
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

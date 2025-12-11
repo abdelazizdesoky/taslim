@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(styleSheet);
 
     function validateSerialForProducts(serial) {
-        // محاكاة منطق PHP باستخدام JavaScript
+        // Adjusted patterns to match the required prefixes
         const patterns = [/^09\/I-/];
         let cleanedSerial = serial;
         for (let pattern of patterns) {
@@ -212,6 +212,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function createSerialItem(serial) {
+        // تحقق طول السيريال قبل أي تحقق آخر
+        if (serial.length < 8) {
+            alert('خطأ: السيريال يجب أن لا يقل عن 8 أحرف.');
+            return false;
+        }
+
         if (isSerialDuplicate(serial)) {
             alert('هذا السيريال مكرر على مستوى الفاتورة!');
             return false;
