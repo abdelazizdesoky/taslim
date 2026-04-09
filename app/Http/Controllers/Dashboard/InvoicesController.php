@@ -25,6 +25,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\InvoiceTemplateExport;
+use App\Exports\SerialNumberTemplateExport;
+use App\Imports\SerialNumbersImport;
 
 class InvoicesController extends Controller
 {
@@ -454,4 +456,24 @@ class InvoicesController extends Controller
 
 
 
+    public function downloadSerialTemplate()
+    {
+        return Excel::download(new SerialNumberTemplateExport, 'serial_number_template.xlsx');
+    }
+
+    public function importSerials(Request $request, $id)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(new SerialNumbersImport($id), $request->file('excel_file'));
+
+            session()->flash('add', 'تم رفع السيريالات بنجاح');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'حدث خطأ أثناء الرفع: ' . $e->getMessage()]);
+        }
+    }
 }
