@@ -104,6 +104,8 @@ Route::middleware(['auth:admin'])->group(function () {
      * User Routes (Permission Level 2)
      */
     Route::middleware('permission:2')->name('user.')->group(function () {
+        Route::get('invoices/serial-template', [UserInvoicesController::class, 'downloadSerialTemplate'])->name('invoices.serialTemplate');
+        Route::post('invoices/{id}/import-serials', [UserInvoicesController::class, 'importSerials'])->name('invoices.importSerials');
         Route::resource('invoices', UserInvoicesController::class)->names([
             'index' => 'invoices.index',
             'create' => 'invoices.create',
