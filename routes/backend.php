@@ -42,6 +42,8 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::resource('customers', CustomersController::class);
      
         // Invoice Management
+        Route::get('invoices/serial-template', [InvoicesController::class, 'downloadSerialTemplate'])->name('invoices.serialTemplate');
+        Route::post('invoices/{id}/import-serials', [InvoicesController::class, 'importSerials'])->name('invoices.importSerials');
         Route::resource('invoices', InvoicesController::class);
         Route::post('invoices/cancel', [InvoicesController::class, 'cancel'])->name('invoices.cancel');
         Route::post('invoices/cancelserial', [InvoicesController::class, 'cancelserial'])->name('invoices.cancelserial');
@@ -102,6 +104,8 @@ Route::middleware(['auth:admin'])->group(function () {
      * User Routes (Permission Level 2)
      */
     Route::middleware('permission:2')->name('user.')->group(function () {
+        Route::get('invoices/serial-template', [UserInvoicesController::class, 'downloadSerialTemplate'])->name('invoices.serialTemplate');
+        Route::post('invoices/{id}/import-serials', [UserInvoicesController::class, 'importSerials'])->name('invoices.importSerials');
         Route::resource('invoices', UserInvoicesController::class)->names([
             'index' => 'invoices.index',
             'create' => 'invoices.create',

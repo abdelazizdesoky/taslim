@@ -18,7 +18,28 @@
 				<!-- row -->
 				<div class="row row-sm">
 					<div class="col-md-12 col-xl-12">
-						<div class=" main-content-body-invoice">
+						<div class="main-content-body-invoice">
+							<div class="row mg-t-20">
+								<div class="col-md-12">
+									<div class="card bg-gray-100">
+										<div class="card-body">
+											<a href="{{ route('admin.invoices.serialTemplate') }}" class="btn btn-info float-left mt-3 mr-2">
+												<i class="mdi mdi-download ml-1"></i>تحميل قالب السيريالات
+											</a>
+											<h6 class="card-title">رفع سيريالات من ملف إكسيل</h6>
+											<form action="{{ route('admin.invoices.importSerials', $invoice->id) }}" method="POST" enctype="multipart/form-data" class="form-inline">
+												@csrf
+												<div class="form-group mb-2">
+													<input type="file" name="excel_file" class="form-control-file mr-2" required>
+												</div>
+												<button type="submit" class="btn btn-info mb-2">
+													<i class="mdi mdi-upload ml-1"></i>رفع الملف
+												</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="card card-invoice">
 								<div class="card-body">
 									<div class="invoice-header">
@@ -162,10 +183,10 @@
 											
 											</tbody>
 										</table>
+								
 									</div>
-									<hr class="mg-b-40">
-									
-									<a href="#" class="btn btn-primary float-left mt-3 mr-2">
+
+									<a href="#" class="btn btn-primary float-left mt-3 mr-2" id="print-invoice">
 										<i class="mdi mdi-printer ml-1"></i>Print
 									</a>
 							
@@ -192,7 +213,8 @@
     <!-- Print functionality -->
     <script>
 	// Print functionality
-document.querySelector('.btn-primary').addEventListener('click', function () {
+document.getElementById('print-invoice').addEventListener('click', function (e) {
+    e.preventDefault();
     window.print();
 });
 document.querySelector('.btn-success').addEventListener('click', function () {
