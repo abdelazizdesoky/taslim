@@ -142,7 +142,7 @@
                 </div>
                 <div class="product-timeline card-body pt-2 mt-1">
                     <ul class="timeline-1 mb-0">
-                        @php
+                        {{-- @php
                             // استعلام للحصول على المندوبين وعدد العمليات
                             $topEmployees = \App\Models\Admin::select('admins.*')
                                 ->join('invoices', 'admins.id', '=', 'invoices.employee_id')
@@ -152,9 +152,9 @@
                                 ->orderByDesc('scan_count') // ترتيب تنازلي
                                 ->take(4) // اختيار الثلاثة الأعلى
                                 ->get();
-                        @endphp
+                        @endphp --}}
 
-                        @foreach ($topEmployees as $employee)
+                        {{-- @foreach ($topEmployees as $employee)
                             <li class="mt-0 mb-0">
                                 <i class="icon-note icons bg-primary-gradient text-white product-icon"></i>
                                 <span class="font-weight-semibold mb-4 tx-14">- {{ $employee->name }}</span>
@@ -163,7 +163,7 @@
                                 </p>
                                 <br>
                             </li>
-                        @endforeach
+                        @endforeach --}}
                     </ul>
                 </div>
             </div>
